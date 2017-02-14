@@ -10,29 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170214062312) do
+ActiveRecord::Schema.define(version: 20170214150253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "members", force: :cascade do |t|
-    t.integer  "databank_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "middle_initial"
-    t.string   "company"
-    t.string   "address_1"
-    t.string   "address_2"
-    t.string   "city"
-    t.string   "state"
-    t.string   "zip"
-    t.string   "home_phone"
-    t.string   "work_phone"
-    t.string   "mobile_phone"
-    t.string   "email"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
+# Could not dump table "members" because of following StandardError
+#   Unknown type 'member_status' for column 'status'
 
   create_table "survey_answers", force: :cascade do |t|
     t.json     "contents"
@@ -49,6 +33,14 @@ ActiveRecord::Schema.define(version: 20170214062312) do
     t.json     "contents"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "username"
+    t.string   "password_digest"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
   add_foreign_key "survey_answers", "members"

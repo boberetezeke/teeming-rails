@@ -17,4 +17,4 @@
 .byebug_history
 
 # Members CSV
-ORMN-Roster.csv
+/lib/seeds/ormn_roster.csv
