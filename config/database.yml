@@ -52,12 +52,20 @@ development:
   # Defaults to warning.
   #min_messages: notice
 
+  # Docker Compose
+  username: postgres
+  host: localhost
+
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
   database: ormn-members_test
+
+  # Docker Compose
+  username: postgres
+  host: localhost
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
