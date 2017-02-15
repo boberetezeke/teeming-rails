@@ -29,7 +29,7 @@ surveys_json['surveys'].each do |survey|
   puts "#{s.name} saved"
 end
 
-members_text = File.read(Rails.root.join('lib', 'seeds', 'test_roster.csv'))
+members_text = File.read(Rails.root.join('lib', 'seeds', 'ormn_roster.csv'))
 csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
   m = Member.find_or_create_by(databank_id:  row['MemberID'])
