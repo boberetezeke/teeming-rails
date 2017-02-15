@@ -1,13 +1,7 @@
 class CreateMembers < ActiveRecord::Migration[5.0]
-  def up
-    execute <<-SQL
-      CREATE TYPE member_status AS ENUM
-      ('active', 'duplicate', 'invalid', 'problem');
-    SQL
-
+  def change
     create_table :members do |t|
       t.integer :databank_id
-      t.column :status, :member_status, default: 'active'
 
       t.string :address_1
       t.string :address_2
@@ -20,6 +14,7 @@ class CreateMembers < ActiveRecord::Migration[5.0]
       t.string :middle_initial
       t.string :mobile_phone
       t.string :state
+      t.string :status
       t.string :work_phone
       t.string :zip
 
@@ -27,13 +22,5 @@ class CreateMembers < ActiveRecord::Migration[5.0]
     end
 
     add_index :members, :databank_id, unique: true
-  end
-
-  def down
-    drop_table :members
-
-    execute <<-SQL
-      DROP TYPE member_status;
-    SQL
   end
 end

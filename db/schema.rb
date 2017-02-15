@@ -24,8 +24,26 @@ ActiveRecord::Schema.define(version: 20170215012238) do
     t.index ["name"], name: "index_candidates_on_name", unique: true, using: :btree
   end
 
-# Could not dump table "members" because of following StandardError
-#   Unknown type 'member_status' for column 'status'
+  create_table "members", force: :cascade do |t|
+    t.integer  "databank_id"
+    t.string   "address_1"
+    t.string   "address_2"
+    t.string   "city"
+    t.string   "company"
+    t.string   "email"
+    t.string   "first_name"
+    t.string   "home_phone"
+    t.string   "last_name"
+    t.string   "middle_initial"
+    t.string   "mobile_phone"
+    t.string   "state"
+    t.string   "status"
+    t.string   "work_phone"
+    t.string   "zip"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
+  end
 
   create_table "survey_answers", force: :cascade do |t|
     t.json     "contents"
@@ -43,6 +61,7 @@ ActiveRecord::Schema.define(version: 20170215012238) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_surveys_on_name", unique: true, using: :btree
   end
 
   create_table "users", force: :cascade do |t|
