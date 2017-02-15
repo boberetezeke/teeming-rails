@@ -8,8 +8,29 @@
 
 require 'csv'
 
-csv_text = File.read(Rails.root.join('lib', 'seeds', 'ormn_roster.csv'))
-csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+candidates_text = File.read(Rails.root.join('lib', 'seeds', 'candidates.json'))
+candidates_json = ActiveSupport::JSON.decode(candidates_text)
+candidates_json['candidates'].each do |candidate|
+  c = Candidate.find_or_create_by(name: candidate['name'])
+  c.office = candidate['office']
+  c.questions = candidate['questions']
+  c.save
+
+  puts "#{c.office}: #{c.name} saved"
+end
+
+surveys_text = File.read(Rails.root.join('lib', 'seeds', 'surveys.json'))
+surveys_json = ActiveSupport::JSON.decode(surveys_text)
+surveys_json['surveys'].each do |survey|
+  s = Survey.find_or_create_by(name: survey['name'])
+  s.contents = survey['contents']
+  s.save
+
+  puts "#{s.name} saved"
+end
+
+members_text = File.read(Rails.root.join('lib', 'seeds', 'test_roster.csv'))
+csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
   m = Member.find_or_create_by(databank_id:  row['MemberID'])
   m.first_name = row['First1']
@@ -30,5 +51,7 @@ csv.each do |row|
   puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
 end
 
-puts "There are now #{Member.count} rows"
+puts "There are now #{Candidate.count} candidates."
+puts "There are now #{Survey.count} surveys."
+puts "There are now #{Member.count} members"
 

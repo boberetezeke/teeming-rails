@@ -10,10 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170214150253) do
+ActiveRecord::Schema.define(version: 20170215012238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "candidates", force: :cascade do |t|
+    t.string   "name"
+    t.string   "office"
+    t.json     "questions"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_candidates_on_name", unique: true, using: :btree
+  end
 
 # Could not dump table "members" because of following StandardError
 #   Unknown type 'member_status' for column 'status'
@@ -31,6 +40,7 @@ ActiveRecord::Schema.define(version: 20170214150253) do
 
   create_table "surveys", force: :cascade do |t|
     t.json     "contents"
+    t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

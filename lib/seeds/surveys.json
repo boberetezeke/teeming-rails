@@ -1,0 +1,108 @@
+{
+  "surveys": [
+    {
+      "name": "DFL Leadership",
+      "contents": [
+        {
+          "title": "Chair",
+          "type": "choose-one",
+          "key": "chair",
+          "choices": [
+            {
+              "name": "Donna Cassutt",
+              "value": "donna-cassutt"
+            },
+            {
+              "name": "Ken Martin",
+              "value": "ken-martin"
+            },
+            {
+              "name": "none of these",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "title": "Vice Chair",
+          "type": "choose-one",
+          "key": "vice-chair",
+          "choices": [
+            {
+              "name": "Taylor Stevenson",
+              "value": "taylor-stevenson"
+            },
+            {
+              "name": "Marge Hoffa",
+              "value": "marge-hoffa"
+            },
+            {
+              "name": "Melissa Olson",
+              "value": "melissa-olson"
+            },
+            {
+              "name": "Ethan Cords",
+              "value": "ethan-cords"
+            },
+            {
+              "name": "none of these",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "title": "Secretary",
+          "type": "choose-one",
+          "key": "secretary",
+          "choices": [
+            {
+              "name": "Amanda Madison",
+              "value": "amanda-madison"
+            },
+            {
+              "name": "Jacob Grippen",
+              "value": "jacob-grippen"
+            },
+            {
+              "name": "none of these",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "title": "Treasurer",
+          "type": "choose-one",
+          "key": "treasurer",
+          "choices": [
+            {
+              "name": "Abena Abraham",
+              "value": "abena-abraham"
+            },
+            {
+              "name": "Tyler Moroles",
+              "value": "tyler-moroles"
+            },
+            {
+              "name": "none of these",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "title": "Outreach Officer",
+          "type": "choose-one",
+          "key": "outreach-officer",
+          "choices": [
+            {
+              "name": "Shivanthi Sathanandan",
+              "value": "shivanthi-sathanandan"
+            },
+            {
+              "name": "none of these",
+              "value": "none"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
