@@ -5,4 +5,6 @@ class Member < ApplicationRecord
   scope :valid_email, -> {
     where('status != ? OR status IS NULL', 'invalid')
   }
+
+  scope :active, -> { where(status: 'active') }
 end
