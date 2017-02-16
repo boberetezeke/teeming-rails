@@ -22,6 +22,7 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'jwt', '>= 1.5.6'
 gem 'kaminari'
+gem 'pry-rails'
 gem 'sendgrid-ruby'
 
 gem 'dotenv-rails', groups: [:development, :test]
@@ -35,7 +36,6 @@ gem 'rack-cors'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'pry-rails'
 end
 
 group :development do
