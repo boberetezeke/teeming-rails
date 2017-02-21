@@ -5,7 +5,6 @@ class MemberMailer < ApplicationMailer
   def send_survey_email(member)
     mail = Mail.new
     mail.from = Email.new(email: ENV['SENDGRID_EMAIL'])
-    mail.subject = 'ORMN: Vote by Saturday -- Tell ORMN Who to Endorse'
 
     personalization = Personalization.new
     personalization.to = Email.new(email: member.email)
@@ -13,7 +12,7 @@ class MemberMailer < ApplicationMailer
       Substitution.new(key: '%email%', value: member.email)
 
     mail.personalizations = personalization
-    mail.contents = Content.new(type: 'text/html', value: 'What\'s up yo?')
+    mail.contents = Content.new(type: 'text/html', value: 'template goes here')
     mail.template_id = ENV['SENDGRID_TEMPLATE_ID']
 
     sg = SendGrid::API.new(

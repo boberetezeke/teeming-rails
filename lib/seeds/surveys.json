@@ -1,8 +1,15 @@
 {
   "surveys": [
     {
+      "code": "dfl-leadership-1",
+      "name": "DFL Leadership beta",
+      "status": "closed",
+      "contents": []
+    },
+    {
       "code": "dfl-leadership-2",
       "name": "DFL Leadership",
+      "status": "open until 5pm CST Thursday, Feb. 23",
       "contents": [
         {
           "title": "Chair",

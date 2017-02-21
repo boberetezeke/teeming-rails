@@ -28,6 +28,7 @@ surveys_json['surveys'].each do |survey|
   s = Survey.find_or_create_by(code: survey['code'])
   s.name = survey['name']
   s.contents = survey['contents']
+  s.status = survey['status']
   s.save!
 
   # puts "#{s.name} saved"
