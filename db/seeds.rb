@@ -15,7 +15,7 @@ candidates_json['candidates'].each do |candidate|
   c.name = candidate['name']
   c.office = candidate['office']
   c.questions = candidate['questions']
-  c.save
+  c.save!
 
   # puts "#{c.office}: #{c.name} saved"
 end
@@ -28,7 +28,7 @@ surveys_json['surveys'].each do |survey|
   s = Survey.find_or_create_by(code: survey['code'])
   s.name = survey['name']
   s.contents = survey['contents']
-  s.save
+  s.save!
 
   # puts "#{s.name} saved"
 end
@@ -52,7 +52,7 @@ csv.each do |row|
   m.work_phone = row['WorkPhone']
   m.mobile_phone = row['MobilePh']
   m.email = row['Email']
-  m.save
+  m.save!
 
   puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
 end
@@ -65,7 +65,7 @@ bounces_json = ActiveSupport::JSON.decode(bounces_text)
 bounces_json.each do |bounce|
   email = bounce["email"]
   member = Member.where(email: email)
-  member.update(status: "bounce")
+  member.update!(status: "bounce")
 end
 
 bounces = Member.where(status: "bounce").count
