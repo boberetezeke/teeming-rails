@@ -64,8 +64,9 @@ bounces_text = File.read(Rails.root.join('lib', 'seeds', 'bounces.json'))
 bounces_json = ActiveSupport::JSON.decode(bounces_text)
 bounces_json.each do |bounce|
   email = bounce["email"]
-  member = Member.where(email: email)
-  member.update!(status: "bounce")
+  Member.where(email: email).each do |m|
+    m.update!(status: "bounce")
+  end
 end
 
 bounces = Member.where(status: "bounce").count
