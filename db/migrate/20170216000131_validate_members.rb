@@ -3,6 +3,7 @@ class ValidateMembers < ActiveRecord::Migration[5.0]
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
   def up
+
     Member.all.each do |member|
       if (member[:email] =~ VALID_EMAIL_REGEX).nil?
         member.update!(status: 'invalid')
@@ -17,9 +18,7 @@ class ValidateMembers < ActiveRecord::Migration[5.0]
         .order("databank_id desc")
         .each_with_index do |member, i|
 
-        if i == 0
-          member.update!(status: "active")
-        else
+        if i != 0
           member.update!(status: "duplicate")
         end
       end

@@ -1,6 +1,12 @@
 class SurveyAnswersController < ApplicationController
   skip_before_action :set_current_user, :authenticate_request
 
+  def index
+    survey_answers = SurveyAnswer.all
+
+    render json: survey_answers
+  end
+
   def create
     attributes = survey_answer_params[:attributes] || {}
     relationships = survey_answer_params[:relationships] || {}

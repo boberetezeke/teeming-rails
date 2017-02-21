@@ -1,19 +1,23 @@
 {
   "surveys": [
     {
+      "code": "dfl-leadership-2",
       "name": "DFL Leadership",
       "contents": [
         {
           "title": "Chair",
           "type": "choose-one",
           "key": "chair",
+          "rules": [],
           "choices": [
             {
               "name": "Donna Cassutt",
+              "gender": "female",
               "value": "donna-cassutt"
             },
             {
               "name": "Ken Martin",
+              "gender": "male",
               "value": "ken-martin"
             },
             {
@@ -26,21 +30,26 @@
           "title": "Vice Chair",
           "type": "choose-one",
           "key": "vice-chair",
+          "rules": ["gendered"],
           "choices": [
             {
               "name": "Taylor Stevenson",
+              "gender": "male",
               "value": "taylor-stevenson"
             },
             {
               "name": "Marge Hoffa",
+              "gender": "female",
               "value": "marge-hoffa"
             },
             {
               "name": "Melissa Olson",
+              "gender": "female",
               "value": "melissa-olson"
             },
             {
               "name": "Ethan Cords",
+              "gender": "male",
               "value": "ethan-cords"
             },
             {

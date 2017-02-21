@@ -1,0 +1,8 @@
+[
+  {
+    "status": "5.1.1",
+    "created": "2017-02-16 00:35:45",
+    "reason": "550 5.1.1 The email account that you tried to reach does not exist. Please try double-checking the recipient's email address for typos or unnecessary spaces. Learn more at  https://support.google.com/mail/?p=NoSuchUser f4si8349915ith.40 - gsmtp ",
+    "email": "xxx@xxx.yyy"
+  }
+]

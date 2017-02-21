@@ -17,6 +17,6 @@
 .byebug_history
 
 # Members CSV
-/lib/seeds/prod_roster.csv
+/lib/data/
 
 .env
