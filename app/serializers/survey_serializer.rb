@@ -1,3 +1,3 @@
 class SurveySerializer < ActiveModel::Serializer
-  attributes :id, :name, :contents
+  attributes :id, :code, :contents, :name, :status
 end

@@ -12,6 +12,7 @@ candidates_text = File.read(Rails.root.join('lib', 'seeds', 'candidates.json'))
 candidates_json = ActiveSupport::JSON.decode(candidates_text)
 candidates_json['candidates'].each do |candidate|
   c = Candidate.find_or_create_by(code: candidate['code'])
+  c.links = candidate['links']
   c.name = candidate['name']
   c.office = candidate['office']
   c.questions = candidate['questions']
@@ -36,7 +37,7 @@ end
 
 puts "There are now #{Survey.count} surveys."
 
-members_text = File.read(Rails.root.join('lib', 'seeds', 'ormn_roster.csv'))
+members_text = File.read(Rails.root.join('lib', 'data', 'ormn_roster.csv'))
 csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
   m = Member.find_or_create_by(databank_id:  row['MemberID'])
@@ -61,7 +62,7 @@ end
 puts "There are now #{Member.count} members"
 
 # Flag bounced emails
-bounces_text = File.read(Rails.root.join('lib', 'seeds', 'bounces.json'))
+bounces_text = File.read(Rails.root.join('lib', 'data', 'bounces.json'))
 bounces_json = ActiveSupport::JSON.decode(bounces_text)
 bounces_json.each do |bounce|
   email = bounce["email"]

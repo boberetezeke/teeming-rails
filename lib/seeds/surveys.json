@@ -15,7 +15,6 @@
           "title": "Chair",
           "type": "choose-one",
           "key": "chair",
-          "rules": [],
           "choices": [
             {
               "name": "Donna Cassutt",
@@ -34,16 +33,10 @@
           ]
         },
         {
-          "title": "Vice Chair",
+          "title": "Vice Chair (female)",
           "type": "choose-one",
-          "key": "vice-chair",
-          "rules": ["gendered"],
+          "key": "vice-chair-female",
           "choices": [
-            {
-              "name": "Taylor Stevenson",
-              "gender": "male",
-              "value": "taylor-stevenson"
-            },
             {
               "name": "Marge Hoffa",
               "gender": "female",
@@ -53,6 +46,22 @@
               "name": "Melissa Olson",
               "gender": "female",
               "value": "melissa-olson"
+            },
+            {
+              "name": "none of these",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "title": "Vice Chair (male)",
+          "type": "choose-one",
+          "key": "vice-chair-male",
+          "choices": [
+            {
+              "name": "Taylor Stevenson",
+              "gender": "male",
+              "value": "taylor-stevenson"
             },
             {
               "name": "Ethan Cords",

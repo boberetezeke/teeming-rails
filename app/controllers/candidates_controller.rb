@@ -2,8 +2,8 @@ class CandidatesController < ApplicationController
   skip_before_action :authenticate_request, only: [:index, :show]
 
   def index
-    if params[:slug]
-      candidates = Candidate.find_by_name(params[:slug].titleize)
+    if params[:code]
+      candidates = Candidate.find_by_code(params[:code])
     else
       candidates = Candidate.order(:office)
     end
