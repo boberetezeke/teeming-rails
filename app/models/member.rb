@@ -4,8 +4,8 @@ class Member < ApplicationRecord
 
   scope :valid_email, -> {
     where(
-      '(status != ? AND status != ?)',
-      'invalid', 'bounce'
+      '(status != ? AND status != ? AND status != ?)',
+      'invalid', 'bounce', 'block'
     )
   }
 
