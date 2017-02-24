@@ -20,3 +20,4 @@
 /lib/data/
 
 .env
+db/backups/
