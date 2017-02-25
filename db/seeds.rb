@@ -60,16 +60,3 @@ csv.each do |row|
 end
 
 puts "There are now #{Member.count} members"
-
-# Flag bounced emails
-bounces_text = File.read(Rails.root.join('lib', 'data', 'bounces.json'))
-bounces_json = ActiveSupport::JSON.decode(bounces_text)
-bounces_json.each do |bounce|
-  email = bounce["email"]
-  Member.where(email: email).each do |m|
-    m.update!(status: "bounce")
-  end
-end
-
-bounces = Member.where(status: "bounce").count
-puts "#{bounces} bounced accounts"
