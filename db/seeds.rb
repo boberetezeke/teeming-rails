@@ -1,11 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
-
 require 'csv'
 
 candidates_text = File.read(Rails.root.join('lib', 'seeds', 'candidates.json'))
@@ -18,7 +10,7 @@ candidates_json['candidates'].each do |candidate|
   c.questions = candidate['questions']
   c.save!
 
-  # puts "#{c.office}: #{c.name} saved"
+  puts "#{c.office}: #{c.name} saved"
 end
 
 puts "There are now #{Candidate.count} candidates."
@@ -32,7 +24,7 @@ surveys_json['surveys'].each do |survey|
   s.status = survey['status']
   s.save!
 
-  # puts "#{s.name} saved"
+  puts "#{s.name} saved"
 end
 
 puts "There are now #{Survey.count} surveys."
