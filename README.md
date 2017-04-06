@@ -1,6 +1,6 @@
 # README
 
-* Ruby version
+## Ruby version
 
 I build and run this using Ruby 2.4.0. I expect it to work on any ruby >
 2.0.
