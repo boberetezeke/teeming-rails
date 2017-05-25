@@ -1,5 +1,7 @@
 require 'csv'
 
+VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+
 members_text = File.read(Rails.root.join('db', 'data', 'ormn_roster.csv'))
 csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
