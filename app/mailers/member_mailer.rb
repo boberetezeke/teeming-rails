@@ -2,7 +2,7 @@ class MemberMailer < ApplicationMailer
   require 'sendgrid-ruby'
   include SendGrid
 
-  def send_survey_email(member)
+  def send_member_email(member)
     mail = Mail.new
     mail.from = Email.new(email: ENV['SENDGRID_EMAIL'])
 
