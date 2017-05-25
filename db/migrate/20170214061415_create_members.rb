@@ -17,7 +17,6 @@ class CreateMembers < ActiveRecord::Migration[5.0]
       t.string :status
       t.string :work_phone
       t.string :zip
-      t.string :roster_status
 
       t.timestamps
     end

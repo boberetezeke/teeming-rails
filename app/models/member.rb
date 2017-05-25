@@ -8,10 +8,6 @@ class Member < ApplicationRecord
     )
   }
 
-  scope :current, -> {
-    where('roster_status != ?', 'absent')
-  }
-
   scope :active, -> {
     where(status: 'active').current
   }

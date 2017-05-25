@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(version: 20170214150253) do
     t.string   "status"
     t.string   "work_phone"
     t.string   "zip"
-    t.string   "roster_status"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
