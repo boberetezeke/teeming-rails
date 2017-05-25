@@ -1,5 +1,9 @@
 # README
 
+**Warning: This is pre-alpha software. It is under development and in no way
+ready for production use just yet. Please help contribute with code or feedback
+or feature requests.**
+
 ## Ruby version
 
 I build and run this using Ruby 2.4.0. I expect it to work on any ruby >
