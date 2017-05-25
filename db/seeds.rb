@@ -1,34 +1,5 @@
 require 'csv'
 
-candidates_text = File.read(Rails.root.join('lib', 'seeds', 'candidates.json'))
-candidates_json = ActiveSupport::JSON.decode(candidates_text)
-candidates_json['candidates'].each do |candidate|
-  c = Candidate.find_or_create_by(code: candidate['code'])
-  c.links = candidate['links']
-  c.name = candidate['name']
-  c.office = candidate['office']
-  c.questions = candidate['questions']
-  c.save!
-
-  puts "#{c.office}: #{c.name} saved"
-end
-
-puts "There are now #{Candidate.count} candidates."
-
-surveys_text = File.read(Rails.root.join('lib', 'seeds', 'surveys.json'))
-surveys_json = ActiveSupport::JSON.decode(surveys_text)
-surveys_json['surveys'].each do |survey|
-  s = Survey.find_or_create_by(code: survey['code'])
-  s.name = survey['name']
-  s.contents = survey['contents']
-  s.status = survey['status']
-  s.save!
-
-  puts "#{s.name} saved"
-end
-
-puts "There are now #{Survey.count} surveys."
-
 members_text = File.read(Rails.root.join('lib', 'data', 'ormn_roster.csv'))
 csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
 csv.each do |row|
