@@ -18,6 +18,6 @@
 
 # Members CSV
 /db/data/
+db/backups/
 
 .env
-db/backups/
