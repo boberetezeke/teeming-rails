@@ -1,0 +1,2 @@
+status,reason,email,created
+5.0.0,"Your email to group none@none.com was rejected due to spam classification. To address this issue:  * Contact the owner of the group, who can choose to enable message moderation instead of bouncing these emails.  * Set up SPF records for your sending domain if you have not done so already.  Instructions for both steps can be found here: https://support.google.com/a/answer/168383.",none@none.com,1487888014
