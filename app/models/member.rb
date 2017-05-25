@@ -9,6 +9,6 @@ class Member < ApplicationRecord
   }
 
   scope :active, -> {
-    where(status: 'active').current
+    where(status: 'active')
   }
 end

@@ -2,7 +2,7 @@ class VerifyMemberRoster < ActiveRecord::Migration[5.0]
   require 'csv'
 
   def up
-    members_text = File.read(Rails.root.join('lib', 'data', 'ormn_roster.csv'))
+    members_text = File.read(Rails.root.join('db', 'data', 'ormn_roster.csv'))
     csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
     databank_ids = []
     csv.each { |row| databank_ids.push(row['MemberID'].to_i) }
