@@ -7,11 +7,3 @@ services:
     ports:
       - "5432:5432"
 
-  api:
-    container_name: teeming-api
-    image: aliencyborg/teeming-api
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    env_file: .env
