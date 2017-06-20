@@ -1,6 +1,6 @@
 module Api
   class UsersController < ApiController
-    skip_before_action :set_current_user, :authenticate_request, only: :create
+    # skip_before_action :set_current_user, :authenticate_request, only: :create
 
     def index
       if params[:me].present?

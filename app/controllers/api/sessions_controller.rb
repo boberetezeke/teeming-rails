@@ -1,6 +1,6 @@
 module Api
   class SessionsController < ApiController
-    skip_before_action :set_current_user, :authenticate_request
+    # skip_before_action :set_current_user, :authenticate_request
 
     def login
       user = User.find_by_email(params[:username])
