@@ -1,0 +1,5 @@
+%h2 Profile
+
+= semantic_form_for @user do |f|
+  = render partial: 'user_details', locals: { f: f }
+  = f.submit class: 'btn btn-sm btn-primary'
