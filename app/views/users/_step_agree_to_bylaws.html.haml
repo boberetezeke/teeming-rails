@@ -1,0 +1,11 @@
+%h2 Step 2 of 3 - Accept Bylaws
+%h3 Accepting these allows you to vote in OurRevolutionMN's elections
+
+= bylaws_text
+
+= semantic_form_for @user do |f|
+  .accepted_bylaws
+    = f.input :accepted_bylaws, as: :boolean, label: 'Accept bylaws'
+  = f.submit 'Cancel', class: 'btn btn-sm btm-info', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
+  = f.submit 'Previous Step', class: 'btn btn-sm btm-info', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
+  = f.submit 'Next Step', class: 'btn btn-sm btn-primary'

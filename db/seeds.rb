@@ -128,3 +128,13 @@ Member.where("status IS NULL").each do |member|
 end
 
 puts "There are #{Member.active.count} active members!"
+
+#======================== setup MN State Init ==========================
+
+state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
+
+initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id)
+initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race', election_id: initial_board_election.id)
+initial_board_questionnaire = Questionnaire.find_or_create_by(race_id: initial_board_race)
+initial_board_questionnaire_question_1 = Question.find_or_create_by(questionnaire_id: initial_board_questionnaire, text: 'Why do you want to be one the board of directors')
+

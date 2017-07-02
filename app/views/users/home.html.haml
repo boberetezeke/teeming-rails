@@ -1,7 +1,5 @@
-- if @user.accepted_bylaws
+- if @user.setup_state.blank?
   %h3 Events
   %h3 Issues
 - else
-  %h2 Welcome
-  %p Please fill out your contact information and accept the bylaws to become an OurRevolutionMN member.
-  = render partial: 'users/first_time_signup', locals: { user: @user, bylaws: @bylaws }
+  = render partial: "#{@user.setup_state}"

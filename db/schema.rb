@@ -10,10 +10,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170620012513) do
+ActiveRecord::Schema.define(version: 20170625200914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "answers", force: :cascade do |t|
+    t.integer "question_id"
+    t.integer "candidacy_id"
+    t.text    "text"
+    t.index ["candidacy_id"], name: "index_answers_on_candidacy_id", using: :btree
+    t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
+  end
+
+  create_table "candidacies", force: :cascade do |t|
+    t.integer "race_id"
+    t.integer "user_id"
+    t.index ["race_id"], name: "index_candidacies_on_race_id", using: :btree
+    t.index ["user_id"], name: "index_candidacies_on_user_id", using: :btree
+  end
+
+  create_table "candidate_assignments", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+    t.integer "answers_id"
+    t.index ["answers_id"], name: "index_candidate_assignments_on_answers_id", using: :btree
+    t.index ["role_id"], name: "index_candidate_assignments_on_role_id", using: :btree
+    t.index ["user_id"], name: "index_candidate_assignments_on_user_id", using: :btree
+  end
+
+  create_table "chapters", force: :cascade do |t|
+    t.boolean "is_state_wide"
+    t.string  "name"
+    t.text    "description"
+  end
+
+  create_table "elections", force: :cascade do |t|
+    t.integer "chapter_id"
+    t.string  "name"
+    t.text    "description"
+    t.index ["chapter_id"], name: "index_elections_on_chapter_id", using: :btree
+  end
 
   create_table "members", force: :cascade do |t|
     t.integer  "databank_id"
@@ -34,6 +71,42 @@ ActiveRecord::Schema.define(version: 20170620012513) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
+  end
+
+  create_table "questionnaires", force: :cascade do |t|
+    t.string  "name"
+    t.integer "race_id"
+    t.index ["race_id"], name: "index_questionnaires_on_race_id", using: :btree
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.integer "questionnaire_id"
+    t.text    "text"
+    t.index ["questionnaire_id"], name: "index_questions_on_questionnaire_id", using: :btree
+  end
+
+  create_table "races", force: :cascade do |t|
+    t.string  "name"
+    t.integer "election_id"
+    t.integer "role_id"
+    t.index ["election_id"], name: "index_races_on_election_id", using: :btree
+    t.index ["role_id"], name: "index_races_on_role_id", using: :btree
+  end
+
+  create_table "role_assignments", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+    t.integer "chapter_id"
+    t.index ["chapter_id"], name: "index_role_assignments_on_chapter_id", using: :btree
+    t.index ["role_id"], name: "index_role_assignments_on_role_id", using: :btree
+    t.index ["user_id"], name: "index_role_assignments_on_user_id", using: :btree
+  end
+
+  create_table "roles", force: :cascade do |t|
+    t.integer "chapter_id"
+    t.string  "name"
+    t.text    "description"
+    t.index ["chapter_id"], name: "index_roles_on_chapter_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -64,8 +137,26 @@ ActiveRecord::Schema.define(version: 20170620012513) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
+    t.string   "role"
+    t.string   "setup_state"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
+  add_foreign_key "answers", "candidacies"
+  add_foreign_key "answers", "questions"
+  add_foreign_key "candidacies", "races"
+  add_foreign_key "candidacies", "users"
+  add_foreign_key "candidate_assignments", "answers", column: "answers_id"
+  add_foreign_key "candidate_assignments", "roles"
+  add_foreign_key "candidate_assignments", "users"
+  add_foreign_key "elections", "chapters"
+  add_foreign_key "questionnaires", "races"
+  add_foreign_key "questions", "questionnaires"
+  add_foreign_key "races", "elections"
+  add_foreign_key "races", "roles"
+  add_foreign_key "role_assignments", "chapters"
+  add_foreign_key "role_assignments", "roles"
+  add_foreign_key "role_assignments", "users"
+  add_foreign_key "roles", "chapters"
 end
