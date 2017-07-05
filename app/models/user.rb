@@ -10,13 +10,14 @@ class User < ApplicationRecord
   ROLE_TYPES = [ROLE_TYPE_USER, ROLE_TYPE_ADMIN]
 
   has_many :candidacies
+  accepts_nested_attributes_for :candidacies
 
   attr_accessor :run_for_state_board
 
   before_save :setup_wizard
 
-  def new_candidacy
-    Candidacy.new(user: self)
+  def new_candidacy(race)
+    Candidacy.new(user: self, race: race)
   end
 
   def admin?
@@ -33,6 +34,10 @@ class User < ApplicationRecord
     else
       self.accepted_bylaws_at = nil
     end
+  end
+
+  def in_race?(race)
+    candidacies.map(&:race).include?(race)
   end
 
   private

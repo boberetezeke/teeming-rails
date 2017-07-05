@@ -10,9 +10,14 @@ class UsersController < ApplicationController
   def home
     @user = current_user
     @race = Race.find(1)
+    @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.questions.map{|q| q.new_answer})
   end
 
   def profile
+    @user = current_user
+  end
+
+  def accept_bylaws
     @user = current_user
   end
 
@@ -28,7 +33,11 @@ class UsersController < ApplicationController
       @user.save
       redirect_to home_users_path
     else
-      if @user.update(user_params)
+      if @user.setup_state == 'step_declare_candidacy'&& params[:user][:run_for_state_board] == '0'
+        params[:user].delete(:candidacies_attributes)
+      end
+
+      if @user.update(user_params(params))
         @user.setup_state = next_state
         @user.save
         redirect_to home_users_path
@@ -60,7 +69,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def user_params
-    params.require(:user).permit(:first_name, :last_name, :phone_number, :address_1, :address_2, :city, :state, :postal_code, :accepted_bylaws)
+  def user_params(params)
+    params.require(:user).permit(:first_name, :last_name, :phone_number,
+                                 :address_1, :address_2, :city, :state, :postal_code, :accepted_bylaws,
+                                 {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end
 end

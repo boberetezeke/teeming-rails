@@ -4,8 +4,8 @@
 = bylaws_text
 
 = semantic_form_for @user do |f|
-  .accepted_bylaws
-    = f.input :accepted_bylaws, as: :boolean, label: 'Accept bylaws'
-  = f.submit 'Cancel', class: 'btn btn-sm btm-info', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
-  = f.submit 'Previous Step', class: 'btn btn-sm btm-info', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
-  = f.submit 'Next Step', class: 'btn btn-sm btn-primary'
+  = render partial: 'accept_bylaws_form', locals: {f: f}
+  = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
+  = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
+  = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding'
+

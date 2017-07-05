@@ -10,9 +10,12 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       get :profile
+      get :accept_bylaws
       get :home
     end
   end
+
+  resources :candidacies
 
   unauthenticated :user do
     devise_scope :user do

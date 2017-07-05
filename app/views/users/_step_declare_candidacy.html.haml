@@ -8,14 +8,11 @@
   #questionnaire.hidden
     %h4 Candidate Questionnaire
     = f.semantic_fields_for :candidacies do |ff|
-      - @race.questionnaire.questions.each do |question|
-        /%p= question.text
-        = ff.semantic_fields_for question.new_answer(@user) do |fff|
-          = fff.input :text, label: question.text, input_html: {rows: 2}
+      = render partial: 'candidacies/form', locals: {f: ff, race: @race, candidacy: @candidacy}
 
-  = f.submit 'Cancel', class: 'btn btn-sm btm-info'
-  = f.submit 'Previous Step', class: 'btn btn-sm btm-info'
-  = f.submit 'Done', class: 'btn btn-sm btn-primary'
+  = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding'
+  = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding'
+  = f.submit 'Done', class: 'btn btn-sm btn-primary btn-with-padding'
 
 :javascript
   $(function(){

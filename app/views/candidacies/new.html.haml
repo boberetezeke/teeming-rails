@@ -1,0 +1,6 @@
+%h2 Candidacy for #{@race.name}
+
+= semantic_form_for @candidacy do |f|
+  = render partial: 'form', locals: {f: f, race: @race, candidacy: @candidacy}
+
+  = f.submit 'Create Candidacy', class: 'btn btn-sm btn-primary btn-with-padding'

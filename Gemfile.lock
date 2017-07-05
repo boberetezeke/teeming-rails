@@ -55,6 +55,7 @@ GEM
       tzinfo (~> 1.1)
     arel (7.1.4)
     bcrypt (3.1.11)
+    bindex (0.5.0)
     bootstrap-datepicker-rails (1.6.4.1)
       railties (>= 3.0)
     builder (3.2.3)
@@ -240,6 +241,11 @@ GEM
       thread_safe (~> 0.1)
     warden (1.2.7)
       rack (>= 1.0)
+    web-console (3.5.1)
+      actionview (>= 5.0)
+      activemodel (>= 5.0)
+      bindex (>= 0.4.0)
+      railties (>= 5.0)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
@@ -274,6 +280,7 @@ DEPENDENCIES
   turbolinks (~> 5)
   twitter-bootstrap-rails!
   tzinfo-data
+  web-console (>= 3.3.0)
 
 BUNDLED WITH
    1.14.6

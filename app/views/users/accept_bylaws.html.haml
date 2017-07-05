@@ -1,0 +1,7 @@
+%h2 Accept Bylaws
+
+= bylaws_text
+
+= semantic_form_for @user do |f|
+  = render partial: 'accept_bylaws_form', locals: {f: f}
+  = f.submit 'Update', class: 'btn btn-sm btn-primary'
