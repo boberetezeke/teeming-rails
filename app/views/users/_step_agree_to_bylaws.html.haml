@@ -1,7 +1,8 @@
 %h2 Step 2 of 3 - Accept Bylaws
 %h3 Accepting these allows you to vote in OurRevolutionMN's elections
 
-= bylaws_text
+.bylaws
+  = render partial: 'shared/bylaws'
 
 = semantic_form_for @user do |f|
   = render partial: 'accept_bylaws_form', locals: {f: f}

@@ -12,6 +12,9 @@ class User < ApplicationRecord
   has_many :candidacies
   accepts_nested_attributes_for :candidacies
 
+  has_one  :member
+  accepts_nested_attributes_for :member
+
   attr_accessor :run_for_state_board
 
   before_save :setup_wizard

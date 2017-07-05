@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
   def home
     @user = current_user
+    @user.member = Member.new unless @user.member
     @race = Race.find(1)
     @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.questions.map{|q| q.new_answer})
   end
@@ -70,8 +71,11 @@ class UsersController < ApplicationController
   end
 
   def user_params(params)
-    params.require(:user).permit(:first_name, :last_name, :phone_number,
-                                 :address_1, :address_2, :city, :state, :postal_code, :accepted_bylaws,
+    params.require(:user).permit(:accepted_bylaws,
+                                 {member_attributes: [
+                                    :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
+                                    :address_1, :address_2, :city, :state, :zip, :chapter_id
+                                 ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end
 end

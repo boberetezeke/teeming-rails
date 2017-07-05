@@ -10,15 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705004439) do
+ActiveRecord::Schema.define(version: 20170705042826) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "affiliates", force: :cascade do |t|
-    t.string "name"
-    t.string "city"
-  end
 
   create_table "answers", force: :cascade do |t|
     t.integer "question_id"
@@ -67,7 +62,11 @@ ActiveRecord::Schema.define(version: 20170705004439) do
     t.string   "zip"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.integer  "user_id"
+    t.integer  "chapter_id"
+    t.index ["chapter_id"], name: "index_members_on_chapter_id", using: :btree
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
+    t.index ["user_id"], name: "index_members_on_user_id", using: :btree
   end
 
   create_table "questionnaires", force: :cascade do |t|
@@ -114,14 +113,6 @@ ActiveRecord::Schema.define(version: 20170705004439) do
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phone_number"
-    t.string   "address_1"
-    t.string   "address_2"
-    t.string   "city"
-    t.string   "state"
-    t.string   "postal_code"
     t.datetime "accepted_bylaws_at"
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
@@ -129,8 +120,6 @@ ActiveRecord::Schema.define(version: 20170705004439) do
     t.string   "unconfirmed_email"
     t.string   "role"
     t.string   "setup_state"
-    t.integer  "affiliates_id"
-    t.index ["affiliates_id"], name: "index_users_on_affiliates_id", using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end

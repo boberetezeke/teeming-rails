@@ -38,6 +38,11 @@ form.formtastic .accepted_bylaws #user_run_for_state_board {
     margin-top: 5px;
 }
 
+.bylaws {
+    background-color: #EEEEEE;
+    padding: 10px;
+}
+
 .logo {
     background-image: url(/images/logo-32.jpg);
     background-repeat: no-repeat;

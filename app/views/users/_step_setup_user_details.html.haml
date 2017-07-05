@@ -1,6 +1,7 @@
 %h2 Step 1 of 3 - Setup your member details
 
 = semantic_form_for @user do |f|
-  = render partial: 'user_details', locals: { f: f }
-  = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
-  = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding'
+  = f.semantic_fields_for :member do |ff|
+    = render partial: 'members/user_details', locals: { f: ff }
+    = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
+    = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding'
