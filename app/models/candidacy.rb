@@ -1,5 +1,5 @@
 class Candidacy < ApplicationRecord
-  has_many :answers
+  has_many :answers, dependent: :destroy
   belongs_to :user
   belongs_to :race
 

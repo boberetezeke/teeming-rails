@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705042826) do
+ActiveRecord::Schema.define(version: 20170709195248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20170705042826) do
     t.integer "question_id"
     t.integer "candidacy_id"
     t.text    "text"
+    t.integer "order_index"
   end
 
   create_table "candidacies", force: :cascade do |t|
@@ -36,6 +37,14 @@ ActiveRecord::Schema.define(version: 20170705042826) do
     t.boolean "is_state_wide"
     t.string  "name"
     t.text    "description"
+  end
+
+  create_table "choices", force: :cascade do |t|
+    t.integer "question_id"
+    t.integer "order"
+    t.string  "title"
+    t.string  "value"
+    t.index ["question_id"], name: "index_choices_on_question_id", using: :btree
   end
 
   create_table "elections", force: :cascade do |t|
@@ -69,14 +78,27 @@ ActiveRecord::Schema.define(version: 20170705042826) do
     t.index ["user_id"], name: "index_members_on_user_id", using: :btree
   end
 
+  create_table "questionnaire_sections", force: :cascade do |t|
+    t.integer "questionnaire_id"
+    t.string  "title"
+    t.integer "order_index"
+    t.index ["questionnaire_id"], name: "index_questionnaire_sections_on_questionnaire_id", using: :btree
+  end
+
   create_table "questionnaires", force: :cascade do |t|
     t.string  "name"
     t.integer "race_id"
+    t.string  "questionnairable_type"
+    t.integer "questionnairable_id"
   end
 
   create_table "questions", force: :cascade do |t|
     t.integer "questionnaire_id"
     t.text    "text"
+    t.string  "question_type"
+    t.integer "order_index"
+    t.integer "questionnaire_section_id"
+    t.index ["questionnaire_section_id"], name: "index_questions_on_questionnaire_section_id", using: :btree
   end
 
   create_table "races", force: :cascade do |t|

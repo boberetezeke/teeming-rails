@@ -43,6 +43,10 @@ form.formtastic .accepted_bylaws #user_interested_in_volunteering {
     margin-top: 5px;
 }
 
+form.formtastic .questionnaire-fields .choice {
+    margin-left: 30px;
+}
+
 .bylaws {
     background-color: #EEEEEE;
     padding: 10px;

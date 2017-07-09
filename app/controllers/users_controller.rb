@@ -20,7 +20,7 @@ class UsersController < ApplicationController
 
       # for candidancies page
       @race = Race.find(1)
-      @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.questions.map{|q| q.new_answer})
+      @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
     end
   end
 

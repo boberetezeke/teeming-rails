@@ -7,7 +7,7 @@ class CandidaciesController < ApplicationController
   def new
     @race = Race.find(params[:race_id])
     @candidacy = Candidacy.new(race: @race, user: current_user)
-    @candidacy.answers = @race.questionnaire.questions.map{|q| q.new_answer(@candidacy)}
+    @candidacy.answers = @race.questionnaire.new_answers
   end
 
   def create
@@ -35,7 +35,7 @@ class CandidaciesController < ApplicationController
   end
 
   def self.candidacy_attributes
-    [:race_id, :user_id, {answers_attributes: [:text, :question_id, :candidacy_id, :id]}]
+    [:race_id, :user_id, {answers_attributes: [:text, :question_id, :order_index, :candidacy_id, :id]}]
   end
 
   private
