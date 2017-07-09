@@ -38,6 +38,11 @@ form.formtastic .accepted_bylaws #user_run_for_state_board {
     margin-top: 5px;
 }
 
+form.formtastic .accepted_bylaws #user_interested_in_volunteering {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 .bylaws {
     background-color: #EEEEEE;
     padding: 10px;

@@ -1,4 +1,4 @@
-%h2 Step 1 of 3 - Setup your member details
+= render partial: 'step_title', locals: { step_title: 'Setup Your Member Details', step_sub_title: 'Setup your personal details' }
 
 = semantic_form_for @user do |f|
   = f.semantic_fields_for :member do |ff|

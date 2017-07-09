@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
-  STATES = ['step_setup_user_details', 'step_agree_to_bylaws', 'step_declare_candidacy']
+  STATES = ['step_setup_user_details', 'step_agree_to_bylaws', 'step_volunteer_or_donate', 'step_declare_candidacy']
 
   def index
     @users = User.all
@@ -9,9 +9,19 @@ class UsersController < ApplicationController
 
   def home
     @user = current_user
-    @user.member = Member.new unless @user.member
-    @race = Race.find(1)
-    @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.questions.map{|q| q.new_answer})
+
+    @setup_state = @user.setup_state
+    if @setup_state.present?
+      @setup_states_index = STATES.index(@setup_state) + 1
+      @setup_states_total = STATES.size
+
+      # for user info page
+      @user.member = Member.new unless @user.member
+
+      # for candidancies page
+      @race = Race.find(1)
+      @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.questions.map{|q| q.new_answer})
+    end
   end
 
   def profile

@@ -1,5 +1,4 @@
-%h2 Step 3 of 3 - Declare Candidacy
-%h3 Decide if you want to run for the state board of directors
+= render partial: 'step_title', locals: { step_title: 'Declare Candidacy or Not', step_sub_title: "Accepting these allows you to vote in OurRevolutionMN's elections" }
 
 = semantic_form_for @user do |f|
   .accepted_bylaws
