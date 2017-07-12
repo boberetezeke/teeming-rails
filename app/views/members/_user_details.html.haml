@@ -28,3 +28,7 @@
 .row
   .col-md-12
     = f.input :chapter, as: :select, collection: Chapter.local_chapters
+.row
+  .col-md-12
+    .accepted_bylaws
+      = f.input :interested_in_starting_chapter, hint: 'Check this if you don\'t have chapter in your area and would like to start one'

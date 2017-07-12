@@ -32,7 +32,11 @@ class UsersController < ApplicationController
     else
       @user.answers.each do |answer|
         if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-          answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
+          if answer.text
+            answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
+          else
+            answer.text_checkboxes = []
+          end
         end
       end
     end
@@ -111,11 +115,11 @@ class UsersController < ApplicationController
   end
 
   def user_params(params)
-    params.require(:user).permit(:accepted_bylaws,
+    params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board,
                                  {answers_attributes: CandidaciesController.answers_atributes},
                                  {member_attributes: [
                                     :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
-                                    :address_1, :address_2, :city, :state, :zip, :chapter_id
+                                    :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter
                                  ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end

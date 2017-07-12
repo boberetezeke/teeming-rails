@@ -43,6 +43,11 @@ form.formtastic .accepted_bylaws #user_interested_in_volunteering {
     margin-top: 5px;
 }
 
+form.formtastic .accepted_bylaws #user_member_attributes_interested_in_starting_chapter {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 form.formtastic .questionnaire-fields .choice {
     margin-left: 30px;
 }

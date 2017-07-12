@@ -4,6 +4,12 @@
   = f.semantic_fields_for :member do |ff|
     = render partial: 'members/user_details', locals: { f: ff }
 
+  %hr
+  %h2 Volunteering
+  = f.inputs do
+    .accepted_bylaws
+      = f.input :interested_in_volunteering
+
   = render partial: 'answers/form', locals: { f: f }
 
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'

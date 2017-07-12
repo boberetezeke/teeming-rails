@@ -18,8 +18,6 @@ class User < ApplicationRecord
   has_one  :member
   accepts_nested_attributes_for :member
 
-  attr_accessor :run_for_state_board, :interested_in_volunteering
-
   before_save :setup_wizard
 
   def new_candidacy(race)

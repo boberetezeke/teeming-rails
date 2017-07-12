@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170709235945) do
+ActiveRecord::Schema.define(version: 20170712015252) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,10 +71,11 @@ ActiveRecord::Schema.define(version: 20170709235945) do
     t.string   "status"
     t.string   "work_phone"
     t.string   "zip"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.integer  "user_id"
     t.integer  "chapter_id"
+    t.boolean  "interested_in_starting_chapter"
     t.index ["chapter_id"], name: "index_members_on_chapter_id", using: :btree
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
     t.index ["user_id"], name: "index_members_on_user_id", using: :btree
@@ -125,14 +126,14 @@ ActiveRecord::Schema.define(version: 20170709235945) do
   create_table "users", force: :cascade do |t|
     t.string   "username"
     t.string   "password_digest"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.string   "email",                      default: "", null: false
+    t.string   "encrypted_password",         default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",              default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -144,6 +145,8 @@ ActiveRecord::Schema.define(version: 20170709235945) do
     t.string   "unconfirmed_email"
     t.string   "role"
     t.string   "setup_state"
+    t.boolean  "run_for_state_board"
+    t.boolean  "interested_in_volunteering"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
