@@ -12,6 +12,9 @@ class User < ApplicationRecord
   has_many :candidacies
   accepts_nested_attributes_for :candidacies
 
+  has_many :answers, dependent: :destroy
+  accepts_nested_attributes_for :answers
+
   has_one  :member
   accepts_nested_attributes_for :member
 

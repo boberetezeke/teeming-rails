@@ -15,6 +15,7 @@ class UsersController < ApplicationController
       @setup_states_index = STATES.index(@setup_state) + 1
       @setup_states_total = STATES.size
 
+      @user.answers = Chapter.state_wide.skills_questionnaire.new_answers
       # for user info page
       @user.member = Member.new unless @user.member
 
@@ -26,6 +27,15 @@ class UsersController < ApplicationController
 
   def profile
     @user = current_user
+    if @user.answers.empty?
+      @user.answers = Chapter.state_wide.skills_questionnaire.new_answers
+    else
+      @user.answers.each do |answer|
+        if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+          answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
+        end
+      end
+    end
   end
 
   def accept_bylaws
@@ -44,13 +54,33 @@ class UsersController < ApplicationController
       @user.save
       redirect_to home_users_path
     else
-      if @user.setup_state == 'step_declare_candidacy'&& params[:user][:run_for_state_board] == '0'
-        params[:user].delete(:candidacies_attributes)
+      if @user.setup_state == 'step_declare_candidacy'
+        if params[:user][:run_for_state_board] == '0'
+          params[:user].delete(:candidacies_attributes)
+        else
+          params['user']['candidacies_attributes'].values[0]['answers_attributes'].values.each do |answer_params|
+            if answer_params['text_checkboxes'].is_a?(Array)
+              answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+            end
+          end
+        end
+      end
+
+      if params['user']['answers_attributes']
+        params['user']['answers_attributes'].values.each do |answer_params|
+          if answer_params['text_checkboxes'].is_a?(Array)
+            answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+          end
+        end
       end
 
       if @user.update(user_params(params))
-        @user.setup_state = next_state
-        @user.save
+        if @user.setup_state.present?
+          @user.reload
+          @user.setup_state = next_state
+          @user.save
+        end
+
         redirect_to home_users_path
       else
         render 'users/home'
@@ -82,6 +112,7 @@ class UsersController < ApplicationController
 
   def user_params(params)
     params.require(:user).permit(:accepted_bylaws,
+                                 {answers_attributes: CandidaciesController.answers_atributes},
                                  {member_attributes: [
                                     :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id

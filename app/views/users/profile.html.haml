@@ -3,4 +3,7 @@
 = semantic_form_for @user do |f|
   = f.semantic_fields_for :member do |ff|
     = render partial: 'members/user_details', locals: { f: ff }
-    = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+
+  = render partial: 'answers/form', locals: { f: f }
+
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'

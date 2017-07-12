@@ -1,0 +1,19 @@
+.questionnaire-fields
+  = f.fields_for :answers do |ff|
+    - answer = ff.object
+    - question = answer.question
+    - if question.order_index == 1
+      %h3 #{answer.question.questionnaire_section.title}
+    = ff.hidden_field :id
+    = ff.hidden_field :question_id
+    = ff.hidden_field :order_index
+    - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
+      = ff.input :text, as: :string, label: question.text
+    - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
+      = ff.input :text, label: question.text, input_html: {rows: 2}
+    - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+      = ff.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
+    - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+      = ff.input :text, label: question.text, as: :radio, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
+    - else
+      %p Question: #{question.text}, type: #{question.question_type}

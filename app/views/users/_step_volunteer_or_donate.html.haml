@@ -23,7 +23,26 @@
   .accepted_bylaws
     = f.input :interested_in_volunteering, as: :boolean, label: 'I want to volunteer'
 
+  #questionnaire.hidden
+    %h3 Skills Questionnaire
+    = render partial: 'answers/form', locals: { f: f }
+
   = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding'
   = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding'
   = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function(){
+    console.log("loaded")
+
+    $("#user_interested_in_volunteering").click(function() {
+      console.log("clicked: "+ $("#user_interested_in_volunteering").is(':checked'));
+      if ($("#user_interested_in_volunteering").is(':checked')) {
+        $("#questionnaire").removeClass('hidden')
+      }
+      else {
+        $("#questionnaire").addClass('hidden');
+      }
+    })
+  })
 
