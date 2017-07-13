@@ -20,7 +20,7 @@ class UsersController < ApplicationController
       @user.member = Member.new unless @user.member
 
       # for candidancies page
-      @race = Race.find(1)
+      @race = Race.order('id asc').first
       @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
     end
   end
