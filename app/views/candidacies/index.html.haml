@@ -1,0 +1,16 @@
+%h2 Candidacies
+
+%table.table
+  %thead
+    %tr.row
+      %th Election
+      %th Race
+  %tbody
+    - @candidacies.each do |candidacy|
+      %tr.row
+        %td= link_to(candidacy.race.election.name, edit_candidacy_path(candidacy, race_id: candidacy.race_id))
+        %td= candidacy.race.name
+
+- @races.each do |race|
+  - if !current_user.in_race?(race)
+    = link_to("Run for #{race.name}", new_candidacy_path(race_id: race.id))

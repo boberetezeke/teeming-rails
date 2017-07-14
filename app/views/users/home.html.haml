@@ -1,0 +1,5 @@
+- if @setup_state.blank?
+  %h3 Events
+  %h3 Issues
+- else
+  = render partial: "#{@setup_state}"

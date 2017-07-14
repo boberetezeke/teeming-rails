@@ -1,0 +1,48 @@
+= render partial: 'step_title', locals: { step_title: 'Volunteer and/or Donate', step_sub_title: "Pitch in and help build OurRevolutionMN" }
+
+%p
+  In an effort to build up an independent progressive movement in Minnesota (and the US), we need to stop relying on big money
+  donors and start relying on our own skils, effort and money. Bernie's campaign was fueled by small donations from
+  all over the country. We can do the same here and maintain the independence we need to fight big money's take
+  over of our politics.
+
+%p
+  OurRevolutionMN does not take money from corporations, political parties or the government
+
+%h4 Member Dues
+
+%p
+  By clicking on the following link, you will be opening up a new browser window. Please come back and finish these signup
+  steps after you are done donating.
+= link_to 'Donate', "https://secure.actblue.com/contribute/page/our-revolution-mn-1?utf8=%E2%9C%93&amount=25&commit=Contribute", target: :_blank, class: 'btn btn-sm btn-success'
+
+%hr
+%h4 Volunteering
+
+= semantic_form_for @user do |f|
+  .accepted_bylaws
+    = f.input :interested_in_volunteering, as: :boolean, label: 'I want to volunteer'
+
+  #questionnaire.hidden
+    %h3 Skills Questionnaire
+    = render partial: 'answers/form', locals: { f: f }
+
+  = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding'
+  = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding'
+  = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function(){
+    console.log("loaded")
+
+    $("#user_interested_in_volunteering").click(function() {
+      console.log("clicked: "+ $("#user_interested_in_volunteering").is(':checked'));
+      if ($("#user_interested_in_volunteering").is(':checked')) {
+        $("#questionnaire").removeClass('hidden')
+      }
+      else {
+        $("#questionnaire").addClass('hidden');
+      }
+    })
+  })
+

@@ -5,6 +5,17 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+# UI Gems
+gem 'jquery-rails'
+gem 'turbolinks', '~> 5'
+gem 'devise'
+gem 'pundit'
+gem 'haml'
+gem 'formtastic', '~> 3.0'
+gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+gem 'bootstrap-datepicker-rails'
+gem 'formtastic-bootstrap' #, git: 'git://github.com/0xCCD/formtastic-bootstrap.git'
+gem 'rails_admin'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'
@@ -39,6 +50,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'web-console', '>= 3.3.0'
   gem 'listen', '~> 3.0.5'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

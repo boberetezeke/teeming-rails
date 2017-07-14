@@ -1,0 +1,29 @@
+= render partial: 'step_title', locals: { step_title: 'Declare Candidacy or Not', step_sub_title: "Accepting these allows you to vote in OurRevolutionMN's elections" }
+
+= semantic_form_for @user do |f|
+  .accepted_bylaws
+    = f.input :run_for_state_board, as: :boolean, label: 'I want to run for the state board of directors'
+
+  #questionnaire.hidden
+    %h4 Candidate Questionnaire
+    = f.semantic_fields_for :candidacies do |ff|
+      = render partial: 'candidacies/form', locals: {f: ff, race: @race, candidacy: @candidacy}
+
+  = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding'
+  = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding'
+  = f.submit 'Done', class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function(){
+    console.log("loaded")
+
+    $("#user_run_for_state_board").click(function() {
+      console.log("clicked: "+ $("#user_run_for_state_board").is(':checked'));
+      if ($("#user_run_for_state_board").is(':checked')) {
+        $("#questionnaire").removeClass('hidden')
+      }
+      else {
+        $("#questionnaire").addClass('hidden');
+      }
+    })
+  })

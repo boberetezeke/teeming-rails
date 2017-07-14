@@ -1,5 +1,7 @@
 class Member < ApplicationRecord
-  validates :databank_id, presence: true, uniqueness: true
+  # validates :databank_id, presence: true, uniqueness: true
+  belongs_to :user
+  belongs_to :chapter
 
   scope :valid_email, -> {
     where(
