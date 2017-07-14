@@ -23,7 +23,7 @@
   .accepted_bylaws
     = f.input :interested_in_volunteering, as: :boolean, label: 'I want to volunteer'
 
-  #questionnaire.hidden
+  #questionnaire{'class' => (f.object.interested_in_volunteering ? '' : 'hidden')}
     %h3 Skills Questionnaire
     = render partial: 'answers/form', locals: { f: f }
 

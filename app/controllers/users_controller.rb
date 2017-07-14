@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       @setup_states_index = STATES.index(@setup_state) + 1
       @setup_states_total = STATES.size
 
-      @user.answers = Chapter.state_wide.skills_questionnaire.new_answers
+      convert_answer_checkboxes_from_text
       # for user info page
       @user.member = Member.new unless @user.member
 
@@ -27,19 +27,7 @@ class UsersController < ApplicationController
 
   def profile
     @user = current_user
-    if @user.answers.empty?
-      @user.answers = Chapter.state_wide.skills_questionnaire.new_answers
-    else
-      @user.answers.each do |answer|
-        if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-          if answer.text
-            answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
-          else
-            answer.text_checkboxes = []
-          end
-        end
-      end
-    end
+    convert_answer_checkboxes_from_text
   end
 
   def accept_bylaws
@@ -63,18 +51,14 @@ class UsersController < ApplicationController
           params[:user].delete(:candidacies_attributes)
         else
           params['user']['candidacies_attributes'].values[0]['answers_attributes'].values.each do |answer_params|
-            if answer_params['text_checkboxes'].is_a?(Array)
-              answer_params['text'] = answer_params['text_checkboxes'].join(' ')
-            end
+            convert_answer_checkboxes_to_text(answer_params)
           end
         end
       end
 
       if params['user']['answers_attributes']
         params['user']['answers_attributes'].values.each do |answer_params|
-          if answer_params['text_checkboxes'].is_a?(Array)
-            answer_params['text'] = answer_params['text_checkboxes'].join(' ')
-          end
+          convert_answer_checkboxes_to_text(answer_params)
         end
       end
 
@@ -123,4 +107,29 @@ class UsersController < ApplicationController
                                  ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end
+
+  private
+
+  def convert_answer_checkboxes_to_text(answer_params)
+    if answer_params['text_checkboxes'].is_a?(Array)
+      answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+    end
+  end
+
+  def convert_answer_checkboxes_from_text
+    if @user.answers.empty?
+      @user.answers = Chapter.state_wide.skills_questionnaire.new_answers
+    else
+      @user.answers.each do |answer|
+        if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+          if answer.text
+            answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
+          else
+            answer.text_checkboxes = []
+          end
+        end
+      end
+    end
+  end
+
 end
