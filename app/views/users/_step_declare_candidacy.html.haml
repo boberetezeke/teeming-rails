@@ -4,7 +4,7 @@
   .accepted_bylaws
     = f.input :run_for_state_board, as: :boolean, label: 'I want to run for the state board of directors'
 
-  #questionnaire.hidden
+  #questionnaire{'class' => (f.object.run_for_state_board ? '' : 'hidden')}
     %h4 Candidate Questionnaire
     = f.semantic_fields_for :candidacies do |ff|
       = render partial: 'candidacies/form', locals: {f: ff, race: @race, candidacy: @candidacy}

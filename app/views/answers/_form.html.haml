@@ -6,6 +6,7 @@
       %h3 #{answer.question.questionnaire_section.title}
     = ff.hidden_field :id
     = ff.hidden_field :question_id
+    = ff.hidden_field :candidacy_id
     = ff.hidden_field :order_index
     - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
       = ff.input :text, as: :string, label: question.text

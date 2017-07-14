@@ -21,6 +21,12 @@ class UsersController < ApplicationController
 
       # for candidancies page
       @race = Race.order('id asc').first
+
+      # HACK - delete existing candidacy to avoid save error - Couldn't find Answer with ID=346 for Candidacy with ID=
+      if @user.candidacies.present?
+        @user.candidacies.destroy_all
+      end
+
       @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
     end
   end
