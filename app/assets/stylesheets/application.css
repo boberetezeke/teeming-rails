@@ -15,6 +15,25 @@
  *= require formtastic
  */
 
+.bylaws h1 {
+    font-size: 16pt;
+}
+
+.bylaws h2 {
+    font-size: 14pt;
+}
+
+.bylaws h3 {
+    font-size: 12pt;
+}
+
+.bylaws p {
+    font-size: 10pt;
+}
+.bylaws li {
+    font-size: 10pt;
+}
+
 form.formtastic .stringish input {
     width: 100%;
 }

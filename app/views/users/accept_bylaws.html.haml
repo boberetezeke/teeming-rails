@@ -1,6 +1,7 @@
 %h2 Accept Bylaws
 
-= bylaws_text
+.bylaws
+  = render partial: 'shared/bylaws'
 
 = semantic_form_for @user do |f|
   = render partial: 'accept_bylaws_form', locals: {f: f}
