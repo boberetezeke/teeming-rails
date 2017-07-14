@@ -34,6 +34,12 @@
     font-size: 10pt;
 }
 
+.privacy_policy_notice {
+    padding: 15px;
+    background-color: lightyellow;
+    color: black;
+}
+
 form.formtastic .stringish input {
     width: 100%;
 }

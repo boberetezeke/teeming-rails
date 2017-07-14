@@ -25,6 +25,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def privacy_policy
+
+  end
+
   def redo_initial_steps
     current_user.update(setup_state: 'step_setup_user_details')
     redirect_to home_users_path

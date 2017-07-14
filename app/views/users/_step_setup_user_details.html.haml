@@ -1,5 +1,7 @@
 = render partial: 'step_title', locals: { step_title: 'Setup Your Member Details', step_sub_title: 'Setup your personal details' }
 
+= render partial: 'shared/privacy_policy_notice'
+
 = semantic_form_for @user do |f|
   = f.semantic_fields_for :member do |ff|
     = render partial: 'members/user_details', locals: { f: ff }

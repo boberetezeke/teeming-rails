@@ -9,9 +9,10 @@ Rails.application.routes.draw do
 
   resources :users do
     collection do
+      get :home
       get :profile
       get :accept_bylaws
-      get :home
+      get :privacy_policy
       put :redo_initial_steps
     end
   end
