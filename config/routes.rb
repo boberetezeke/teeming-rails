@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       get :profile
       get :accept_bylaws
       get :home
+      put :redo_initial_steps
     end
   end
 

@@ -25,6 +25,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def redo_initial_steps
+    current_user.update(setup_state: 'step_setup_user_details')
+    redirect_to home_users_path
+  end
+
   def profile
     @user = current_user
     convert_answer_checkboxes_from_text
