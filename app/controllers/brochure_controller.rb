@@ -1,5 +1,6 @@
 class BrochureController < ApplicationController
-  def home
+  layout "application_ourrev"
 
+  def home
   end
 end
