@@ -18,6 +18,7 @@ class UsersController < ApplicationController
       convert_answer_checkboxes_from_text
       # for user info page
       @user.member = Member.new unless @user.member
+      @user.member.with_user_input = true
 
       # for candidancies page
       @race = Race.order('id asc').first
@@ -86,7 +87,7 @@ class UsersController < ApplicationController
 
         redirect_to home_users_path
       else
-        render 'users/home'
+        render 'home'
       end
     end
   end
@@ -118,7 +119,8 @@ class UsersController < ApplicationController
                                  {answers_attributes: CandidaciesController.answers_atributes},
                                  {member_attributes: [
                                     :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
-                                    :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter
+                                    :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
+                                    :with_user_input
                                  ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end

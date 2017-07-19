@@ -15,7 +15,7 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
   accepts_nested_attributes_for :answers
 
-  has_one  :member
+  has_one  :member, dependent: :destroy
   accepts_nested_attributes_for :member
 
   before_save :setup_wizard

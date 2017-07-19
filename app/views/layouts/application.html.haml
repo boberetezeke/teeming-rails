@@ -44,6 +44,8 @@
                   %li= link_to "Accept Bylaws", accept_bylaws_users_path
                   %li= link_to "Candidacies", candidacies_path
                   %li.divider
+                  %li= link_to "Redo Setup Process", redo_initial_steps_users_path, method: :put
+                  %li.divider
                   %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
     .container
       - if flash[:alert]
