@@ -83,11 +83,16 @@ form.formtastic .questionnaire-fields .choice {
     padding: 10px;
 }
 
+.navbar-brand {
+    padding: 0 15px;
+}
+
 .logo {
     background-image: url(/images/logo-32.jpg);
     background-repeat: no-repeat;
     background-position: left center;
-    padding-left: 40px;
+    padding: 15px 0 0 42px;
+    height: 50px;
 }
 
 .left-pane {
