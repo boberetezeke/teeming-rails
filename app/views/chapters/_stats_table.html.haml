@@ -1,0 +1,10 @@
+%table.table
+  %thead
+    %tr.row
+      %th Name
+      %th Number of Members
+  %tbody
+    - chapters.each do |chapter|
+      %tr.row
+        %td= chapter.name
+        %td= chapter.members.count

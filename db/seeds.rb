@@ -158,8 +158,11 @@ skills_questionnaire.destroy if skills_questionnaire
     Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 #end
 
-initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id)
-initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race', election_id: initial_board_election.id, entry_deadline: Time.local(2017, 8, 5))
+initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 18))
+initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race',
+                                            election_id: initial_board_election.id,
+                                            filing_deadline_date: Date.new(2017, 8, 5),
+                                            candidates_announcement_date: Date.new(2017, 8, 20))
 
 initial_board_questionnaire = Questionnaire.where(questionnairable_type: 'Race', questionnairable_id: initial_board_race.id).first
 

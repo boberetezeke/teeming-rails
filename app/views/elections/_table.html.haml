@@ -1,0 +1,27 @@
+- elections.each do |election|
+  %h4= election.name
+  - election.races.each do |race|
+    - if race.candidates_announced?
+      %h5 #{race.name} candidates
+      %hr
+      %table.table
+        %thead
+          %tr.row
+            %th Name
+            %th Candidate Info
+        %tbody
+          - race.candidacies.each do |candidacy|
+            %tr.row
+              %td= candidacy.user.name
+              %td
+    - else
+      %h5 Race #{race.name}
+      %p
+        Filing date:
+        %strong #{race.filing_deadline_date.to_date}
+      %p
+        Candidates announced on:
+        %strong #{race.candidates_announcement_date}
+      %p
+        Election on:
+        %strong #{election.vote_date}
