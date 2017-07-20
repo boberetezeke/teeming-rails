@@ -14,7 +14,7 @@
           %span.icon-bar
           %span.icon-bar
         .navbar-brand
-          .logo OurRevolutionMN
+          .logo= link_to "OurRevolutionMN", "/"
         - if current_user && breadcrumbs_html_safe
           .navbar-text= breadcrumbs_html_safe
         .navbar-divider
@@ -53,4 +53,3 @@
       - if flash[:notice]
         .alert.alert-info= flash[:notice]
       = yield
-

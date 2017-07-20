@@ -1,85 +1,22 @@
 !!!
 %html
   %head
-    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     = csrf_meta_tags
     %meta{content: "width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no", name: "viewport"}/
     = stylesheet_link_tag    'application_ourrev', media: 'all', 'data-turbolinks-track': 'reload'
-    %link#theme-google-font-heading-css{:href => "https://fonts.googleapis.com/css?family=Muli:400,400italic,700,700italic&subset=latin,latin-ext", :media => "all", :rel => "stylesheet", :type => "text/css"}/
-    %link#theme-google-font-body-css{:href => "https://fonts.googleapis.com/css?family=Muli:400,400italic,100,100italic,300,300italic,500,500italic,700,700italic&subset=latin,latin-ext", :media => "all", :rel => "stylesheet", :type => "text/css"}/
+    %link#theme-google-font-heading-css{href: "https://fonts.googleapis.com/css?family=Muli:400,400italic,700,700italic&subset=latin,latin-ext", media: "all", rel: "stylesheet", type: "text/css"}/
+    %link#theme-google-font-body-css{href: "https://fonts.googleapis.com/css?family=Muli:400,400italic,100,100italic,300,300italic,500,500italic,700,700italic&subset=latin,latin-ext", media: "all", rel: "stylesheet", type: "text/css"}/
 
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   %body
-    %nav.navbar.navbar-default.navbar-static-top
-      .navbar__upper.container
-        %button.navbar-toggle{'type' => "button", 'data-toggle' => 'collapse', 'data-target' => '.navbar-responsive-collapse'}
-          %span.icon-bar
-          %span.icon-bar
-          %span.icon-bar
-        .navbar__logo OurRevolutionMN
-      - if current_user && breadcrumbs_html_safe
-        .navbar-text= breadcrumbs_html_safe
-      .navbar__lower
+    = render 'shared/header'
+    .main-content
+      - if flash[:alert]
         .container
-          .menu-primary-container
-            %ul#menu-primary.nav-list.uppercase
-              %li#menu-item-1764.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1764
-                %a{:href => "https://ourrevolutionmn.com/"} Home
-              %li#menu-item-1765.menu-item.menu-item-type-post_type.menu-item-object-page.current-menu-item.page_item.page-item-1710.current_page_item.menu-item-1765
-                %a{:href => "https://ourrevolutionmn.com/about/"} About
-              %li#menu-item-2143.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-2143
-                %a{:href => "https://ourrevolutionmn.com/endorsements/"} Endorsements
-              %li#menu-item-1760.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1760
-                %a{:href => "https://ourrevolutionmn.com/#section-news"} News
-              %li#menu-item-1763.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1763
-                %a{:href => "https://ourrevolutionmn.com/events"} Calendar
-              /%li#menu-item-1671.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1671
-              /  %a{:href => "http://www.gis.leg.mn/iMaps/districts/", :target => "_blank"} Your Reps
-              %li#menu-item-1671.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1671
-                %a{:href => "/"} Membership
-                %ul.dropdown-menu{:role => "menu"}
-                  %li= link_to "Dashboard", root_path
-                  %li.divider
-                  %li= link_to "My Profile", profile_users_path
-                -#
-                  - if current_user
-                    /.navbar-text= "Logged in as #{current_user.email}"
-                    %ul.nav.navbar-nav
-                      - if current_user.admin?
-                        %li.dropdown
-                          %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                            Admin
-                            %span.caret
-                          %ul.dropdown-menu{:role => "menu"}
-                            %li
-                              = link_to("Home", dashboard_users_path)
-                      %li.dropdown
-                        %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                          - if current_user.admin?
-                            Users
-                          - else
-                            User
-                          %span.caret
-                        %ul.dropdown-menu{:role => "menu"}
-                          %li= link_to "Dashboard", root_path
-                          %li.divider
-                          %li= link_to "My Profile", profile_users_path
-                          %li= link_to "Accept Bylaws", accept_bylaws_users_path
-                          %li= link_to "Candidacies", candidacies_path
-                          %li.divider
-                          %li= link_to "Redo Initial Steps", redo_initial_steps_users_path, method: :put
-                          %li.divider
-                          %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
-                        %li#menu-item-1671.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1671
-                          %a{:href => "/"} Membership
-
-      #header.header-bg.header-nav-bottom
-        .header-bg-wrapper{:style => "display:none;"}
-        / end header-bg-wrapper
-      .main-content
-        - if flash[:alert]
           .alert.alert-danger= flash[:alert]
-        - if flash[:notice]
-          .alert.alert-info= flash[:notice]
+      - if flash[:notice]
         .container
-          = yield
+          .alert.alert-info= flash[:notice]
+      .container
+        = yield

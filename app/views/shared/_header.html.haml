@@ -1,0 +1,96 @@
+.navbar.navbar-default.navbar-static-top
+  .container
+    %button.navbar-toggle{'type' => "button", 'data-toggle' => 'collapse', 'data-target' => '.navbar-responsive-collapse'}
+      %span.icon-bar
+      %span.icon-bar
+      %span.icon-bar
+    .navbar-brand
+      .logo= link_to "OurRevolutionMN", "/"
+    - if current_user && breadcrumbs_html_safe
+      .navbar-text= breadcrumbs_html_safe
+    .navbar-collapse.collapse.navbar-responsive-collapse.pull-right
+      - if current_user
+        .navbar-text= "Logged in as #{current_user.email}"
+        %ul.nav.navbar-nav
+          - if current_user.admin?
+            %li.dropdown
+              %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                Admin
+                %span.caret
+              %ul.dropdown-menu{:role => "menu"}
+                %li
+                  = link_to("Home", dashboard_users_path)
+          %li.dropdown
+            %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+              - if current_user.admin?
+                Users
+              - else
+                User
+              %span.caret
+            %ul.dropdown-menu{:role => "menu"}
+              %li= link_to "Dashboard", root_path
+              %li.divider
+              %li= link_to "My Profile", profile_users_path
+              %li= link_to "Accept Bylaws", accept_bylaws_users_path
+              %li= link_to "Candidacies", candidacies_path
+              %li.divider
+              %li= link_to "Redo Setup Process", redo_initial_steps_users_path, method: :put
+              %li.divider
+              %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
+      = link_to "Login", profile_users_path, class: "btn btn-secondary", style:"margin-top:8px;"
+
+  - if current_user && breadcrumbs_html_safe
+    .navbar-text= breadcrumbs_html_safe
+  .navbar__lower
+    .container
+      .menu-primary-container
+        %ul#menu-primary.nav-list.uppercase
+          %li#menu-item-1764.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1764
+            %a{:href => "https://ourrevolutionmn.com/"} Home
+          %li#menu-item-1765.menu-item.menu-item-type-post_type.menu-item-object-page.current-menu-item.page_item.page-item-1710.current_page_item.menu-item-1765
+            %a{:href => "https://ourrevolutionmn.com/about/"} About
+          %li#menu-item-2143.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-2143
+            %a{:href => "https://ourrevolutionmn.com/endorsements/"} Endorsements
+          %li#menu-item-1760.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1760
+            %a{:href => "https://ourrevolutionmn.com/#section-news"} News
+          %li#menu-item-1763.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1763
+            %a{:href => "https://ourrevolutionmn.com/events"} Calendar
+          /%li#menu-item-1671.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1671
+          /  %a{:href => "http://www.gis.leg.mn/iMaps/districts/", :target => "_blank"} Your Reps
+          %li#menu-item-1671.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1671
+            %a{:href => "/"} Membership
+            %ul.dropdown-menu{:role => "menu"}
+              %li= link_to "Dashboard", root_path
+              %li.divider
+              %li= link_to "My Profile", profile_users_path
+            -#
+              - if current_user
+                /.navbar-text= "Logged in as #{current_user.email}"
+                %ul.nav.navbar-nav
+                  - if current_user.admin?
+                    %li.dropdown
+                      %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                        Admin
+                        %span.caret
+                      %ul.dropdown-menu{:role => "menu"}
+                        %li
+                          = link_to("Home", dashboard_users_path)
+                  %li.dropdown
+                    %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                      - if current_user.admin?
+                        Users
+                      - else
+                        User
+                      %span.caret
+                    %ul.dropdown-menu{:role => "menu"}
+                      %li= link_to "Dashboard", root_path
+                      %li.divider
+                      %li= link_to "My Profile", profile_users_path
+                      %li= link_to "Accept Bylaws", accept_bylaws_users_path
+                      %li= link_to "Candidacies", candidacies_path
+                      %li.divider
+                      %li= link_to "Redo Initial Steps", redo_initial_steps_users_path, method: :put
+                      %li.divider
+                      %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
+                    %li#menu-item-1671.menu-item.menu-item-type-custom.menu-item-object-custom.menu-item-1671
+                      %a{:href => "/"} Membership
