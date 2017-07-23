@@ -1,10 +1,6 @@
 %h2 Resend confirmation instructions
-= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+= semantic_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
   = devise_error_messages!
-  .field
-    = f.label :email
-    %br/
-    = f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email)
-  .actions
-    = f.submit "Resend confirmation instructions"
+  = f.input :email, as: :email, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email)
+  = f.submit "Resend confirmation instructions", class: 'btn btn-sm btn-primary btn-with-padding'
 = render "devise/shared/links"
