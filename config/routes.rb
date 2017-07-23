@@ -8,9 +8,15 @@ Rails.application.routes.draw do
   post 'api/login', to: 'sessions#login'
 
   resources :users do
+    member do
+      put :update_email
+      put :update_password
+    end
+
     collection do
       get :home
       get :profile
+      get :account
       get :accept_bylaws
       get :privacy_policy
       put :redo_initial_steps

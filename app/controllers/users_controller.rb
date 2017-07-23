@@ -53,6 +53,10 @@ class UsersController < ApplicationController
     convert_answer_checkboxes_from_text
   end
 
+  def account
+    @user = current_user
+  end
+
   def accept_bylaws
     @user = current_user
   end
@@ -104,6 +108,31 @@ class UsersController < ApplicationController
     end
   end
 
+  def update_email
+    @user = User.find(params[:id])
+    if @user.update(user_params(params))
+      flash[:notice] = "An email has been sent to you to confirm your email change. The change won't take effect until you click the confirmation link."
+      redirect_to root_path
+    else
+      render 'account'
+    end
+  end
+
+  def update_password
+    @user = User.find(params[:id])
+    if @user.update(user_params(params))
+      redirect_to root_path
+    else
+      render 'account'
+    end
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    # @user.destroy
+    redirect_to root_path
+  end
+
   private
 
   def next_state
@@ -128,6 +157,7 @@ class UsersController < ApplicationController
 
   def user_params(params)
     params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board,
+                                 :email, :password, :password_confirmation,
                                  {answers_attributes: CandidaciesController.answers_atributes},
                                  {event_rsvps_attributes: [:rsvp_type, :event_id] },
                                  {member_attributes: [
