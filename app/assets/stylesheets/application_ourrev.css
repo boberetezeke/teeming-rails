@@ -84,13 +84,17 @@ form.formtastic .questionnaire-fields .choice {
     padding: 10px;
 }
 
+.navbar-brand {
+    padding: 0 15px;
+}
+
 .logo {
     background-image: url(/images/logo-32.jpg);
     background-repeat: no-repeat;
     background-position: left center;
-    padding-left: 40px;
+    padding: 15px 0 0 42px;
+    height: 50px;
 }
-
 .left-pane {
     position: relative;
 }
@@ -102,4 +106,16 @@ form.formtastic .questionnaire-fields .choice {
 
 .error-link {
     color: red;
+}
+
+.navbar-default{
+  background-color: #147FD7;
+  background-image: url("MG_6506-sm-3-alt.png");
+  background-repeat: no-repeat;
+  border: none;
+  border-radius: 0;
+}
+.navbar-brand .logo,
+.navbar-brand .logo a{
+  color:#fff;
 }
