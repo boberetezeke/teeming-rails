@@ -21,7 +21,7 @@
                 %li
                   = link_to("Home", dashboard_users_path)
           %li.dropdown
-            %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+            %a.dropdown-toggle.top-level{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
               - if current_user.admin?
                 Users
               - else
@@ -37,7 +37,8 @@
               %li= link_to "Redo Setup Process", redo_initial_steps_users_path, method: :put
               %li.divider
               %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
-      = link_to "Login", profile_users_path, class: "btn btn-secondary", style:"margin-top:8px;"
+      - else
+        = link_to "Login", new_user_session_path, class: "btn btn-secondary", style:"margin-top:8px;"
 
   - if current_user && breadcrumbs_html_safe
     .navbar-text= breadcrumbs_html_safe
