@@ -20,7 +20,7 @@
 %h4 Volunteering
 
 = semantic_form_for @user do |f|
-  .accepted_bylaws
+  .check_box_or_radio
     = f.input :interested_in_volunteering, as: :boolean, label: 'I want to volunteer'
 
   #questionnaire{'class' => (f.object.interested_in_volunteering ? '' : 'hidden')}

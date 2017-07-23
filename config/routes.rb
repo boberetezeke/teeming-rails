@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :events, only: [:index, :show]
+  resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :candidacies
 
   unauthenticated :user do

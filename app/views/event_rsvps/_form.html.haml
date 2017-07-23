@@ -1,0 +1,3 @@
+.check_box_or_radio
+  = f.input :rsvp_type, as: :radio, collection: EventRsvp::RSVP_TYPES_FOR_FORM
+  = f.hidden_field :event_id

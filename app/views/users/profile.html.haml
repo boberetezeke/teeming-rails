@@ -9,7 +9,7 @@
   %hr
   %h2 Volunteering
   = f.inputs do
-    .accepted_bylaws
+    .check_box_or_radio
       = f.input :interested_in_volunteering
 
   = render partial: 'answers/form', locals: { f: f }

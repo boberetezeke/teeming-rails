@@ -1,7 +1,13 @@
-= render partial: 'step_title', locals: { step_title: 'Declare Candidacy or Not', step_sub_title: "Accepting these allows you to vote in OurRevolutionMN's elections" }
+= render partial: 'step_title', locals: { step_title: 'The Founding Convention', step_sub_title: "Help found a change in Minnesota's future" }
 
 = semantic_form_for @user do |f|
-  .accepted_bylaws
+  = render partial: 'events/show', locals: { event: @initial_convention, show_description: true, show_rsvp: false }
+  %h3 Your RSVP
+  = f.semantic_fields_for :event_rsvps do |ff|
+    = render partial: 'event_rsvps/form', locals: {f: ff}
+
+  %h3 Your Potential Candidacy
+  .check_box_or_radio
     = f.input :run_for_state_board, as: :boolean, label: 'I want to run for the state board of directors'
 
   #questionnaire{'class' => (f.object.run_for_state_board ? '' : 'hidden')}

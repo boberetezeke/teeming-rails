@@ -1,0 +1,2 @@
+- events.each do |event|
+  = render partial: 'events/show', locals: {event: event, show_description: false, show_rsvp: true, event_rsvp: user.event_rsvps.where(event: event).first}

@@ -29,6 +29,13 @@ class UsersController < ApplicationController
       end
 
       @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
+
+      if @user.event_rsvps.present?
+        @user.event_rsvps.destroy_all
+      end
+
+      @initial_convention = Event.first
+      @user.event_rsvps.build(user: current_user, event: @initial_convention)
     end
   end
 
@@ -70,6 +77,10 @@ class UsersController < ApplicationController
             convert_answer_checkboxes_to_text(answer_params)
           end
         end
+
+        if params[:user][:event_rsvps_attributes].nil?
+          params[:user][:event_rsvps_attributes] = {"0" => {"rsvp_type" => ""}}
+        end
       end
 
       if params['user']['answers_attributes']
@@ -87,6 +98,7 @@ class UsersController < ApplicationController
 
         redirect_to home_users_path
       else
+        @initial_convention = Event.first
         render 'home'
       end
     end
@@ -117,6 +129,7 @@ class UsersController < ApplicationController
   def user_params(params)
     params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board,
                                  {answers_attributes: CandidaciesController.answers_atributes},
+                                 {event_rsvps_attributes: [:rsvp_type, :event_id] },
                                  {member_attributes: [
                                     :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,

@@ -9,6 +9,11 @@ class User < ApplicationRecord
   ROLE_TYPE_ADMIN = :admin
   ROLE_TYPES = [ROLE_TYPE_USER, ROLE_TYPE_ADMIN]
 
+  has_many :event_rsvps
+  accepts_nested_attributes_for :event_rsvps
+
+  has_many :events, through: :event_rsvps
+
   has_many :candidacies
   accepts_nested_attributes_for :candidacies
 

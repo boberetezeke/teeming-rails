@@ -1,0 +1,30 @@
+.row
+  .col-md-4
+    .event-title What
+  .col-md-4
+    .event-title Where
+  .col-md-4
+    .event-title When
+.row
+  .col-md-4
+    = event.name
+  .col-md-4
+    = event.location
+  .col-md-4
+    = event_date_and_time_str(event.occurs_at)
+- if show_description
+  .row
+    .col-md-12
+      .event-title Description
+  .row
+    .col-md-12
+      = event.description
+- if show_rsvp && event_rsvp
+  .row
+    .col-md-12
+      .event-title Your RSVP
+  .row
+    .col-md-12
+      = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
+      = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
+

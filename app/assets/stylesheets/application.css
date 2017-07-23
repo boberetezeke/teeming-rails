@@ -16,6 +16,11 @@
  *= require formtastic
  */
 
+.event-title {
+    font-weight: bold;
+    font-size:   14pt;
+}
+
 .bylaws h1 {
     font-size: 16pt;
 }
@@ -49,27 +54,27 @@ form.formtastic .stringish input {
     padding: 5px;
 }
 
-form.formtastic .accepted_bylaws label {
-    padding-left: 20px;
+form.formtastic .check_box_or_radio label {
+    padding-left: 25px;
     font-weight: bold;
 }
 
-form.formtastic .accepted_bylaws #user_accepted_bylaws {
+form.formtastic .check_box_or_radio #user_accepted_bylaws {
     margin-left: -20px;
     margin-top: 5px;
 }
 
-form.formtastic .accepted_bylaws #user_run_for_state_board {
+form.formtastic .check_box_or_radio #user_run_for_state_board {
     margin-left: -20px;
     margin-top: 5px;
 }
 
-form.formtastic .accepted_bylaws #user_interested_in_volunteering {
+form.formtastic .check_box_or_radio #user_interested_in_volunteering {
     margin-left: -20px;
     margin-top: 5px;
 }
 
-form.formtastic .accepted_bylaws #user_member_attributes_interested_in_starting_chapter {
+form.formtastic .check_box_or_radio #user_member_attributes_interested_in_starting_chapter {
     margin-left: -20px;
     margin-top: 5px;
 }
