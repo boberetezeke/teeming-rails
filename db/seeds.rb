@@ -166,7 +166,7 @@ initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race',
 initial_board_convention = Event.find_or_create_by(name: 'Founding Convention', occurs_at: DateTime.new(2017, 9, 16, 9, 00), location: 'AAAA Theatre, Alexandria, MN', description: "This convention is to not only launch the organization with its first elected board, but also to bring together people from all around the state to start to take it back to its progressive roots.")
 initial_board_questionnaire = Questionnaire.where(questionnairable_type: 'Race', questionnairable_id: initial_board_race.id).first
 
-# initial_board_questionnaire.destroy if initial_board_questionnaire
+initial_board_questionnaire.destroy if initial_board_questionnaire
 if !initial_board_questionnaire
   initial_board_questionnaire = Questionnaire.create(questionnairable: initial_board_race)
   overview_section = QuestionnaireSection.create(questionnaire: initial_board_questionnaire, order_index: 1, title: 'Overview')
