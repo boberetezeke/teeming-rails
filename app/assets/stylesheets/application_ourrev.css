@@ -17,6 +17,59 @@
  *= require formtastic
  */
 
+body {
+    margin-bottom: 30px;
+}
+
+h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 10px;
+}
+
+.navbar-default {
+    background-image: url("http://i.imgur.com/vgm7SWe.jpg");
+    background-size: 100%;
+}
+
+.navbar-default .navbar-text,
+.navbar-default .navbar-nav > li > a,
+.navbar-brand .logo,
+.navbar-brand .logo a {
+    text-decoration: none;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #fff;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background: transparent;
+}
+
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #fff;
+    }
+}
+
+.formtastic .stringish input,
+.formtastic .text textarea {
+    padding-left: 8px;
+}
+
+.formtastic abbr,
+.formtastic acronym {
+    border: 0;
+    font-variant: normal;
+    text-decoration: none;
+}
+
 .bylaws h1 {
     font-size: 16pt;
 }
@@ -85,7 +138,9 @@ form.formtastic .questionnaire-fields .choice {
 }
 
 .logo {
-    background-image: url(/images/logo-32.jpg);
+    /* background-image: url(/images/logo-32.jpg); */
+    background-image: url("http://i.imgur.com/wcudyo8.png");
+    background-size: 30px;
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 40px;
