@@ -26,7 +26,7 @@ h1, .h1, h2, .h2, h3, .h3 {
 }
 
 .navbar-default {
-    background-image: url("http://i.imgur.com/vgm7SWe.jpg");
+    background-image: url("//i.imgur.com/vgm7SWe.jpg");
     background-size: 100%;
 }
 
@@ -139,7 +139,7 @@ form.formtastic .questionnaire-fields .choice {
 
 .logo {
     /* background-image: url(/images/logo-32.jpg); */
-    background-image: url("http://i.imgur.com/wcudyo8.png");
+    background-image: url("//i.imgur.com/wcudyo8.png");
     background-size: 30px;
     background-repeat: no-repeat;
     background-position: left center;
