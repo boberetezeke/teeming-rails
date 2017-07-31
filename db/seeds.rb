@@ -168,7 +168,7 @@ initial_board_questionnaire = Questionnaire.where(questionnairable_type: 'Race',
 
 initial_board_questionnaire.destroy if initial_board_questionnaire
 if !initial_board_questionnaire
-  initial_board_questionnaire = Questionnaire.create(questionnairable: initial_board_race)
+  initial_board_questionnaire = Questionnaire.create(questionnairable: initial_board_race, name: "Initial Board Election")
   overview_section = QuestionnaireSection.create(questionnaire: initial_board_questionnaire, order_index: 1, title: 'Overview')
     Question.create(questionnaire_section: overview_section, order_index: 1, text: 'Campaign website', question_type: Question::QUESTION_TYPE_SHORT_TEXT)
     congressional_question = Question.create(questionnaire_section: overview_section, order_index: 2, text: 'For the purpose of fulfilling balance requirements put forth in the Our Revolution MN bylaws, specify your congressional district', question_type: Question::QUESTION_TYPE_MULTIPLE_CHOICE)

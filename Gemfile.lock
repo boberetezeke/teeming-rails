@@ -274,6 +274,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.0.1)
   rails_admin
+  responders
   sendgrid-ruby
   spring
   spring-watcher-listen (~> 2.0.0)
@@ -283,4 +284,4 @@ DEPENDENCIES
   web-console (>= 3.3.0)
 
 BUNDLED WITH
-   1.14.6
+   1.15.1

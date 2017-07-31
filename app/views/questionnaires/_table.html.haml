@@ -1,0 +1,12 @@
+%table.table
+  %thead
+    %tr.row
+      %th Name
+      %th Action
+  %tbody
+    - questionnaires.each do |questionnaire|
+      %tr.row
+        %td= link_to questionnaire.name, questionnaire
+        %td
+          = link_to 'Edit', edit_questionnaire_path(questionnaire), class: 'btn btn-sm btn-success'
+          = link_to 'Delete', questionnaire_path(questionnaire), method: :delete, class: 'btn btn-sm btn-danger'

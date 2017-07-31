@@ -2,19 +2,38 @@
   = f.fields_for :answers do |ff|
     - answer = ff.object
     - question = answer.question
+    - section = question.questionnaire_section
+    - questionnaire = section.questionnaire
+
     - if question.order_index == 1
-      %h3 #{answer.question.questionnaire_section.title}
+      .row
+        %div{class:'col-md-9'}
+          %h3 #{answer.question.questionnaire_section.title}
+        - if edit_tools
+          .col-md-3
+          = link_to "- Section", questionnaire_section_path(answer.question.questionnaire_section), method: :delete, class: 'btn btn-sm btn-danger'
+          = link_to "^", move_up_questionnaire_section_path(answer.question.questionnaire_section), method: :put, class: 'btn btn-sm btn-info'
+          = link_to "v", move_down_questionnaire_section_path(answer.question.questionnaire_section), method: :put, class: 'btn btn-sm btn-info'
+          = link_to "+", new_questionnaire_questionnaire_section_path(questionnaire, after_order_index: section.order_index), class: 'btn btn-sm btn-success'
     = ff.hidden_field :id
     = ff.hidden_field :question_id
     = ff.hidden_field :candidacy_id
     = ff.hidden_field :order_index
-    - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
-      = ff.input :text, as: :string, label: question.text
-    - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
-      = ff.input :text, label: question.text, input_html: {rows: 2}
-    - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-      = ff.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
-    - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
-      = ff.input :text, label: question.text, as: :radio, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
-    - else
-      %p Question: #{question.text}, type: #{question.question_type}
+    .row
+      %div{class:'col-md-9'}
+        - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
+          = ff.input :text, as: :string, label: question.text
+        - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
+          = ff.input :text, label: question.text, input_html: {rows: 2}
+        - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+          = ff.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
+        - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+          = ff.input :text, label: question.text, as: :radio, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
+        - else
+          %p Question: #{question.text}, type: #{question.question_type}
+      - if edit_tools
+        .col-md-3
+          = link_to "- Question", question_path(question), method: :delete, class: 'btn btn-sm btn-danger'
+          = link_to "^", move_up_question_path(question), method: :put, class: 'btn btn-sm btn-info'
+          = link_to "v", move_down_question_path(question), method: :put, class: 'btn btn-sm btn-info'
+          = link_to "+", new_questionnaire_question_path(questionnaire, questionnaire_section_id: section.id, after_order_index: question.order_index), class: 'btn btn-sm btn-success'
