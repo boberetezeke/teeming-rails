@@ -1,0 +1,10 @@
+= semantic_form_for [questionnaire, question] do |f|
+  = f.hidden_field :questionnaire_section_id
+  = f.hidden_field :order_index
+  = f.input :text, input_html: { rows: 2, cols: 80 }
+  = f.input :question_type, as: :select, collection: Question::QUESTION_TYPES, allow_blank: false
+  - if f.object.question_type == Question::QUESTION_TYPE_CHECKBOXES || f.object.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+    %h3 Choices
+    = f.fields_for :choices do |ff|
+      = render partial: 'choices/form', locals: { f: ff, edit_tools: true }
+  = f.submit class: 'btn btn-sm btn-primary'

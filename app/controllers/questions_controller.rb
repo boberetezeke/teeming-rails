@@ -1,4 +1,38 @@
 class QuestionsController < ApplicationController
+  def new
+    @questionnaire = Questionnaire.find(params[:questionnaire_id])
+    @question = Question.new(questionnaire_section_id: params[:questionnaire_section_id], question_type: Question::QUESTION_TYPE_SHORT_TEXT, order_index: params[:after_order_index].to_i + 1)
+  end
+
+  def create
+    @question = Question.new(question_params)
+    @questionnaire = @question.questionnaire_section.questionnaire
+
+    if @question.valid?
+      renumber_questions(@question, @question.order_index, 1)
+    end
+
+    if @question.save
+      redirect_to @questionnaire
+    else
+      render 'new'
+    end
+  end
+
+  def edit
+    @question = Question.find(params[:id])
+  end
+
+  def update
+    @question = Question.find(params[:id])
+
+    if @question.update(question_params)
+      redirect_to @question.questionnaire_section.questionnaire
+    else
+      render 'edit'
+    end
+  end
+
   def move_up
     @question = Question.find(params[:id])
 
@@ -26,8 +60,9 @@ class QuestionsController < ApplicationController
   def destroy
     @question = Question.find(params[:id])
     questionnaire = @question.questionnaire_section.questionnaire
+    order_index = @question.order_index
 
-    renumber_questions(@question)
+    renumber_questions(@question, order_index, -1)
 
     @question.destroy
 
@@ -36,14 +71,17 @@ class QuestionsController < ApplicationController
 
   private
 
-  def swap_questions
+  def question_params
+    params.require(:question).permit(:questionnaire_section_id, :text, :question_type, :order_index, choices_attributes: [:id, :order_index, :title])
   end
 
-  def renumber_questions(question_begin_deleted)
-    questions = Question.where(questionnaire_section: question_begin_deleted.questionnaire_section).select{ |q| q.order_index > question_begin_deleted.order_index }
-    questions.each do |question|
-      question.order_index -= 1
-      question.save
+  def renumber_questions(question, order_index, adjustment)
+    Question.where(
+        Question.arel_table[:questionnaire_section_id].eq(question.questionnaire_section.id).and(
+        Question.arel_table[:order_index].gteq(order_index)
+    )).each do |q|
+      q.order_index += adjustment
+      q.save
     end
   end
 end

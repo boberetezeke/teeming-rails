@@ -1,0 +1,9 @@
+- choice = f.object
+.row
+  .col-md-9
+    = f.input :title, label: false
+  .col-md-3
+    = link_to "+", new_question_choice_path(choice.question, after_order_index: choice.order_index), class: 'btn btn-sm btn-success'
+    = link_to "^", move_up_choice_path(choice), method: :put, class: 'btn btn-sm btn-info'
+    = link_to "v", move_down_choice_path(choice), method: :put, class: 'btn btn-sm btn-info'
+    = link_to "-", choice_path(choice), method: :delete, class: 'btn btn-sm btn-danger'

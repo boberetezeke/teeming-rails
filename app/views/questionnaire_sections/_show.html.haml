@@ -1,0 +1,11 @@
+.row
+  %div{class:'col-md-9'}
+    %h3 #{section.title}
+  - if edit_tools
+    .col-md-3
+    = link_to "+", new_questionnaire_questionnaire_section_path(section.questionnaire, after_order_index: section.order_index), class: 'btn btn-sm btn-success'
+    = link_to "+Q", new_questionnaire_question_path(section.questionnaire, questionnaire_section_id: section.id, after_order_index: 0), class: 'btn btn-sm btn-success'
+    = link_to "E", edit_questionnaire_section_path(section), class: 'btn btn-sm btn-info'
+    = link_to "^", move_up_questionnaire_section_path(section), method: :put, class: 'btn btn-sm btn-info'
+    = link_to "v", move_down_questionnaire_section_path(section), method: :put, class: 'btn btn-sm btn-info'
+    = link_to "-S", questionnaire_section_path(section), method: :delete, class: 'btn btn-sm btn-danger'

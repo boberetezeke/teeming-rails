@@ -1,4 +1,37 @@
 class QuestionnaireSectionsController < ApplicationController
+  def new
+    @questionnaire = Questionnaire.find(params[:questionnaire_id])
+    @questionnaire_section = QuestionnaireSection.new(questionnaire: @questionnaire, order_index: params[:after_order_index].to_i + 1)
+  end
+
+  def create
+    @questionnaire_section = QuestionnaireSection.new(questionnaire_section_params)
+    @questionnaire = @questionnaire_section.questionnaire
+
+    if @questionnaire_section.valid?
+      renumber_question_sections(@questionnaire, @questionnaire_section.order_index, 1)
+    end
+
+    if @questionnaire_section.save
+      redirect_to @questionnaire
+    else
+      render 'new'
+    end
+  end
+
+  def edit
+    @questionnaire_section = QuestionnaireSection.find(params[:id])
+  end
+
+  def update
+    @questionnaire_section = QuestionnaireSection.find(params[:id])
+    if @questionnaire_section.update(questionnaire_section_params)
+      redirect_to @questionnaire_section.questionnaire
+    else
+      render 'edit'
+    end
+  end
+
   def move_up
     @questionnaire_section = QuestionnaireSection.find(params[:id])
 
@@ -26,19 +59,28 @@ class QuestionnaireSectionsController < ApplicationController
   def destroy
     @questionnaire_section = QuestionnaireSection.find(params[:id])
     questionnaire = @questionnaire_section.questionnaire
+    order_index = @questionnaire_section.order_index
 
     @questionnaire_section.destroy
+
+    renumber_question_sections(questionnaire, order_index+1, -1)
 
     redirect_to questionnaire
   end
 
   private
 
-  def renumber_questionnaire_sections(questionnaire_section_begin_deleted)
-    questionnaire_sections = Question.where(questionnaire: questionnaire_section_begin_deleted.questionnaire).select{ |q| q.order_index > questionnaire_section_begin_deleted.order_index }
-    questionnaire_sections.each do |questionnaire_section|
-      questionnaire_section.order_index -= 1
-      questionnaire_section.save
+  def renumber_question_sections(questionnaire, order_index, adjustment)
+    QuestionnaireSection.where(
+        QuestionnaireSection.arel_table[:questionnaire_id].eq(questionnaire.id).and(
+        QuestionnaireSection.arel_table[:order_index].gteq(order_index)
+    )).each do |qe|
+      qe.order_index += adjustment
+      qe.save
     end
+  end
+
+  def questionnaire_section_params
+    params.require(:questionnaire_section).permit(:title, :questionnaire_id, :order_index)
   end
 end

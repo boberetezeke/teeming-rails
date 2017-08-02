@@ -1,0 +1,5 @@
+= semantic_form_for [questionnaire, questionnaire_section] do |f|
+  = f.input :title
+  = f.hidden_field :questionnaire_id
+  = f.hidden_field :order_index
+  = f.submit class: 'btn btn-sm btn-primary'
