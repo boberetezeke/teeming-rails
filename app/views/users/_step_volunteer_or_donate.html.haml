@@ -25,7 +25,7 @@
 
   #questionnaire{'class' => (f.object.interested_in_volunteering ? '' : 'hidden')}
     %h3 Skills Questionnaire
-    = render partial: 'answers/form', locals: { f: f }
+    = render partial: 'answers/form', locals: { f: f, edit_tools: false }
 
   = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding'
   = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding'

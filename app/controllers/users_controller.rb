@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
+  include ApplicationHelper
+
   STATES = ['step_setup_user_details', 'step_agree_to_bylaws', 'step_volunteer_or_donate', 'step_declare_candidacy']
 
   def index
@@ -51,14 +53,20 @@ class UsersController < ApplicationController
   def profile
     @user = current_user
     convert_answer_checkboxes_from_text
+
+    breadcrumbs "My Profile"
   end
 
   def account
     @user = current_user
+
+    breadcrumbs "My Account"
   end
 
   def accept_bylaws
     @user = current_user
+
+    breadcrumbs "Accept Bylaws"
   end
 
   def update

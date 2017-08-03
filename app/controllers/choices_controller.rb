@@ -1,4 +1,6 @@
 class ChoicesController < ApplicationController
+  before_filter :authenticate_user!
+
   # this should be def new_blank
   def show
     after_order_index = params[:after_order_index].to_i

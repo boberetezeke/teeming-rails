@@ -1,11 +1,19 @@
 class QuestionnairesController < ApplicationController
+  before_filter :authenticate_user!
+
+  include ApplicationHelper
+
+  before_filter :authenticate_user!
+
   def index
     @questionnaires = Questionnaire.all
+    breadcrumbs questionnaires_breadcrumbs(include_link: false)
   end
 
   def show
     @questionnaire = Questionnaire.find(params[:id])
     @candidacy = Candidacy.new(answers: @questionnaire.new_answers)
+    breadcrumbs questionnaires_breadcrumbs, @questionnaire.name
   end
 
   def new
@@ -22,6 +30,7 @@ class QuestionnairesController < ApplicationController
 
   def edit
     @questionnaire = Questionnaire.find(params[:id])
+    breadcrumbs questionnaires_breadcrumbs, @questionnaire.name
   end
 
   def update
@@ -43,5 +52,12 @@ class QuestionnairesController < ApplicationController
 
   def questionnaire_params
     params.require(:questionnaire).permit(:name)
+  end
+
+  def questionnaires_breadcrumbs(include_link: true)
+    ["Questionnaires", include_link ? questionnaires_path : nil]
+  end
+
+  def new_blank
   end
 end

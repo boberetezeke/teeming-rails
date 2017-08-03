@@ -1,13 +1,21 @@
 class CandidaciesController < ApplicationController
+  before_filter :authenticate_user!
+
+  include ApplicationHelper
+
   def index
     @candidacies = Candidacy.all
     @races = Race.active_for_time(Time.now)
+
+    breadcrumbs candidacies_breadcrumbs(include_link: false)
   end
 
   def new
     @race = Race.find(params[:race_id])
     @candidacy = Candidacy.new(race: @race, user: current_user)
     @candidacy.answers = @race.questionnaire.new_answers
+
+    breadcrumbs candidacies_breadcrumbs, "New Candidacy"
   end
 
   def create
@@ -29,6 +37,8 @@ class CandidaciesController < ApplicationController
         answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
       end
     end
+
+    breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
 
   def update
@@ -59,6 +69,10 @@ class CandidaciesController < ApplicationController
 
   def candidacy_params(params)
     params.require(:candidacy).permit(*self.class.candidacy_attributes)
+  end
+
+  def candidacies_breadcrumbs(include_link: true)
+    ["Candidacies", include_link ? candidacies_path : nil]
   end
 end
 

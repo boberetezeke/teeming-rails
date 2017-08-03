@@ -1,7 +1,13 @@
 class QuestionsController < ApplicationController
+  before_filter :authenticate_user!
+
+  include ApplicationHelper
+
   def new
     @questionnaire = Questionnaire.find(params[:questionnaire_id])
     @question = Question.new(questionnaire_section_id: params[:questionnaire_section_id], question_type: Question::QUESTION_TYPE_SHORT_TEXT, order_index: params[:after_order_index].to_i + 1)
+
+    questions_breadcrumbs(@question)
   end
 
   def create
@@ -21,6 +27,7 @@ class QuestionsController < ApplicationController
 
   def edit
     @question = Question.find(params[:id])
+    questions_breadcrumbs(@question)
   end
 
   def update
@@ -76,6 +83,11 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:questionnaire_section_id, :text, :question_type, :order_index, choices_attributes: [:id, :order_index, :title])
+  end
+
+  def questions_breadcrumbs(question)
+    questionnaire = question.questionnaire_section.questionnaire
+    breadcrumbs [questionnaire.name, questionnaire_path(questionnaire)], ["Question", nil]
   end
 
   def renumber_questions(question, order_index, adjustment)

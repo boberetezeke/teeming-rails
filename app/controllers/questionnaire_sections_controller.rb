@@ -1,4 +1,6 @@
 class QuestionnaireSectionsController < ApplicationController
+  before_filter :authenticate_user!
+
   def new
     @questionnaire = Questionnaire.find(params[:questionnaire_id])
     @questionnaire_section = QuestionnaireSection.new(questionnaire: @questionnaire, order_index: params[:after_order_index].to_i + 1)
