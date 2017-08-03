@@ -1,6 +1,11 @@
 class ChoicesController < ApplicationController
-  def new
-    @choice = Choice.new(question: Question.find(params[:question_id]), order_index: params[:after_order_index].to_i + 1)
+  # this should be def new_blank
+  def show
+    after_order_index = params[:after_order_index].to_i
+    @choice = Choice.new(question: Question.find(params[:question_id]), order_index: after_order_index + 1)
+
+    renumber_choices(@choice, @choice.order_index, 1)
+
     @choice.save
     redirect_to edit_question_path(@choice.question)
   end
@@ -29,12 +34,26 @@ class ChoicesController < ApplicationController
     redirect_to edit_question_path(@choice.question)
   end
 
-  def destroy
+  def delete
     @choice = Choice.find(params[:id])
     question = @choice.question
+
+    renumber_choices(@choice, @choice.order_index, -1)
 
     @choice.destroy
 
     redirect_to edit_question_path(question)
+  end
+
+  private
+
+  def renumber_choices(choice, order_index, adjustment)
+    Choice.where(
+      Choice.arel_table[:question_id].eq(choice.question.id).and(
+      Choice.arel_table[:order_index].gteq(order_index)
+    )).each do |c|
+      c.order_index += adjustment
+      c.save
+    end
   end
 end

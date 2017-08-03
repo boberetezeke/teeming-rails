@@ -27,7 +27,11 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
 
     if @question.update(question_params)
-      redirect_to @question.questionnaire_section.questionnaire
+      if params[:redirect_location].blank?
+        redirect_to @question.questionnaire_section.questionnaire
+      else
+        redirect_to params[:redirect_location]
+      end
     else
       render 'edit'
     end
@@ -60,9 +64,8 @@ class QuestionsController < ApplicationController
   def destroy
     @question = Question.find(params[:id])
     questionnaire = @question.questionnaire_section.questionnaire
-    order_index = @question.order_index
 
-    renumber_questions(@question, order_index, -1)
+    renumber_questions(@question, @question.order_index, -1)
 
     @question.destroy
 

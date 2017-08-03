@@ -24,4 +24,8 @@ class Question < ApplicationRecord
   def new_answer(candidacy: nil, index: nil)
     Answer.new(candidacy: candidacy, question: self, order_index: index)
   end
+
+  def has_choices?
+    question_type == QUESTION_TYPE_CHECKBOXES || question_type == QUESTION_TYPE_MULTIPLE_CHOICE
+  end
 end

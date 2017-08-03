@@ -1,10 +1,36 @@
 = semantic_form_for [questionnaire, question] do |f|
   = f.hidden_field :questionnaire_section_id
   = f.hidden_field :order_index
+  = f.hidden_field_tag :redirect_location
   = f.input :text, input_html: { rows: 2, cols: 80 }
-  = f.input :question_type, as: :select, collection: Question::QUESTION_TYPES, allow_blank: false
-  - if f.object.question_type == Question::QUESTION_TYPE_CHECKBOXES || f.object.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
-    %h3 Choices
+  = f.input :question_type, as: :select, collection: Question::QUESTION_TYPES, include_blank: false
+  #choices{class: question.has_choices? ? '' : 'hidden'}
+    .row
+      .col-md-9
+        %h3 Choices
+      .col-md-3
+        = link_to "+ Choice", new_blank_choices_path(question_id: f.object.id, after_order_index: 0), class: 'btn btn-sm btn-success'
     = f.fields_for :choices do |ff|
       = render partial: 'choices/form', locals: { f: ff, edit_tools: true }
-  = f.submit class: 'btn btn-sm btn-primary'
+  = f.submit class: 'btn btn-sm btn-primary', id: 'submit'
+
+:javascript
+  $(function() {
+    $("#question_question_type").change(function() {
+      var question_type =  $("#question_question_type").val();
+
+      if (question_type == 'checkboxes' || question_type == 'multiple_choice') {
+        $("#choices").removeClass('hidden')
+      }
+      else {
+        $("#choices").addClass('hidden')
+      }
+    })
+
+    $(".submit-before-redirect").click(function(e) {
+      $("#redirect_location").val(this.getAttribute('href'))
+
+      $("#submit").click()
+      return false;
+    })
+  })
