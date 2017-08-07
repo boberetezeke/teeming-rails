@@ -3,6 +3,8 @@ class Race < ApplicationRecord
   has_many :candidacies, dependent: :destroy
   has_one  :questionnaire, as: :questionnairable
 
+  validates :name, presence: true
+
   scope :active_for_time, ->(time){ where(Race.arel_table[:filing_deadline_date].gt(time) ) }
 
   def candidates_announced?

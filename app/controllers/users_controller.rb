@@ -1,8 +1,6 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
-  include ApplicationHelper
-
   STATES = ['step_setup_user_details', 'step_agree_to_bylaws', 'step_volunteer_or_donate', 'step_declare_candidacy']
 
   def index

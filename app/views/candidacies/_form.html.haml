@@ -1,3 +1,7 @@
 = f.hidden_field :race_id
-= f.hidden_field :user_id
-= render partial: 'answers/form', locals: { f: f, edit_tools: false }
+- if race.election.internal?
+  = f.hidden_field :user_id
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false }
+- else
+  = f.input :name
+

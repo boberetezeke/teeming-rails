@@ -1,0 +1,9 @@
+%h2 Elections
+
+%h3 Internal (for Our Revolution MN)
+
+= render partial: 'table', locals: { elections: @internal_elections }
+
+%h3 External (for Minnesota offices)
+
+= render partial: 'table', locals: { elections: @external_elections }

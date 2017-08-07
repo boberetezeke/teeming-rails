@@ -1,0 +1,12 @@
+%table.table
+  %thead
+    %tr.row
+      %th Name
+      %th Action
+  %tbody
+    - candidacies.each do |candidacy|
+      %tr.row
+        %td= link_to candidacy.name, candidacy
+        %td
+          = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-success'
+          = link_to 'Delete', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger'

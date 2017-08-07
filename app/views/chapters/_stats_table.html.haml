@@ -6,5 +6,5 @@
   %tbody
     - chapters.each do |chapter|
       %tr.row
-        %td= chapter.name
+        %td= link_to(chapter.name, chapter)
         %td= chapter.members.count

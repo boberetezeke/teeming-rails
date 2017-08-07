@@ -158,7 +158,8 @@ skills_questionnaire.destroy if skills_questionnaire
     Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 #end
 
-initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 18))
+minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
+initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 18), election_type: Election::ELECTION_TYPE_INTERNAL)
 initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race',
                                             election_id: initial_board_election.id,
                                             filing_deadline_date: Date.new(2017, 8, 5),

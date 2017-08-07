@@ -1,8 +1,6 @@
 class CandidaciesController < ApplicationController
   before_filter :authenticate_user!
 
-  include ApplicationHelper
-
   def index
     @candidacies = Candidacy.all
     @races = Race.active_for_time(Time.now)
@@ -13,24 +11,32 @@ class CandidaciesController < ApplicationController
   def new
     @race = Race.find(params[:race_id])
     @candidacy = Candidacy.new(race: @race, user: current_user)
-    @candidacy.answers = @race.questionnaire.new_answers
-
-    breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+    if @race.election.internal?
+      @candidacy.answers = @race.questionnaire.new_answers
+      breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+    else
+      breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+    end
   end
 
   def create
     @race = Race.find(params[:candidacy][:race_id])
-    @candidacy = Candidacy.new(candidacy_params)
+    @candidacy = Candidacy.new(candidacy_params(params))
     if @candidacy.save
-      redirect_to candidacies_path
+      if @race.election.internal?
+        redirect_to candidacies_path
+      else
+        redirect_to @race
+      end
     else
       render 'new'
     end
   end
 
   def edit
-    @race = Race.find(params[:race_id])
+    # @race = Race.find(params[:race_id])
     @candidacy = Candidacy.find(params[:id])
+    @race = @candidacy.race
 
     @candidacy.answers.each do |answer|
       if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
@@ -44,16 +50,33 @@ class CandidaciesController < ApplicationController
   def update
     @candidacy = Candidacy.find(params[:id])
 
-    params['candidacy']['answers_attributes'].values.each do |answer_params|
-      if answer_params['text_checkboxes'].is_a?(Array)
-        answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+    if params['candidacy']['answers_attributes']
+      params['candidacy']['answers_attributes'].values.each do |answer_params|
+        if answer_params['text_checkboxes'].is_a?(Array)
+          answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+        end
       end
     end
 
     if @candidacy.update(candidacy_params(params))
-      redirect_to candidacies_path
+      if @candidacy.race.election.internal?
+        redirect_to candidacies_path
+      else
+        redirect_to @candidacy.race
+      end
     else
       render 'edit'
+    end
+  end
+
+  def destroy
+    @candidacy = Candidacy.find(params[:id])
+    race = @candidacy.race
+
+    @candidacy.destroy
+
+    if @candidacy.race.election.external?
+      redirect_to race
     end
   end
 
@@ -62,7 +85,7 @@ class CandidaciesController < ApplicationController
   end
 
   def self.candidacy_attributes
-    [:race_id, :user_id, {answers_attributes: answers_atributes}]
+    [:race_id, :user_id, :name, {answers_attributes: answers_atributes}]
   end
 
   private

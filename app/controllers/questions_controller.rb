@@ -1,8 +1,6 @@
 class QuestionsController < ApplicationController
   before_filter :authenticate_user!
 
-  include ApplicationHelper
-
   def new
     @questionnaire = Questionnaire.find(params[:questionnaire_id])
     @question = Question.new(questionnaire_section_id: params[:questionnaire_section_id], question_type: Question::QUESTION_TYPE_SHORT_TEXT, order_index: params[:after_order_index].to_i + 1)
