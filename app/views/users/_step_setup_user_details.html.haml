@@ -7,5 +7,26 @@
     = ff.hidden_field :id
     = ff.hidden_field :with_user_input
     = render partial: 'members/user_details', locals: { f: ff }
-    = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding', hint: 'You must go through all the setup steps to vote OurRevolutionMN elections'
-    = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding'
+
+  .row
+    .col-md-12
+      = render partial: 'shared/bylaws_link'
+  .row
+    .col-md-12
+      .check_box_or_radio
+        = f.input :accepted_bylaws, as: :boolean, label: 'Accept bylaws'
+  .row
+    .col-md-12
+      = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding', disabled: !@user.accepted_bylaws, id: 'submit_button'
+
+:javascript
+  $(function() {
+    $("#user_accepted_bylaws").change(function() {
+      if ($("#user_accepted_bylaws").is(":checked")) {
+        $("#submit_button").prop("disabled", false)
+      }
+      else {
+        $("#submit_button").prop("disabled", true)
+      }
+    })
+  })

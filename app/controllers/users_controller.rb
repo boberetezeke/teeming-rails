@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
-  STATES = ['step_setup_user_details', 'step_agree_to_bylaws', 'step_volunteer_or_donate', 'step_declare_candidacy']
+  STATES = ['step_setup_user_details', 'step_volunteer_or_donate', 'step_declare_candidacy']
 
   def index
     @users = User.all
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
       @user.member.with_user_input = true
 
       # for candidancies page
-      @race = Race.order('id asc').first
+      @race = Race.find_by_name('Initial Board Election Race')
 
       # HACK - delete existing candidacy to avoid save error - Couldn't find Answer with ID=346 for Candidacy with ID=
       if @user.candidacies.present?
@@ -40,6 +40,10 @@ class UsersController < ApplicationController
   end
 
   def privacy_policy
+
+  end
+
+  def bylaws
 
   end
 

@@ -46,6 +46,16 @@
     color: black;
 }
 
+form.formtastic {
+    margin-bottom: 20px;
+}
+
+form.formtastic p.bylaws_link {
+    padding: 15px;
+    background-color: lightblue;
+    color: black;
+}
+
 form.formtastic .stringish input {
     width: 100%;
 }
@@ -81,6 +91,21 @@ form.formtastic .check_box_or_radio #user_member_attributes_interested_in_starti
 
 form.formtastic .questionnaire-fields .choice {
     margin-left: 30px;
+}
+
+form.formtastic p.in-formtastic {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+form.formtastic ul.in-formtastic {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+form.formtastic li.in-formtastic {
+    margin-left: 30px;
+    list-style-type: disc;
 }
 
 .bylaws {
