@@ -78,7 +78,7 @@ class UsersController < ApplicationController
       @user.save
       redirect_to home_users_path
     elsif params[:commit] == 'Cancel'
-      flash[:notice] = "You have cancelled your new user setup. You can complete your profile, accept the bylaws and declare a candidacy by selecting them in the User menu."
+      flash[:notice] = "You have cancelled your new user setup. You can complete your profile, and declare a candidacy by selecting them in the User menu."
       @user.setup_state = ''
       @user.save
       redirect_to home_users_path

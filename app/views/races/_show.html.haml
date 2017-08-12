@@ -12,14 +12,18 @@
           %td= candidacy.user.name
           %td
 - else
-  %h5 Race #{race.name}
+  - if race.election.internal?
+    %h5 Race: #{link_to(race.name, race)}
+  - else
+    %h5 Race: #{link_to(race.type_and_locale, race)} (#{race.candidacies.count} candidate(s))
   - if race.filing_deadline_date
     %p
       Filing date:
       %strong #{race.filing_deadline_date.to_date}
-  %p
-    Candidates announced on:
-    %strong #{race.candidates_announcement_date}
-  %p
-    Election on:
-    %strong #{race.election.vote_date}
+  - if race.candidates_announcement_date
+    %p
+      Candidates announced on:
+      %strong #{race.candidates_announcement_date}
+    %p
+      Election on:
+      %strong #{race.election.vote_date}

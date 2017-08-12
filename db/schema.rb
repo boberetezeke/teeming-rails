@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807021722) do
+ActiveRecord::Schema.define(version: 20170812204415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,6 +130,8 @@ ActiveRecord::Schema.define(version: 20170807021722) do
     t.integer  "role_id"
     t.datetime "filing_deadline_date"
     t.date     "candidates_announcement_date"
+    t.string   "level_of_government"
+    t.string   "locale"
   end
 
   create_table "role_assignments", force: :cascade do |t|
@@ -168,6 +170,7 @@ ActiveRecord::Schema.define(version: 20170807021722) do
     t.string   "setup_state"
     t.boolean  "run_for_state_board"
     t.boolean  "interested_in_volunteering"
+    t.boolean  "saw_introduction"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end

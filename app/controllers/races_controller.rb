@@ -49,7 +49,7 @@ class RacesController < ApplicationController
   private
 
   def race_params
-    params.require(:race).permit(:name, :election_id)
+    params.require(:race).permit(:name, :election_id, :level_of_government, :locale)
   end
 
   def races_breadcrumbs(election, include_link: true)

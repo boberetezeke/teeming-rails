@@ -17,7 +17,6 @@ Rails.application.routes.draw do
       get :home
       get :profile
       get :account
-      get :accept_bylaws
       get :privacy_policy
       get :bylaws
       put :redo_initial_steps
