@@ -55,7 +55,11 @@ form.formtastic {
 }
 
 .note {
-    color: lightblue;
+    color: blue;
+}
+
+.strong {
+    font-weight: bold;
 }
 
 form.formtastic p.bylaws_link {

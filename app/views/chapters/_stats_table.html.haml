@@ -8,3 +8,6 @@
       %tr.row
         %td= link_to(chapter.name, chapter)
         %td= chapter.members.count
+    %tr.row
+      %td Totals
+      %td= chapters.map{|c| c.members.count}.sum

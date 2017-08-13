@@ -19,4 +19,8 @@ class EventRsvp < ApplicationRecord
       RSVP_TYPE_NO        => "I will not attend"
   }
   RSVP_TYPES_FOR_FORM = RSVP_TYPES.invert
+
+  scope :in_person, ->{ where(rsvp_type: RSVP_TYPE_IN_PERSON) }
+  scope :online,    ->{ where(rsvp_type: RSVP_TYPE_ONLINE) }
+  scope :no,        ->{ where(rsvp_type: RSVP_TYPE_NO) }
 end
