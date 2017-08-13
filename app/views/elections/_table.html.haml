@@ -1,6 +1,9 @@
 - elections.each_with_index do |election, index|
   %h4
-    =link_to(election.name, election_races_path(election))
+    - if election.internal?
+      = election.name
+    - else
+      =link_to(election.name, election_races_path(election))
     (#{election.races.count} #{'race'.pluralize(election.races.count)})
 
   - if short_list_of_races

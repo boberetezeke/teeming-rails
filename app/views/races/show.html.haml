@@ -1,13 +1,14 @@
 = render partial: 'show', locals: { race: @race }
 
-- if @race.candidacies.present?
-  %h3 Candidacies
-
-  = render partial: 'candidacies/table', locals: { candidacies: @race.candidacies }
-- else
-  %h3 No Candidacies
-
 - if @race.election.external?
-  .actions
-    = link_to("Add Candidacy", new_candidacy_path(race_id: @race.id), class: 'btn btn-sm btn-primary')
-    = link_to("Edit", edit_race_path(@race), class: 'btn btn-sm btn-primary')
+  - if @race.candidacies.present?
+    %h3 Candidacies
+
+    = render partial: 'candidacies/table', locals: { candidacies: @race.candidacies }
+  - else
+    %h3 No Candidacies
+
+  - if @race.election.external?
+    .actions
+      = link_to("Add Candidacy", new_candidacy_path(race_id: @race.id), class: 'btn btn-sm btn-primary')
+      = link_to("Edit", edit_race_path(@race), class: 'btn btn-sm btn-primary')
