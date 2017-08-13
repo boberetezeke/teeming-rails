@@ -27,7 +27,7 @@
     = f.input :zip, label: 'Zip Code'
 .row
   .col-md-12
-    = f.input :chapter, as: :select, collection: Chapter.local_chapters
+    = f.input :chapter, as: :select, collection: Chapter.all, include_blank: false
 .row
   .col-md-12
     .check_box_or_radio
