@@ -50,6 +50,14 @@ form.formtastic {
     margin-bottom: 20px;
 }
 
+.updated {
+    color: lightgrey;
+}
+
+.note {
+    color: lightblue;
+}
+
 form.formtastic p.bylaws_link {
     padding: 15px;
     background-color: lightblue;

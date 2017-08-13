@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170812204415) do
+ActiveRecord::Schema.define(version: 20170813154946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,15 @@ ActiveRecord::Schema.define(version: 20170812204415) do
   end
 
   create_table "candidacies", force: :cascade do |t|
-    t.integer "race_id"
-    t.integer "user_id"
-    t.string  "name"
+    t.integer  "race_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.integer  "created_by_user_id"
+    t.integer  "updated_by_user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["created_by_user_id"], name: "index_candidacies_on_created_by_user_id", using: :btree
+    t.index ["updated_by_user_id"], name: "index_candidacies_on_updated_by_user_id", using: :btree
   end
 
   create_table "candidate_assignments", force: :cascade do |t|
@@ -132,6 +138,12 @@ ActiveRecord::Schema.define(version: 20170812204415) do
     t.date     "candidates_announcement_date"
     t.string   "level_of_government"
     t.string   "locale"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "created_by_user_id"
+    t.integer  "updated_by_user_id"
+    t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id", using: :btree
+    t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id", using: :btree
   end
 
   create_table "role_assignments", force: :cascade do |t|

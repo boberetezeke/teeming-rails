@@ -15,7 +15,10 @@
   - if race.election.internal?
     %h5 Race: #{link_to(race.name, race)}
   - else
-    %h5 Race: #{link_to(race.type_and_locale, race)} (#{race.candidacies.count} candidate(s))
+    %h5
+      #{link_to(race.type_and_locale, race)}
+      (#{race.candidacies.count} #{'candidate'.pluralize(race.candidacies.count)})
+      %span.updated Updated #{time_ago_in_words(race.updated_at)} ago
   - if race.filing_deadline_date
     %p
       Filing date:

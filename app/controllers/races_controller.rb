@@ -9,7 +9,7 @@ class RacesController < ApplicationController
 
   def show
     @race = Race.find(params[:id])
-    breadcrumbs races_breadcrumbs(@race.election), @race.name
+    breadcrumbs races_breadcrumbs(@race.election), @race.complete_name
   end
 
   def new
@@ -27,7 +27,7 @@ class RacesController < ApplicationController
 
   def edit
     @race = Race.find(params[:id])
-    breadcrumbs races_breadcrumbs(@race.election), @race.name
+    breadcrumbs races_breadcrumbs(@race.election), @race.complete_name
   end
 
   def update

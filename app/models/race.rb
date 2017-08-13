@@ -8,6 +8,7 @@ class Race < ApplicationRecord
   validates :locale, presence: true,              if: ->{ election.external? }
 
   scope :active_for_time, ->(time){ where(Race.arel_table[:filing_deadline_date].gt(time) ) }
+  scope :by_last_update, ->{  order("updated_at desc") }
 
   LEVEL_OF_GOVERNMENT_TYPE_SCHOOL_BOARD =           'school_board'
   LEVEL_OF_GOVERNMENT_TYPE_MAYOR =                  'mayor'
@@ -46,5 +47,13 @@ class Race < ApplicationRecord
 
   def type_and_locale
     "#{locale} #{LEVEL_OF_GOVERNMENT_TYPES.invert[level_of_government]}"
+  end
+
+  def complete_name
+    if election.external?
+      type_and_locale
+    else
+      name
+    end
   end
 end

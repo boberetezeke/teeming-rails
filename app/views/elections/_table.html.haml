@@ -1,4 +1,15 @@
-- elections.each do |election|
-  %h4= link_to(election.name, election_races_path(election))
-  - election.races.each do |race|
-    = render partial: 'races/show', locals: { race: race }
+- elections.each_with_index do |election, index|
+  %h4
+    =link_to(election.name, election_races_path(election))
+    (#{election.races.count} #{'race'.pluralize(election.races.count)})
+
+  - if short_list_of_races
+    - if election.external?
+      %span.note Click on the link above to add races/candidacy in your area
+    - election.races.by_last_update.take(3).each do |race|
+      = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true }
+  - else
+    - election.races.each do |race|
+      = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true }
+  - if index < elections.count - 1
+    %hr

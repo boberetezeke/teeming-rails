@@ -2,8 +2,8 @@
 
 %h3 Internal (for Our Revolution MN)
 
-= render partial: 'table', locals: { elections: @internal_elections }
+= render partial: 'table', locals: { elections: @internal_elections, short_list_of_races: false }
 
 %h3 External (for Minnesota offices)
 
-= render partial: 'table', locals: { elections: @external_elections }
+= render partial: 'table', locals: { elections: @external_elections, short_list_of_races: false  }
