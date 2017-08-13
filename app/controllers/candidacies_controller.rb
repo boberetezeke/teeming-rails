@@ -85,7 +85,7 @@ class CandidaciesController < ApplicationController
   end
 
   def self.candidacy_attributes
-    [:race_id, :user_id, :name, {answers_attributes: answers_atributes}]
+    [:race_id, :user_id, :name, :party_affiliation, :notes, {answers_attributes: answers_atributes}]
   end
 
   private

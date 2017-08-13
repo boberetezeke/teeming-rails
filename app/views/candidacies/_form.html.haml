@@ -4,4 +4,6 @@
   = render partial: 'answers/form', locals: { f: f, edit_tools: false }
 - else
   = f.input :name
+  = f.input :party_affiliation, as: :select, collection: Candidacy::PARTY_AFFILATION_TYPES, include_blank: false
+  = f.input :notes, html_input: { rows: 2, cols: 80 }
 

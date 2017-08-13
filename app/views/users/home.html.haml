@@ -12,3 +12,27 @@
       = render partial: 'events/table', locals: {events: Event.all, user: current_user}
 - else
   = render partial: "#{@user.setup_state}"
+
+- if !@user.saw_introduction
+  .modal.fade#my-modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          .modal-title Welcome to Our Revolution MN
+        .modal-body
+          %h3 You are now eligible to vote in Our Revolution MN elections!
+          %p
+            Also this membership site will be a meeting place for you and others to organize
+            all over the state of Minnesota for progressive values.
+          %p
+            As a start, you can start entering local races for the fall and who is running to
+            contest those seats. Click on the Minnesota 2017 Elections link to get started
+            (after dismissing this window).
+          = semantic_form_for @user do |f|
+            = f.hidden_field :saw_introduction, value: 'true'
+            = f.submit "Ok", class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function() {
+    #{(@user.setup_state.blank? && !@user.saw_introduction) ? '$("#my-modal").modal().show()'.html_safe : ''}
+  })

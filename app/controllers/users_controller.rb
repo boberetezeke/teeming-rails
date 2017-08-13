@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   end
 
   def redo_initial_steps
-    current_user.update(setup_state: 'step_setup_user_details')
+    current_user.update(setup_state: 'step_setup_user_details', saw_introduction: false)
     redirect_to home_users_path
   end
 
@@ -166,7 +166,7 @@ class UsersController < ApplicationController
   end
 
   def user_params(params)
-    params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board,
+    params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board, :saw_introduction,
                                  :email, :password, :password_confirmation,
                                  {answers_attributes: CandidaciesController.answers_atributes},
                                  {event_rsvps_attributes: [:rsvp_type, :event_id] },
