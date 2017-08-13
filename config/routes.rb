@@ -19,6 +19,7 @@ Rails.application.routes.draw do
       get :account
       get :privacy_policy
       get :bylaws
+      get :code_of_conduct
       put :redo_initial_steps
     end
   end

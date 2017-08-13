@@ -1,7 +1,7 @@
 = render partial: 'step_title', locals: { step_title: 'The Founding Convention', step_sub_title: "Help found a change in Minnesota's future" }
 
 = semantic_form_for @user do |f|
-  = render partial: 'events/show', locals: { event: @initial_convention, show_description: true, show_rsvp: false }
+  = render partial: 'events/show', locals: { event: @initial_convention, show_description: true, show_rsvp: false, show_stats: false }
   %h3 Your RSVP
   = f.semantic_fields_for :event_rsvps do |ff|
     = render partial: 'event_rsvps/form', locals: {f: ff}

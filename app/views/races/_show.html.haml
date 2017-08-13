@@ -27,6 +27,9 @@
     %p
       Candidates announced on:
       %strong #{race.candidates_announcement_date}
+    - if race.candidacies.count > 0
+      %p
+        #{race.candidacies.count} #{"candidate".pluralize(race.candidacies.count)} signed up
     %p
       Election on:
       %strong #{race.election.vote_date}

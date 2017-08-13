@@ -40,11 +40,12 @@ class UsersController < ApplicationController
   end
 
   def privacy_policy
-
   end
 
   def bylaws
+  end
 
+  def code_of_conduct
   end
 
   def redo_initial_steps

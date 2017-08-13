@@ -14,7 +14,7 @@
   .row
     .col-md-12
       .check_box_or_radio
-        = f.input :accepted_bylaws, as: :boolean, label: 'Accept bylaws'
+        = f.input :accepted_bylaws, as: :boolean, label: 'Accept bylaws and code of conduct'
   .row
     .col-md-12
       = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding', disabled: !@user.accepted_bylaws, id: 'submit_button'
