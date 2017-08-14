@@ -20,6 +20,7 @@ class RacesController < ApplicationController
   def create
     @race = Race.new(race_params)
 
+    @race.created_by_user = current_user
     @race.save
 
     respond_with @race, location: race_path(@race)
@@ -33,6 +34,7 @@ class RacesController < ApplicationController
   def update
     @race = Race.find(params[:id])
 
+    @race.updated_by_user = current_user
     @race.update(race_params)
 
     respond_with @race, location: race_path(@race)

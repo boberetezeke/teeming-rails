@@ -22,6 +22,7 @@ class CandidaciesController < ApplicationController
   def create
     @race = Race.find(params[:candidacy][:race_id])
     @candidacy = Candidacy.new(candidacy_params(params))
+    @candidacy.created_by_user = current_user
     if @candidacy.save
       if @race.election.internal?
         redirect_to candidacies_path
@@ -49,6 +50,7 @@ class CandidaciesController < ApplicationController
 
   def update
     @candidacy = Candidacy.find(params[:id])
+    @candidacy.updated_by_user = current_user
 
     if params['candidacy']['answers_attributes']
       params['candidacy']['answers_attributes'].values.each do |answer_params|
