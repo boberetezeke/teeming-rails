@@ -13,3 +13,7 @@ ActionMailer::Base.smtp_settings = {
   :authentication => :plain,
   :enable_starttle_auto => true
 }
+
+if !Rails.env.development?
+  Rails.logger = Le.new(ENV['LOGENTRIES_TOKEN'])
+end

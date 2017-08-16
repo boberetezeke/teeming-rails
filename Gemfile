@@ -37,6 +37,9 @@ gem 'kaminari'
 gem 'pry-rails'
 gem 'sendgrid-ruby'
 
+gem 'honeybadger'
+gem 'le'
+
 gem 'dotenv-rails', groups: [:development, :test]
 
 # Use Capistrano for deployment
