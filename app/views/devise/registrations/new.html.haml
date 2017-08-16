@@ -8,6 +8,8 @@
   %li You will be asked to login with your email and the password you entered in Step 1
   %li You will then go through a 3 step process complete your membership.
 
+%p if you have an issues with getting signed up, please email: #{link_to("communications@ourrevolutionmn.com", "mailto:communications@ourrevolutionmn.com")}
+
 %hr
 
 = semantic_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
