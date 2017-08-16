@@ -1,16 +1,21 @@
 = render partial: 'step_title', locals: { step_title: 'Volunteer and/or Donate', step_sub_title: "Pitch in and help build OurRevolutionMN" }
 
 %p
-  In an effort to build up an independent progressive movement in Minnesota (and the US), we need to stop relying on big money
-  donors and start relying on our own skils, effort and money. Bernie's campaign was fueled by small donations from
-  all over the country. We can do the same here and maintain the independence we need to fight big money's take
-  over of our politics.
+  Organizations don't run on passion alone, as much as we wish they would. Member donations of both time, skills, and
+  money are necessary to help us fulfill our mission. In an effort to build up an independent progressive movement in
+  Minnesota (and all around the US), we need to stop relying on big money donors and start relying on our own skils,
+  effort and money. Bernie's campaign was fueled by small donations from all over the country. We can do the same
+  here and maintain the independence we need to fight big money's take over of our politics.
 
 %p
   OurRevolutionMN does not take money from corporations, political parties or the government
 
-%h4 Member Dues
+%h4 Donations
 
+Please donate, as much or as little as you can by using the DONATE button below. May we suggest $27? It was the average
+contribution to Bernie's presidential run.
+
+%hr
 %p
   By clicking on the following link, you will be opening up a new browser window. Please come back and finish these signup
   steps after you are done donating.
@@ -18,6 +23,10 @@
 
 %hr
 %h4 Volunteering
+
+%p
+  As important or more important than money is your time, talents and passion. Let us know what you like to do and
+  what you are good at.
 
 = semantic_form_for @user do |f|
   .check_box_or_radio

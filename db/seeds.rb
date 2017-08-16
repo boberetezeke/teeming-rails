@@ -159,11 +159,11 @@ skills_questionnaire.destroy if skills_questionnaire
 #end
 
 minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
-initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 18), election_type: Election::ELECTION_TYPE_INTERNAL)
+initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), election_type: Election::ELECTION_TYPE_INTERNAL)
 initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race',
                                             election_id: initial_board_election.id,
-                                            filing_deadline_date: Date.new(2017, 8, 5),
-                                            candidates_announcement_date: Date.new(2017, 8, 20))
+                                            filing_deadline_date: Date.new(2017, 9, 2),
+                                            candidates_announcement_date: Date.new(2017, 9, 9))
 initial_board_convention = Event.find_or_create_by(name: 'Founding Convention', occurs_at: DateTime.new(2017, 9, 16, 9, 00), location: 'AAAA Theatre, Alexandria, MN', description: "This convention is to not only launch the organization with its first elected board, but also to bring together people from all around the state to start to take it back to its progressive roots.")
 initial_board_questionnaire = Questionnaire.where(questionnairable_type: 'Race', questionnairable_id: initial_board_race.id).first
 

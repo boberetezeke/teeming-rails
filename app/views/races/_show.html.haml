@@ -13,7 +13,7 @@
           %td
 - else
   - if race.election.internal?
-    %h5 Race: #{link_to(race.name, race)}
+    %h5 #{link_to(race.name, race)}
   - else
     %h5
       #{link_to(race.type_and_locale, race)}

@@ -1,4 +1,15 @@
 %h2 Sign up
+%h3 Welcome to the sign up process, here is how it will go.
+
+%ol
+  %li Fill out your email and password below
+  %li You will be emailed a confirmation email, check your email for that email.
+  %li Click on the confirmation link in the email
+  %li You will be asked to login with your email and the password you entered in Step 1
+  %li You will then go through a 3 step process complete your membership.
+
+%hr
+
 = semantic_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
   = f.input :email, as: :email
   - if @minimum_password_length
