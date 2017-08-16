@@ -1,17 +1,16 @@
 .row
   .col-md-4
-    .event-title What
+    %span.event-title What
+    %br
+    %span.event-data= event.name
   .col-md-4
-    .event-title Where
+    %span.event-title Where
+    %br
+    %span.event-data= event.location
   .col-md-4
-    .event-title When
-.row
-  .col-md-4
-    = event.name
-  .col-md-4
-    = event.location
-  .col-md-4
-    = event_date_and_time_str(event.occurs_at)
+    %span.event-title When
+    %br
+    %span.event-data= event_date_and_time_str(event.occurs_at)
 - if show_description
   .row
     .col-md-12
