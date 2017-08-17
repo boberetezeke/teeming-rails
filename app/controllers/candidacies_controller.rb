@@ -20,6 +20,11 @@ class CandidaciesController < ApplicationController
   end
 
   def create
+    params['candidacy']['answers_attributes'].values.each do |answer_params|
+      if answer_params['text_checkboxes'].is_a?(Array)
+        answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+      end
+    end
     @race = Race.find(params[:candidacy][:race_id])
     @candidacy = Candidacy.new(candidacy_params(params))
     @candidacy.created_by_user = current_user
