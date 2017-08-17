@@ -25,7 +25,7 @@ class CandidaciesController < ApplicationController
     @candidacy.created_by_user = current_user
     if @candidacy.save
       if @race.election.internal?
-        redirect_to candidacies_path
+        redirect_to root_path
       else
         redirect_to @race
       end
@@ -66,7 +66,7 @@ class CandidaciesController < ApplicationController
 
     if @candidacy.update(candidacy_params(params))
       if @candidacy.race.election.internal?
-        redirect_to candidacies_path
+        redirect_to root_path
       else
         redirect_to @candidacy.race
       end
@@ -77,10 +77,15 @@ class CandidaciesController < ApplicationController
 
   def destroy
     @candidacy = Candidacy.find(params[:id])
+    race = @candidacy.race
 
     @candidacy.destroy
 
-    redirect_to candidacies_path
+    if race.election.internal?
+      redirect_to root_path
+    else
+      redirect_to @candidacy.race
+    end
   end
 
   def self.answers_atributes

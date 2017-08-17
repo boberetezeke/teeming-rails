@@ -33,3 +33,11 @@
     %p
       Election on:
       %strong #{race.election.vote_date}
+  - if race.election.internal?
+    - candidacy = current_user.candidacies.where(race: race).first
+    - if candidacy
+      = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
+      = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger'
+    - else
+      = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
+
