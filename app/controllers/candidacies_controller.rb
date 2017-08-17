@@ -2,7 +2,7 @@ class CandidaciesController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @candidacies = Candidacy.joins(race: :election).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_INTERNAL))
+    @candidacies = current_user.candidacies.joins(race: :election).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_INTERNAL))
     @races = Race.active_for_time(Time.now)
 
     breadcrumbs candidacies_breadcrumbs(include_link: false)
