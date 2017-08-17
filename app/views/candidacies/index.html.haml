@@ -5,11 +5,15 @@
     %tr.row
       %th Election
       %th Race
+      %th Actions
   %tbody
     - @candidacies.each do |candidacy|
       %tr.row
-        %td= link_to(candidacy.race.election.name, edit_candidacy_path(candidacy, race_id: candidacy.race_id))
+        %td= candidacy.race.election.name
         %td= candidacy.race.name
+        %td
+          = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-success'
+          = link_to 'Delete', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger'
 
 - @races.each do |race|
   - if !current_user.in_race?(race)

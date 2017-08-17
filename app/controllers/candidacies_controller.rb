@@ -2,7 +2,7 @@ class CandidaciesController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @candidacies = Candidacy.all
+    @candidacies = Candidacy.joins(race: :election).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_INTERNAL))
     @races = Race.active_for_time(Time.now)
 
     breadcrumbs candidacies_breadcrumbs(include_link: false)
@@ -41,11 +41,15 @@ class CandidaciesController < ApplicationController
 
     @candidacy.answers.each do |answer|
       if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-        answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
+        if answer && answer.text
+          answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
+        else
+          answer.text_checkboxes = ''
+        end
       end
     end
 
-    breadcrumbs candidacies_breadcrumbs, @candidacy.name
+    breadcrumbs candidacies_breadcrumbs, @candidacy.race.name
   end
 
   def update
@@ -73,13 +77,10 @@ class CandidaciesController < ApplicationController
 
   def destroy
     @candidacy = Candidacy.find(params[:id])
-    race = @candidacy.race
 
     @candidacy.destroy
 
-    if @candidacy.race.election.external?
-      redirect_to race
-    end
+    redirect_to candidacies_path
   end
 
   def self.answers_atributes
