@@ -10,7 +10,7 @@
           %td= link_to race.complete_name, race
           %td
             = link_to 'Edit', edit_race_path(race), class: 'btn btn-sm btn-success'
-            = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger'
+            = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
   - else
     %thead
       %tr.row
@@ -24,4 +24,4 @@
           %td= Race::LEVEL_OF_GOVERNMENT_TYPES.invert[race.level_of_government]
           %td
             = link_to 'Edit', edit_race_path(race), class: 'btn btn-sm btn-success'
-            = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger'
+            = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}

@@ -9,4 +9,4 @@
         %td= link_to questionnaire.name, questionnaire
         %td
           = link_to 'Edit', edit_questionnaire_path(questionnaire), class: 'btn btn-sm btn-success'
-          = link_to 'Delete', questionnaire_path(questionnaire), method: :delete, class: 'btn btn-sm btn-danger'
+          = link_to 'Delete', questionnaire_path(questionnaire), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
