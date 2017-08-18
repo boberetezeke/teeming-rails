@@ -7,7 +7,7 @@
     %tbody
       - races.each do |race|
         %tr.row
-          %td= link_to race.name, race
+          %td= link_to race.complete_name, race
           %td
             = link_to 'Edit', edit_race_path(race), class: 'btn btn-sm btn-success'
             = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger'

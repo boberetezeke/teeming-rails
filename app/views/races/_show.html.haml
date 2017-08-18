@@ -1,5 +1,5 @@
 - if race.candidates_announced?
-  %h5 #{race.name} candidates
+  %h5 #{race.complete_name} candidates
   %hr
   %table.table
     %thead
@@ -13,7 +13,7 @@
           %td
 - else
   - if race.election.internal?
-    %h5 #{link_to(race.name, race)}
+    %h5 #{link_to(race.complete_name, race)}
   - else
     %h5
       #{link_to(race.type_and_locale, race)}

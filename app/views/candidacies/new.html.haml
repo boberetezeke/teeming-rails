@@ -1,4 +1,4 @@
-%h2 Candidacy for #{@race.name}
+%h2 Candidacy for #{@race.complete_name}
 
 = semantic_form_for @candidacy do |f|
   = render partial: 'form', locals: {f: f, race: @race, candidacy: @candidacy }

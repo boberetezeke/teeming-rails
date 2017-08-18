@@ -57,7 +57,7 @@ class CandidaciesController < ApplicationController
       end
     end
 
-    breadcrumbs candidacies_breadcrumbs, @candidacy.race.name
+    breadcrumbs candidacies_breadcrumbs, @candidacy.race.complete_name
   end
 
   def update
