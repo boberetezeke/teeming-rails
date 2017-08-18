@@ -5,7 +5,7 @@
   %h4 There are no races for this election, click Add Race to add one
 - else
   - @election.races.each do |race|
-    = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: false }
+    = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: false, show_all: false }
 
 .actions
   = link_to("Add Race", new_election_race_path(@election), class: 'btn btn-sm btn-primary')

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170813172518) do
+ActiveRecord::Schema.define(version: 20170818184425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(version: 20170813172518) do
     t.datetime "updated_at"
     t.integer  "created_by_user_id"
     t.integer  "updated_by_user_id"
+    t.text     "notes"
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id", using: :btree
   end

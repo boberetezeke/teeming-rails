@@ -1,4 +1,4 @@
-= render partial: 'show', locals: { race: @race }
+= render partial: 'show', locals: { race: @race, show_all: true }
 
 - if @race.election.external?
   - if @race.candidacies.present?
