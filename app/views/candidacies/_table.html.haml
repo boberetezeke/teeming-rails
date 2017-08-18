@@ -7,7 +7,8 @@
   %tbody
     - candidacies.each do |candidacy|
       %tr.row
-        %td= link_to candidacy.name, candidacy
+        /%td= link_to candidacy.name, candidacy
+        %td= candidacy.name
         %td= Candidacy::PARTY_AFFILATION_TYPES.invert[candidacy.party_affiliation]
         %td
           = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-success'
