@@ -2,8 +2,8 @@ class Race < ApplicationRecord
   belongs_to :election
   has_many :candidacies, dependent: :destroy
   has_one  :questionnaire, as: :questionnairable
-  has_one  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
-  has_one  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
+  belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
+  belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
 
   validates :name, presence: true,                if: ->{ election.internal? }
   validates :level_of_government, presence: true, if: ->{ election.external? }
