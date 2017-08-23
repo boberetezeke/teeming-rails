@@ -110,7 +110,7 @@ repeated_emails = Member.valid_email.group(:email)
   .having("count(email) > 1").count.keys
 
 repeated_emails.each do |email|
-  Member.current.where(email: email)
+  Member.where(email: email)
     .order("databank_id desc")
     .each_with_index do |member, i|
 
