@@ -3,10 +3,6 @@ class UsersController < ApplicationController
 
   STATES = ['step_setup_user_details', 'step_volunteer_or_donate', 'step_declare_candidacy']
 
-  def index
-    @users = User.all
-  end
-
   def home
     @user = current_user
 

@@ -85,4 +85,8 @@ module ApplicationHelper
 
     after_sections.each { |section| yield section }
   end
+
+  def in_formtastic(html)
+    html.gsub(/<(p|ul|li)>/) { "<#{$1} class=\"in-formtastic\">" }
+  end
 end
