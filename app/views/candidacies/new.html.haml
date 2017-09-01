@@ -1,5 +1,8 @@
 %h2 Candidacy for #{@race.complete_name}
 
+- if @race.election.internal?
+  = Kramdown::Document.new(@race.notes).to_html.html_safe
+
 = semantic_form_for @candidacy do |f|
   = render partial: 'form', locals: {f: f, race: @race, candidacy: @candidacy }
 
