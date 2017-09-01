@@ -161,10 +161,63 @@ skills_questionnaire.destroy if skills_questionnaire
 minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
 minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
 initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), election_type: Election::ELECTION_TYPE_INTERNAL)
+
+=begin
+  %p.in-formtastic
+    Your voice is needed on the Statewide Board!
+  %p.in-formtastic
+    Our organization needs vision, talent, skillsets, and passion.
+  %p.in-formtastic
+    This is OUR REVOLUTION and diverse voices are necessary for success.
+  %p.in-formtastic
+    This is about building a team and that means introverts, extroverts, legal nerds, tech nerds,
+    social butterflies, event planners, parents, rural/urban, absolutely anyone with interest should run.
+    Prior board experience is not necessary, but is helpful.
+
+  %p.in-formtastic ORMN Board members should expect to:
+  %ul.in-formtastic
+    %li.in-formtastic attend the statewide meeting annually
+    %li.in-formtastic attend the scheduled board meetings (these are available remotely as well as in person)
+    %li.in-formtastic provide vision to the organization
+    %li.in-formtastic provide talent and guidance to committees and membership
+    %li.in-formtastic recruit and support new chapters
+    %li.in-formtastic abide by and amend the bylaws as necessary
+    %li.in-formtastic select a Chair/Vice Chair/Secretary/Treasurer from board ranks
+    %li.in-formtastic support the Our Revolution platform
+    %li.in-formtastic have sincere dedication to statewide organizing that focuses on getting progressives elected
+
+  %p.in-formtastic The board membership, when available, should be equally split between urban and rural areas as defined through congressional districts.
+=end
+
+initial_board_race_notes = <<EOT
+Your voice is needed on the Statewide Board!
+
+Our organization needs vision, talent, skillsets, and passion.
+
+This is OUR REVOLUTION and diverse voices are necessary for success.
+
+This is about building a team and that means introverts, extroverts, legal nerds, tech nerds,
+social butterflies, event planners, parents, rural/urban, absolutely anyone with interest should run.
+Prior board experience is not necessary, but is helpful.
+
+ORMN Board members should expect to:
+
+* attend the statewide meeting annually
+* attend the scheduled board meetings (these are available remotely as well as in person)
+* provide vision to the organization
+* provide talent and guidance to committees and membership
+* recruit and support new chapters
+* abide by and amend the bylaws as necessary
+* select a Chair/Vice Chair/Secretary/Treasurer from board ranks
+* support the Our Revolution platform
+* have sincere dedication to statewide organizing that focuses on getting progressives elected
+
+The board membership, when available, should be equally split between urban and rural areas as defined through congressional districts.
+EOT
 initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race',
                                             election_id: initial_board_election.id,
                                             filing_deadline_date: Date.new(2017, 9, 2),
-                                            candidates_announcement_date: Date.new(2017, 9, 9))
+                                            candidates_announcement_date: Date.new(2017, 9, 9), notes: initial_board_race_notes)
 initial_board_convention = Event.find_or_create_by(name: 'Founding Convention', occurs_at: DateTime.new(2017, 9, 16, 9, 00), location: 'AAAA Theatre, Alexandria, MN', description: "This convention is to not only launch the organization with its first elected board, but also to bring together people from all around the state to start to take it back to its progressive roots.")
 initial_board_questionnaire = Questionnaire.where(questionnairable_type: 'Race', questionnairable_id: initial_board_race.id).first
 
