@@ -81,6 +81,7 @@ class UsersController < ApplicationController
       redirect_to home_users_path
     else
       if @user.setup_state == 'step_declare_candidacy'
+        @race = Race.find_by_name('Initial Board Election Race')
         if params[:user][:run_for_state_board] == '0'
           params[:user].delete(:candidacies_attributes)
         else
