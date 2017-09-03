@@ -8,15 +8,20 @@
 
   %h3 Your Potential State Board Candidacy
 
-  = in_formtastic(Kramdown::Document.new(@race.notes).to_html).html_safe
+  - if @race.before_filing_deadline?(Time.now.utc)
+    = in_formtastic(Kramdown::Document.new(@race.notes).to_html).html_safe
 
-  .check_box_or_radio
-    = f.input :run_for_state_board, as: :boolean, label: 'I want to run for the state board of directors'
+    .check_box_or_radio
+      = f.input :run_for_state_board, as: :boolean, label: 'I want to run for the state board of directors'
 
-  #questionnaire{'class' => (f.object.run_for_state_board ? '' : 'hidden')}
-    %h4 Candidate Questionnaire
-    = f.semantic_fields_for :candidacies do |ff|
-      = render partial: 'candidacies/form', locals: {f: ff, race: @race, candidacy: @candidacy}
+    #questionnaire{'class' => (f.object.run_for_state_board ? '' : 'hidden')}
+      %h4 Candidate Questionnaire
+      = f.semantic_fields_for :candidacies do |ff|
+        = render partial: 'candidacies/form', locals: {f: ff, race: @race, candidacy: @candidacy}
+  - else
+    %hr
+    = in_formtastic("<div class=\"strong\">The filing deadline for the #{@race.name} election has passed.</div>").html_safe
+    %hr
 
   = f.submit 'Cancel', class: 'btn btn-sm btm-info btn-with-padding'
   = f.submit 'Previous Step', class: 'btn btn-sm btm-info btn-with-padding'

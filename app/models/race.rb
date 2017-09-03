@@ -58,4 +58,10 @@ class Race < ApplicationRecord
       name
     end
   end
+
+  def before_filing_deadline?(utc_time)
+    local_time = Time.zone.utc_to_local(utc_time)
+    local_date = Date.new(local_time.year, local_time.month, local_time.day)
+    local_date <= filing_deadline_date.utc.to_date
+  end
 end

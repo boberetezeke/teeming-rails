@@ -17,6 +17,9 @@ module TeemingMembers
     # Skip views, helpers and assets when generating a new resource.
     # config.api_only = false
     config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/lib #{config.root}/app/actions)
+
+    config.time_zone = 'Central Time (US & Canada)'
+    config.active_record.default_timezone = :utc
   end
 end
 

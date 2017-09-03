@@ -25,7 +25,9 @@
   - if race.filing_deadline_date
     %p
       Filing date:
-      %strong #{race.filing_deadline_date.to_date}
+      %strong #{race.filing_deadline_date.utc.to_date}
+      - unless race.before_filing_deadline?(Time.now.utc)
+        (Closed)
   - if race.candidates_announcement_date
     %p
       Candidates announced on:
@@ -42,5 +44,9 @@
       = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
       = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
     - else
-      = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
+      - if race.before_filing_deadline?(Time.now.utc)
+        = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
+      - else
+        The filing deadline for this race has past.
+
 

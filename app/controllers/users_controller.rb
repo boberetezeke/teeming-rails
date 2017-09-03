@@ -80,13 +80,17 @@ class UsersController < ApplicationController
       @user.save
       redirect_to home_users_path
     else
+      declaring_candidacy_and_beyond_filing_deadline = false
       if @user.setup_state == 'step_declare_candidacy'
         @race = Race.find_by_name('Initial Board Election Race')
         if params[:user][:run_for_state_board] == '0'
           params[:user].delete(:candidacies_attributes)
         else
-          params['user']['candidacies_attributes'].values[0]['answers_attributes'].values.each do |answer_params|
-            convert_answer_checkboxes_to_text(answer_params)
+          declaring_candidacy_and_beyond_filing_deadline = !(@race.before_filing_deadline?(Time.now.utc))
+          if params['user']['candidacies_attributes']
+            params['user']['candidacies_attributes'].values[0]['answers_attributes'].values.each do |answer_params|
+              convert_answer_checkboxes_to_text(answer_params)
+            end
           end
         end
 
@@ -101,7 +105,7 @@ class UsersController < ApplicationController
         end
       end
 
-      if @user.update(user_params(params))
+      if @user.update(user_params(params)) && !declaring_candidacy_and_beyond_filing_deadline
         if @user.setup_state.present?
           @user.reload
           @user.setup_state = next_state
@@ -110,6 +114,9 @@ class UsersController < ApplicationController
 
         redirect_to home_users_path
       else
+        if declaring_candidacy_and_beyond_filing_deadline
+          flash[:error] = 'the filing deadline is past'
+        end
         @initial_convention = Event.first
         render 'home'
       end
