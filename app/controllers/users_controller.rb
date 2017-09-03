@@ -83,7 +83,7 @@ class UsersController < ApplicationController
       declaring_candidacy_and_beyond_filing_deadline = false
       if @user.setup_state == 'step_declare_candidacy'
         @race = Race.find_by_name('Initial Board Election Race')
-        if params[:user][:run_for_state_board] == '0'
+        if !(params[:user][:run_for_state_board]) || params[:user][:run_for_state_board] == '0'
           params[:user].delete(:candidacies_attributes)
         else
           declaring_candidacy_and_beyond_filing_deadline = !(@race.before_filing_deadline?(Time.now.utc))
