@@ -115,7 +115,7 @@ class UsersController < ApplicationController
         redirect_to home_users_path
       else
         if declaring_candidacy_and_beyond_filing_deadline
-          flash[:error] = 'the filing deadline is past'
+          flash[:alert] = 'the filing deadline is past'
         end
         @initial_convention = Event.first
         render 'home'

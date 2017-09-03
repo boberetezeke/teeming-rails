@@ -10,12 +10,17 @@ class CandidaciesController < ApplicationController
 
   def new
     @race = Race.find(params[:race_id])
-    @candidacy = Candidacy.new(race: @race, user: current_user)
-    if @race.election.internal?
-      @candidacy.answers = @race.questionnaire.new_answers
-      breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+    if @race.election.internal? && !@race.before_filing_deadline?(Time.now.utc)
+      flash[:alert] = 'the filing deadline is past'
+      redirect_to candidacies_path
     else
-      breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+      @candidacy = Candidacy.new(race: @race, user: current_user)
+      if @race.election.internal?
+        @candidacy.answers = @race.questionnaire.new_answers
+        breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+      else
+        breadcrumbs candidacies_breadcrumbs, "New Candidacy"
+      end
     end
   end
 
@@ -29,16 +34,21 @@ class CandidaciesController < ApplicationController
     end
 
     @race = Race.find(params[:candidacy][:race_id])
-    @candidacy = Candidacy.new(candidacy_params(params))
-    @candidacy.created_by_user = current_user
-    if @candidacy.save
-      if @race.election.internal?
-        redirect_to root_path
-      else
-        redirect_to @race
-      end
+    if @race.election.internal? && !@race.before_filing_deadline?(Time.now.utc)
+      flash[:alert] = 'the filing deadline is past'
+      redirect_to root_path
     else
-      render 'new'
+      @candidacy = Candidacy.new(candidacy_params(params))
+      @candidacy.created_by_user = current_user
+      if @candidacy.save
+        if @race.election.internal?
+          redirect_to root_path
+        else
+          redirect_to @race
+        end
+      else
+        render 'new'
+      end
     end
   end
 

@@ -52,7 +52,7 @@ describe UsersController do
       put :update, id: user.id, user: { run_for_state_board: "1" }.merge(event_rsvps_attributes_in_person)
 
       expect(user.reload.setup_state).to eq("")
-      expect(flash[:error]).to be_nil
+      expect(flash[:alert]).to be_nil
     end
 
     it "disallows signup after the candidacy filing date is up" do
@@ -63,7 +63,7 @@ describe UsersController do
       put :update, id: user.id, user: { run_for_state_board: "1" }.merge(event_rsvps_attributes_in_person)
 
       expect(user.reload.setup_state).to eq('step_declare_candidacy')
-      expect(flash[:error]).to eq('the filing deadline is past')
+      expect(flash[:alert]).to eq('the filing deadline is past')
     end
   end
 end
