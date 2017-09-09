@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818184425) do
+ActiveRecord::Schema.define(version: 20170907034103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,14 @@ ActiveRecord::Schema.define(version: 20170818184425) do
     t.index ["user_id"], name: "index_members_on_user_id", using: :btree
   end
 
+  create_table "privileges", force: :cascade do |t|
+    t.integer "role_id"
+    t.string  "subject"
+    t.string  "action"
+    t.string  "scope"
+    t.index ["role_id"], name: "index_privileges_on_role_id", using: :btree
+  end
+
   create_table "questionnaire_sections", force: :cascade do |t|
     t.integer "questionnaire_id"
     t.string  "title"
@@ -149,16 +157,10 @@ ActiveRecord::Schema.define(version: 20170818184425) do
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id", using: :btree
   end
 
-  create_table "role_assignments", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "role_id"
-    t.integer "chapter_id"
-  end
-
   create_table "roles", force: :cascade do |t|
-    t.integer "chapter_id"
+    t.integer "user_id"
     t.string  "name"
-    t.text    "description"
+    t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -181,7 +183,6 @@ ActiveRecord::Schema.define(version: 20170818184425) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.string   "role"
     t.string   "setup_state"
     t.boolean  "run_for_state_board"
     t.boolean  "interested_in_volunteering"

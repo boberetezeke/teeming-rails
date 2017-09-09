@@ -23,6 +23,8 @@ class User < ApplicationRecord
   has_one  :member, dependent: :destroy
   accepts_nested_attributes_for :member
 
+  has_one :role
+
   before_save :setup_wizard
 
   def new_candidacy(race)
@@ -47,6 +49,10 @@ class User < ApplicationRecord
 
   def in_race?(race)
     candidacies.map(&:race).include?(race)
+  end
+
+  def can_show_internal_races?
+    role && role.can_show_internal_races?
   end
 
   private

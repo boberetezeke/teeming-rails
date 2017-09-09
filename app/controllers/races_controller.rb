@@ -9,6 +9,7 @@ class RacesController < ApplicationController
 
   def show
     @race = Race.find(params[:id])
+    authorize @race
     breadcrumbs races_breadcrumbs(@race.election), @race.complete_name
   end
 
