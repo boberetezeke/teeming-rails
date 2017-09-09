@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170907034103) do
+ActiveRecord::Schema.define(version: 20170909211216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,9 +158,7 @@ ActiveRecord::Schema.define(version: 20170907034103) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.integer "user_id"
-    t.string  "name"
-    t.index ["user_id"], name: "index_roles_on_user_id", using: :btree
+    t.string "name"
   end
 
   create_table "users", force: :cascade do |t|
@@ -187,7 +185,9 @@ ActiveRecord::Schema.define(version: 20170907034103) do
     t.boolean  "run_for_state_board"
     t.boolean  "interested_in_volunteering"
     t.boolean  "saw_introduction"
+    t.integer  "role_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+    t.index ["role_id"], name: "index_users_on_role_id", using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 

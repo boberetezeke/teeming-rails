@@ -1,5 +1,5 @@
 class Role < ApplicationRecord
-  belongs_to :user
+  has_many :users
   has_many :privileges
 
   def can_show_internal_candidacies?

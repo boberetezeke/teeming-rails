@@ -6,5 +6,6 @@ FactoryGirl.define do
     password_confirmation   'asdfasdf'
 
     confirmed_at            Time.now
+    association             :role
   end
 end
