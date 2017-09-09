@@ -1,10 +1,10 @@
 = render partial: 'show', locals: { race: @race, show_all: true }
 
-- if @race.election.external?
+- if policy(@race).show_candidacies?
   - if @race.candidacies.present?
     %h3 Candidacies
 
-    = render partial: 'candidacies/table', locals: { candidacies: @race.candidacies }
+    = render partial: 'candidacies/table', locals: { race: @race, candidacies: @race.candidacies }
   - else
     %h3 No Candidacies
 

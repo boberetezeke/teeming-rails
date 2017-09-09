@@ -1,0 +1,4 @@
+%h3= @candidacy.name
+
+- @candidacy.answers.each do |answer|
+  = render partial: 'answers/show', locals: { answer: answer }

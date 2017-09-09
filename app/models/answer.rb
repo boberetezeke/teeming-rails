@@ -14,4 +14,13 @@ class Answer < ApplicationRecord
       self.text = self.text_checkboxes.join(" ")
     end
   end
+
+  def choices_text
+    return [] unless text.present?
+
+    choices_hash = Hash[question.choices.map{|c| [c.value, c.title]}]
+    text.split(/ /).reject{|c| c.blank? }.map do |choice_value|
+      choices_hash[choice_value]
+    end
+  end
 end

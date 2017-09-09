@@ -1,0 +1,9 @@
+- question = answer.question
+- if question.order_index == 1
+  - before_and_current_sections_for_question(question) do |section|
+    = render partial: 'questionnaire_sections/show', locals: { section: section, edit_tools: nil }
+.row
+  = render partial: 'questions/display', locals: { question: question, answer: answer}
+
+- empty_after_sections_for_question(question) do |section|
+  = render partial: 'questionnaire_sections/show', locals: { section: section, edit_tools: nil }

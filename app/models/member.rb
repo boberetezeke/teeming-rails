@@ -21,4 +21,8 @@ class Member < ApplicationRecord
   scope :active, -> {
     where(status: 'active')
   }
+
+  def name
+    first_name + ' ' + last_name
+  end
 end

@@ -24,4 +24,12 @@ class Candidacy < ApplicationRecord
       "Indepdence Party" =>                 PARTY_AFFILIATION_INDEPENDENCE_PARTY,
       "Other" =>                            PARTY_AFFILIATION_OTHER
   }
+
+  def name
+    if user
+      user.member.name
+    else
+      read_attribute(:name)
+    end
+  end
 end

@@ -8,6 +8,11 @@ class CandidaciesController < ApplicationController
     breadcrumbs candidacies_breadcrumbs(include_link: false)
   end
 
+  def show
+    @candidacy = Candidacy.find(params[:id])
+    authorize @candidacy
+  end
+
   def new
     @race = Race.find(params[:race_id])
     if @race.election.internal? && !@race.before_filing_deadline?(Time.now.utc)

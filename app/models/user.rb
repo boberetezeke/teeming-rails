@@ -51,8 +51,8 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
-  def can_show_internal_races?
-    role && role.can_show_internal_races?
+  def can_show_internal_candidacies?
+    role && role.can_show_internal_candidacies?
   end
 
   private

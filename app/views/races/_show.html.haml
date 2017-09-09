@@ -1,52 +1,41 @@
-- if race.candidates_announced?
-  %h5 #{race.complete_name} candidates
-  %hr
-  %table.table
-    %thead
-      %tr.row
-        %th Name
-        %th Candidate Info
-    %tbody
-      - race.candidacies.each do |candidacy|
-        %tr.row
-          %td= candidacy.user.name
-          %td
+- if race.election.internal?
+  %h5 #{link_to(race.complete_name, race)}
 - else
-  - if race.election.internal?
-    %h5 #{link_to(race.complete_name, race)}
+  %h5
+    #{link_to(race.type_and_locale, race)}
+    (#{race.candidacies.count} #{'candidate'.pluralize(race.candidacies.count)})
+    %span.updated Updated #{time_ago_in_words(race.updated_at)} ago
+  - if show_all && race.notes
+    %p.strong Notes:
+    %p= race.notes
+- if race.filing_deadline_date
+  %p
+    Filing date:
+    %strong #{race.filing_deadline_date.utc.to_date}
+    - unless race.before_filing_deadline?(Time.now.utc)
+      (Closed)
+- if race.candidates_announcement_date
+  %p
+    Candidates announced on:
+    %strong #{race.candidates_announcement_date}
+  - if policy(race).show_candidacies?
+    Candidates: #{race.candidacies.map{|c| link_to(c.name, c) }.join(', ').html_safe }
   - else
-    %h5
-      #{link_to(race.type_and_locale, race)}
-      (#{race.candidacies.count} #{'candidate'.pluralize(race.candidacies.count)})
-      %span.updated Updated #{time_ago_in_words(race.updated_at)} ago
-    - if show_all && race.notes
-      %p.strong Notes:
-      %p= race.notes
-  - if race.filing_deadline_date
-    %p
-      Filing date:
-      %strong #{race.filing_deadline_date.utc.to_date}
-      - unless race.before_filing_deadline?(Time.now.utc)
-        (Closed)
-  - if race.candidates_announcement_date
-    %p
-      Candidates announced on:
-      %strong #{race.candidates_announcement_date}
     - if race.candidacies.count > 0
       %p
         #{race.candidacies.count} #{"candidate".pluralize(race.candidacies.count)} signed up
-    %p
-      Election on:
-      %strong #{race.election.vote_date}
-  - if race.election.internal?
-    - candidacy = current_user.candidacies.where(race: race).first
-    - if candidacy
-      = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
-      = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+  %p
+    Election on:
+    %strong #{race.election.vote_date}
+- if race.election.internal?
+  - candidacy = current_user.candidacies.where(race: race).first
+  - if candidacy
+    = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
+    = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+  - else
+    - if race.before_filing_deadline?(Time.now.utc)
+      = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
     - else
-      - if race.before_filing_deadline?(Time.now.utc)
-        = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
-      - else
-        The filing deadline for this race has past.
+      The filing deadline for this race has past.
 
 

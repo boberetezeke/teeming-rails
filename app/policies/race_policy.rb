@@ -1,9 +1,13 @@
 class RacePolicy < ApplicationPolicy
   def show?
-    if @record.election.external?
+    true
+  end
+
+  def show_candidacies?
+    if @user.can_show_internal_candidacies?
       true
     else
-      @user.can_show_internal_races?
+      @record.election.external? || Time.zone.now.to_date >= @record.candidates_announcement_date
     end
   end
 end
