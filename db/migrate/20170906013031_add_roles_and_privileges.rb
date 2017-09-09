@@ -1,5 +1,9 @@
 class AddRolesAndPrivileges < ActiveRecord::Migration[5.0]
   def up
+    remove_foreign_key :races, :roles
+    remove_foreign_key :candidate_assignments, :roles
+    remove_foreign_key :role_assignments, :roles
+
     drop_table :roles
     drop_table :role_assignments
 
