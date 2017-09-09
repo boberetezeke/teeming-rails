@@ -43,8 +43,9 @@ class Race < ApplicationRecord
   }
 
   def candidates_announced?
-    candidates_announcement_date &&
-       candidates_announcement_date < Time.now
+    false
+    #candidates_announcement_date &&
+    #   candidates_announcement_date < Time.now
   end
 
   def type_and_locale
