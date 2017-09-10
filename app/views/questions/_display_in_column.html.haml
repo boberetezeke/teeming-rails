@@ -1,0 +1,10 @@
+- if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
+  %p= answer.text
+- elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
+  %p= answer.text
+- elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+  %ul
+    - answer.choices_text.each do |choice|
+      %li= choice
+- elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+  %p #{answer.choices_text.join(', ')}

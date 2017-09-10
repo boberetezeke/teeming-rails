@@ -2,12 +2,17 @@
   %thead
     %tr.row
       %th Name
+      - candidacies.first.answers.each do |answer|
+        %th= answer.question.text
       /%th Action
   %tbody
     - candidacies.all.sort_by{|c| c.name}.each do |candidacy|
       %tr.row
         /%td= link_to candidacy.name, candidacy
         %td= link_to(candidacy.name, candidacy)
+        - candidacy.answers.each do |answer|
+          %td= render partial: 'questions/display_in_column', locals: { question: answer.question, answer: answer }
+
         /%td
         /  = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-success'
         /  = link_to 'Delete', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
