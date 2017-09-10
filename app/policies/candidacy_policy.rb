@@ -22,6 +22,7 @@ class CandidacyPolicy < ApplicationPolicy
   end
 
   def show?
-    @record.user == @user || @user.can_show_internal_candidacies?
+    true
+    # @record.user == @user || @user.can_show_internal_candidacies?
   end
 end
