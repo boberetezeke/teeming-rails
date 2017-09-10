@@ -1,5 +1,7 @@
 - if race.election.internal?
   %h5 #{link_to(race.complete_name, race)}
+  - if race.candidates_announcement_date && policy(race).show_candidacies?
+    %span.note Click on the link to see all the candidate questionnaire responses together in a table
 - else
   %h5
     #{link_to(race.type_and_locale, race)}
