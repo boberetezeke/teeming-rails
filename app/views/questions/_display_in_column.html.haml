@@ -1,7 +1,7 @@
 - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
-  %p= answer.text
+  %p= truncate(answer.text, length: 100)
 - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
-  %p= answer.text
+  %p= truncate(answer.text, length: 100)
 - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
   %ul
     - answer.choices_text.each do |choice|
