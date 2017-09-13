@@ -39,5 +39,10 @@
       = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
     - else
       The filing deadline for this race has past.
+  - if policy(race).votes? && !current_user.voted_in_race?(race)
+    = link_to("Vote", race_votes_path(race), class: 'btn btn-sm btn-info')
+  - if current_user.voted_in_race?(race)
+    = link_to("View Your Vote", race_votes_path(race), class: 'btn btn-sm btn-success')
+
 
 

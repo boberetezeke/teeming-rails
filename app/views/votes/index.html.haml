@@ -1,13 +1,31 @@
 %h2 Vote for #{@race.name}
 
-= form_tag race_votes_path(@race) do
-  - group_candidacies_by_district(@race.candidacies, @votes, current_user).each do |district_name, candidacies|
-    - if @overflow_districts[district_name]
-      %h3.red District #{district_name} (#{@overflow_districts[district_name]} votes for this district)
-    - else
-      %h3 District #{district_name}
+- if @vote_completed
+  %p
+    Your votes are the
+    %strong X - bold
+    selections
+  - DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes, current_user).each do |district_name, candidacies|
+    %h3 District #{district_name}
     - candidacies.each do |candidacy, vote|
-      = check_box_tag("votes[#{candidacy.id}]", "1", vote.present?)
-      = candidacy.name
+      %div
+        - if vote.present?
+          %strong X - #{candidacy.name}
+        - else
+          = candidacy.name
+- else
+  %p= @race.voting_rules
 
-  %div= submit_tag "Vote", class: 'btn btn-sm, btn-primary'
+  = form_tag race_votes_path(@race) do
+    - DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes, current_user).each do |district_name, candidacies|
+      - if @overflow_districts[district_name]
+        %h3.error District #{district_name} (#{@overflow_districts[district_name]} votes for this district)
+      - else
+        %h3 District #{district_name}
+      - candidacies.each do |candidacy, vote|
+        %div
+          = check_box_tag("votes[#{candidacy.id}]", "1", vote.present?)
+          = candidacy.name
+
+    %hr
+    %div= submit_tag "Vote", class: 'btn btn-sm, btn-primary'

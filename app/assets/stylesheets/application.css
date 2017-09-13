@@ -146,6 +146,10 @@ form.formtastic li.in-formtastic {
     overflow-y: visible;
 }
 
+.error {
+    color: red
+}
+
 .error-link {
     color: red;
 }

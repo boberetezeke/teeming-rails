@@ -12,6 +12,10 @@ class RacePolicy < ApplicationPolicy
   end
 
   def votes?
-    @record.election.internal?
+    now = Time.now.utc
+    @record.election.internal? &&
+        (@record.vote_start_time && @record.vote_end_time) &&
+        (@record.vote_start_time <= now && now < @record.vote_end_time) # &&
+        # !user.voted_in_race?(@record)
   end
 end

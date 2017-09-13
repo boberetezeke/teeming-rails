@@ -58,6 +58,10 @@ class User < ApplicationRecord
     role && role.can_show_internal_candidacies?
   end
 
+  def voted_in_race?(race)
+    vote_completions.for_race(race).completed.present?
+  end
+
   private
 
   def setup_wizard

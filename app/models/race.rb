@@ -74,4 +74,8 @@ class Race < ApplicationRecord
   def votes_valid?(votes)
     DistrictVoting.votes_valid?(votes)
   end
+
+  def voting_rules
+    DistrictVoting.voting_rules
+  end
 end
