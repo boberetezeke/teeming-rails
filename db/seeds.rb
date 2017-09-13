@@ -133,8 +133,10 @@ end
 
 #======================== setup MN State Init ==========================
 
+account = Account.find_or_create_by_name("Our Revolution Minnesota")
+
 state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
-['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth'].each do |chapter|
+['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
   Chapter.find_or_create_by(name: chapter, is_state_wide: false)
 end
 
