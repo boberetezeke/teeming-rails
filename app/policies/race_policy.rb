@@ -10,4 +10,8 @@ class RacePolicy < ApplicationPolicy
       @record.election.external? || Time.zone.now.to_date >= @record.candidates_announcement_date
     end
   end
+
+  def votes?
+    @record.election.internal?
+  end
 end

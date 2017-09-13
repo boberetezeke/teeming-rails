@@ -23,6 +23,9 @@ class User < ApplicationRecord
   has_one  :member, dependent: :destroy
   accepts_nested_attributes_for :member
 
+  has_many :votes
+  has_many :vote_completions
+
   belongs_to :role
 
   before_save :setup_wizard

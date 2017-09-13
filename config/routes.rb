@@ -28,6 +28,9 @@ Rails.application.routes.draw do
   resources :elections, only: [:index, :show] do
     resources :races, shallow: true
   end
+  resources :races, only: [] do
+    resources :votes, shallow: true, only: [:index, :create]
+  end
   resources :events, only: [:index, :show]
   resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :candidacies
