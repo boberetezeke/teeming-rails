@@ -25,10 +25,18 @@ class VotesController < ApplicationController
     breadcrumbs votes_breadcrumbs, "Vote"
 
     user_valid = true
+    vote_completion_type = VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE
     if params[:voter_email]
+      vote_completion_type = VoteCompletion::VOTE_COMPLETION_TYPE_PAPER
+      @voter_email = params[:voter_email]
       user = User.find_by_email(params[:voter_email])
-      unless user
-        @voter_email = params[:voter_email]
+
+      if user
+        if vote_completion = user.voted_in_race?(@race)
+          user_valid = false
+          @voter_email_error = "voter has already voted (#{vote_completion.vote_type})"
+        end
+      else
         @voter_email_error = "email not found"
         user_valid = false
       end
@@ -48,7 +56,7 @@ class VotesController < ApplicationController
 
     if votes_valid && user_valid
       @votes.each { |vote| vote.save }
-      VoteCompletion.create(race: @race, user: user, has_voted: true)
+      VoteCompletion.create(race: @race, user: user, has_voted: true, vote_type: vote_completion_type)
 
       if params[:voter_email]
         flash[:notice] = "The vote has been recorded"

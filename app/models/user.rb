@@ -55,7 +55,7 @@ class User < ApplicationRecord
   end
 
   def voted_in_race?(race)
-    vote_completions.for_race(race).completed.present?
+    vote_completions.for_race(race).completed.first
   end
 
   def method_missing(sym, *args, &block)

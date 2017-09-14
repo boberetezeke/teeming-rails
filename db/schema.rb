@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170913022059) do
+ActiveRecord::Schema.define(version: 20170914121600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 20170913022059) do
     t.integer "race_id"
     t.boolean "has_voted"
     t.string  "token"
+    t.string  "vote_type"
     t.index ["race_id"], name: "index_vote_completions_on_race_id", using: :btree
     t.index ["token"], name: "index_vote_completions_on_token", using: :btree
     t.index ["user_id"], name: "index_vote_completions_on_user_id", using: :btree
