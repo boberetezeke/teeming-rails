@@ -4,6 +4,9 @@
     = text_field_tag "voter_email", @voter_email
     - if @voter_email_error
       %p.error= @voter_email_error
+  - else
+    - if @voter_error
+      %p.error= @voter_error
   - DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes).each do |district_name, candidacies|
     - if @overflow_districts[district_name]
       %h3.error District #{district_name} (#{@overflow_districts[district_name]} votes for this district)

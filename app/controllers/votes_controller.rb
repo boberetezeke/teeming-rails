@@ -42,6 +42,10 @@ class VotesController < ApplicationController
       end
     else
       user = current_user
+      if user.voted_in_race?(@race)
+        user_valid = false
+        @voter_error = "you have already voted"
+      end
     end
 
     if params[:votes]
