@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       collection do
         get :tallies
         get :view
+        get :enter
       end
     end
   end

@@ -26,4 +26,8 @@ class RacePolicy < ApplicationPolicy
   def tallies?
     @user.can_show_vote_tallies?
   end
+
+  def enter?
+    @user.can_show_vote_tallies?
+  end
 end

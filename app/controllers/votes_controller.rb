@@ -22,7 +22,7 @@ class VotesController < ApplicationController
     @race = Race.find(params[:race_id])
     authorize @race, :vote?
 
-    breadcrumbs votes_breadcrumbs("Votes for #{@race.name}")
+    breadcrumbs votes_breadcrumbs, "Vote"
 
     if params[:votes]
       @votes = params[:votes].keys.map do |candidacy_id|
@@ -51,6 +51,11 @@ class VotesController < ApplicationController
     @tallies = @race.tally_votes
 
     breadcrumbs votes_breadcrumbs, "Vote"
+  end
+
+  def enter
+    @race = Race.find(params[:race_id])
+    authorize @race, :enter?
   end
 
   private
