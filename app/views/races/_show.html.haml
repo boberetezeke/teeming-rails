@@ -42,6 +42,9 @@
   - if race.vote_start_time < Time.zone.now
     .vote-dates
       Voting is from: #{voting_date_and_time_str(race.vote_start_time)} to #{voting_date_and_time_str(race.vote_end_time)}
+  - elsif Time.now > race.vote_end_time
+    .vote-dates
+      Voting is complete
   .vote-actions
     - if policy(race).vote? && !current_user.voted_in_race?(race)
       = link_to("Vote", race_votes_path(race), class: 'btn btn-sm btn-info')
