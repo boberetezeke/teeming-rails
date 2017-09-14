@@ -13,10 +13,11 @@ class RacePolicy < ApplicationPolicy
 
   def vote?
     now = Time.now.utc
-    @record.election.internal? &&
-        (@record.vote_start_time && @record.vote_end_time) &&
-        (@record.vote_start_time <= now && now < @record.vote_end_time) # &&
-        !@user.voted_in_race?(@record)
+    @user.can_enter_votes? ||
+      (@record.election.internal? &&
+          (@record.vote_start_time && @record.vote_end_time) &&
+          (@record.vote_start_time <= now && now < @record.vote_end_time) &&
+          !@user.voted_in_race?(@record))
   end
 
   def view_vote?
@@ -28,6 +29,10 @@ class RacePolicy < ApplicationPolicy
   end
 
   def enter?
-    @user.can_show_vote_tallies?
+    @user.can_enter_votes?
+  end
+
+  def delete_votes?
+    @user.can_delete_votes?
   end
 end

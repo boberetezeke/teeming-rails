@@ -1,7 +1,7 @@
 = form_tag race_votes_path(@race) do
   - if enter_vote
     = label_tag "Voter Email: "
-    = text_field_tag "voter_email"
+    = text_field_tag "voter_email", @voter_email
     - if @voter_email_error
       %p.error= @voter_email_error
   - DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes).each do |district_name, candidacies|

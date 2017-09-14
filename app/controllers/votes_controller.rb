@@ -24,25 +24,29 @@ class VotesController < ApplicationController
 
     breadcrumbs votes_breadcrumbs, "Vote"
 
+    user_valid = true
+    if params[:voter_email]
+      user = User.find_by_email(params[:voter_email])
+      unless user
+        @voter_email = params[:voter_email]
+        @voter_email_error = "email not found"
+        user_valid = false
+      end
+    else
+      user = current_user
+    end
+
     if params[:votes]
       @votes = params[:votes].keys.map do |candidacy_id|
-        Vote.new(candidacy: Candidacy.find(candidacy_id), user: current_user, race: @race)
+        Vote.new(candidacy: Candidacy.find(candidacy_id), user: user, race: @race)
       end
     else
       @votes = []
     end
 
-    valid, @overflow_districts = @race.votes_valid?(@votes)
+    votes_valid, @overflow_districts = @race.votes_valid?(@votes)
 
-    if params[:voter_email]
-      user = User.find_by_email(params[:voter_email])
-      @voter_email_error = "email not found"
-      valid = false unless user
-    else
-      user = current_user
-    end
-
-    if valid
+    if votes_valid && user_valid
       @votes.each { |vote| vote.save }
       VoteCompletion.create(race: @race, user: user, has_voted: true)
 
@@ -80,6 +84,16 @@ class VotesController < ApplicationController
     @overflow_districts = {}
 
     breadcrumbs votes_breadcrumbs, "Vote"
+  end
+
+  def delete_votes
+    @race = Race.find(params[:race_id])
+    authorize @race, :delete_votes?
+
+    @race.votes.destroy_all
+    @race.vote_completions.destroy_all
+
+    redirect_to @race
   end
 
   private

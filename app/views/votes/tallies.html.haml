@@ -5,3 +5,6 @@
   - candidacies.each do |candidacy, count|
     %div
       #{candidacy.name} - #{count} votes
+
+%hr
+= link_to "Delete Votes", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }

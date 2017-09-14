@@ -34,6 +34,7 @@ Rails.application.routes.draw do
         get :tallies
         get :view
         get :enter
+        put :delete_votes
       end
     end
   end

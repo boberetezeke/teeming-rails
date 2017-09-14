@@ -10,6 +10,10 @@ class Role < ApplicationRecord
     privileges.where(action: 'show_tallies', subject: 'vote').count > 0
   end
 
+  def can_enter_votes?
+    privileges.where(action: 'enter', subject: 'vote').count > 0
+  end
+
   def can_delete_votes?
     privileges.where(action: 'delete', subject: 'vote').count > 0
   end
