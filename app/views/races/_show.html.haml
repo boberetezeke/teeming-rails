@@ -39,10 +39,10 @@
       = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
     - else
     The filing deadline for this race has past.
-  - if race.vote_start_time < Time.zone.now
+  - if Time.zone.now < race.vote_end_time
     .vote-dates
       Voting is from: #{voting_date_and_time_str(race.vote_start_time)} to #{voting_date_and_time_str(race.vote_end_time)}
-  - elsif Time.now > race.vote_end_time
+  - elsif Time.now >= race.vote_end_time
     .vote-dates
       Voting is complete
   .vote-actions
