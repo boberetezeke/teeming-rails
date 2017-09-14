@@ -33,14 +33,33 @@ class VotesController < ApplicationController
     end
 
     valid, @overflow_districts = @race.votes_valid?(@votes)
+
+    if params[:voter_email]
+      user = User.find_by_email(params[:voter_email])
+      @voter_email_error = "email not found"
+      valid = false unless user
+    else
+      user = current_user
+    end
+
     if valid
       @votes.each { |vote| vote.save }
-      VoteCompletion.create(race: @race, user: current_user, has_voted: true)
+      VoteCompletion.create(race: @race, user: user, has_voted: true)
 
-      flash[:notice] = "Your votes have been recorded"
-      redirect_to @race
+      if params[:voter_email]
+        flash[:notice] = "The vote has been recorded"
+        redirect_to enter_race_votes_path(@race)
+      else
+        flash[:notice] = "Your votes have been recorded"
+        redirect_to @race
+      end
+
     else
-      render 'index'
+      if params[:voter_email]
+        render 'enter'
+      else
+        render 'index'
+      end
     end
   end
 
@@ -56,6 +75,11 @@ class VotesController < ApplicationController
   def enter
     @race = Race.find(params[:race_id])
     authorize @race, :enter?
+
+    @votes = []
+    @overflow_districts = {}
+
+    breadcrumbs votes_breadcrumbs, "Vote"
   end
 
   private

@@ -46,6 +46,9 @@
       = link_to("View Your Vote", view_race_votes_path(race), class: 'btn btn-sm btn-success')
     - if policy(race).tallies?
       = link_to("View Vote Tallies", tallies_race_votes_path(race), class: 'btn btn-sm btn-info')
+    - if policy(race).enter?
+      = link_to("Enter Paper Ballots", enter_race_votes_path(race), class: 'btn btn-sm btn-info')
+
 
 
 
