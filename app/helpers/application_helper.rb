@@ -41,6 +41,10 @@ module ApplicationHelper
     "On " + datetime.strftime("%A, the #{datetime.day.ordinalize} of %B, %Y") + ", at #{datetime.strftime('%I:%M%P')}"
   end
 
+  def voting_date_and_time_str(datetime)
+    datetime.strftime("%m/%d/%Y %H:%M")
+  end
+
   def before_and_current_sections_for_question(question)
     section = question.questionnaire_section
 
