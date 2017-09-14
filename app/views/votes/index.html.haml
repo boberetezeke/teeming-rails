@@ -1,6 +1,6 @@
 %h2 Vote for #{@race.name}
 
 %p= @race.voting_rules
-%p You can vote until #{@race.vote_end_time.strftime('%H:%M')}
+%p You can vote until #{@race.vote_end_time.strftime('%H:%M%P')}
 
 = render partial: 'vote', locals: { enter_vote: false }
