@@ -38,7 +38,10 @@
     - if race.before_filing_deadline?(Time.now.utc)
       = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
     - else
-      The filing deadline for this race has past.
+    The filing deadline for this race has past.
+  - if race.vote_start_time < Time.zone.now
+    .vote-dates
+      Voting is from: #{event_date_and_time_str(race.vote_start_time)} to #{event_date_and_time_str(race.vote_end_time)}
   .vote-actions
     - if policy(race).vote? && !current_user.voted_in_race?(race)
       = link_to("Vote", race_votes_path(race), class: 'btn btn-sm btn-info')
