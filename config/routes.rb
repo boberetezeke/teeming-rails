@@ -29,7 +29,12 @@ Rails.application.routes.draw do
     resources :races, shallow: true
   end
   resources :races, only: [] do
-    resources :votes, shallow: true, only: [:index, :create]
+    resources :votes, shallow: true, only: [:index, :create] do
+      collection do
+        get :tallies
+        get :view
+      end
+    end
   end
   resources :events, only: [:index, :show]
   resources :event_rsvps, only: [:new, :create, :edit, :update]

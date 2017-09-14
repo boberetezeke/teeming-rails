@@ -54,12 +54,16 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
-  def can_show_internal_candidacies?
-    role && role.can_show_internal_candidacies?
-  end
-
   def voted_in_race?(race)
     vote_completions.for_race(race).completed.present?
+  end
+
+  def method_missing(sym, *args, &block)
+    if sym.to_s =~ /^can_/
+      if role && role.respond_to?(sym)
+        role.send(sym)
+      end
+    end
   end
 
   private

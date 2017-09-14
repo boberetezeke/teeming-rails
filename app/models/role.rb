@@ -5,4 +5,12 @@ class Role < ApplicationRecord
   def can_show_internal_candidacies?
     privileges.where(action: 'show_internal', subject: 'candidacy').count > 0
   end
+
+  def can_show_vote_tallies?
+    privileges.where(action: 'show_tallies', subject: 'vote').count > 0
+  end
+
+  def can_delete_votes?
+    privileges.where(action: 'delete', subject: 'vote').count > 0
+  end
 end

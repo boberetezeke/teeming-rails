@@ -1,0 +1,7 @@
+%h2 Vote tallies for #{@race.name}
+
+- DistrictVoting.group_candidacy_tallies_by_district(@tallies).each do |district_name, candidacies|
+  %h3 District #{district_name}
+  - candidacies.each do |candidacy, count|
+    %div
+      #{candidacy.name} - #{count} votes

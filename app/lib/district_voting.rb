@@ -1,5 +1,13 @@
 module DistrictVoting
-  def self.group_candidacies_by_district(candidacies, votes, user)
+  #
+  # group candidate votes by district
+  #
+  # @param candidacies [Array<Candidacy>] - array of candidacies
+  # @param votes [Array<Votes>] - array of votes in this race
+  # @return [Hash<String,Array<Array<Candidacy, Vote>>>] - a hash that is from district to an array of two member
+  #                                                         arrays of candidacy and a vote object
+  #
+  def self.group_candidacies_by_district(candidacies, votes)
     candidacies_by_district = {}
 
     candidacies.each do |candidacy|
@@ -7,6 +15,25 @@ module DistrictVoting
       candidacies_by_district[district] ||= []
       vote = votes.select{|v| v.candidacy == candidacy}.first
       candidacies_by_district[district].push([candidacy, vote])
+    end
+
+    candidacies_by_district
+  end
+
+  #
+  # group candidate tallies by district
+  #
+  # @param tallies [Hash<Candidacy, Integer>] - a hash from candidacy to vote counts
+  # @return [Hash<String,Array<Array<Candidacy, Count>>>] - a hash that is from district to an array of two member
+  #                                                         arrays of candidacy and a vote count
+  #
+  def self.group_candidacy_tallies_by_district(tallies)
+    candidacies_by_district = {}
+
+    tallies.each do |candidacy, count|
+      district = district_for_candidacy(candidacy)
+      candidacies_by_district[district] ||= []
+      candidacies_by_district[district].push([candidacy, count])
     end
 
     candidacies_by_district

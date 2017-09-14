@@ -1,18 +1,26 @@
 class VotesController < ApplicationController
   def index
     @race = Race.find(params[:race_id])
-    authorize @race, :votes?
+    authorize @race, :vote?
 
     @votes = current_user.votes.for_race(@race).includes(:candidacy)
-    @vote_completed = current_user.voted_in_race?(@race)
     @overflow_districts = {}
 
-    breadcrumbs votes_breadcrumbs("Votes for #{@race.name}")
+    breadcrumbs votes_breadcrumbs, "Vote"
+  end
+
+  def view
+    @race = Race.find(params[:race_id])
+    authorize @race, :view_vote?
+
+    @votes = current_user.votes.for_race(@race).includes(:candidacy)
+
+    breadcrumbs votes_breadcrumbs, "View Votes"
   end
 
   def create
     @race = Race.find(params[:race_id])
-    authorize @race, :votes?
+    authorize @race, :vote?
 
     breadcrumbs votes_breadcrumbs("Votes for #{@race.name}")
 
@@ -36,9 +44,18 @@ class VotesController < ApplicationController
     end
   end
 
+  def tallies
+    @race = Race.find(params[:race_id])
+    authorize @race, :tallies?
+
+    @tallies = @race.tally_votes
+
+    breadcrumbs votes_breadcrumbs, "Vote"
+  end
+
   private
 
-  def votes_breadcrumbs(title, include_link: true)
-    title
+  def votes_breadcrumbs(include_link: true)
+    [@race.name, race_path(@race)]
   end
 end

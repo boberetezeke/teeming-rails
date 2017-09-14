@@ -78,4 +78,20 @@ class Race < ApplicationRecord
   def voting_rules
     DistrictVoting.voting_rules
   end
+
+  #
+  # tally the votes for this race
+  #
+  # @returns [Hash<Candidacy, Integer>] - a hash from candidacy and a count of votes
+  #
+  def tally_votes
+    tallies = {}
+    votes.each do |vote|
+      candidacy = vote.candidacy
+      tallies[candidacy] ||= 0
+      tallies[candidacy] += 1
+    end
+
+    tallies
+  end
 end
