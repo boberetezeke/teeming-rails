@@ -13,9 +13,14 @@ The voting will commence in
     setInterval(function() {
       secs_left = display_time(".countdown", secs_left)
 
+      var refresh_time = 30;
+      if (secs_left < 30) {
+        refresh_time = Math.floor(Math.random() * 10)
+      }
+
       console.log("secs left = " + secs_left)
-      if (secs_left <= 0 || Math.floor(secs_left % 5) == 0) {
-        window.location = "/races/17/votes";
+      if (secs_left <= 0 || Math.floor(secs_left % refresh_time) == 0) {
+        reload_votes()
       }
     }, 1000)
   })
