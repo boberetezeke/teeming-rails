@@ -1,7 +1,7 @@
 class VotesController < ApplicationController
   before_filter :authenticate_user!
 
-  # Election.find(3).races.first.update(vote_start_time: Time.zone.now.change(hour: 9, min: 55), vote_end_time: Time.zone.now.change(hour: 9, min: 57))
+  # Election.find(3).races.first.update(vote_start_time: Time.zone.now.change(hour: 16, min: 00), vote_end_time: Time.zone.now.change(hour: 16, min: 30))
   def index
     @race = Race.find(params[:race_id])
     now = Time.zone.now
@@ -108,6 +108,8 @@ class VotesController < ApplicationController
   def disqualified
     @race = Race.find(params[:race_id])
     authorize @race, :disqualified?
+
+    @vote_completion = current_user.vote_completions.for_race(@race).disqualifications.first
   end
 
   def wait
