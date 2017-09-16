@@ -1,7 +1,6 @@
 class VotesController < ApplicationController
   before_filter :authenticate_user!
 
-  # Election.find(3).races.first.update(vote_start_time: Time.zone.now.change(hour: 16, min: 00), vote_end_time: Time.zone.now.change(hour: 16, min: 30))
   def index
     @race = Race.find(params[:race_id])
     now = Time.zone.now
