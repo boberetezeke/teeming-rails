@@ -4,6 +4,10 @@ The voting will commence in
 
 .countdown
 
+While you wait, check out the candidate questionnaire responses below
+
+= render partial: 'candidacies/table', locals: { race: @race, candidacies: @race.candidacies }
+
 :javascript
   var secs_left = #{(@race.vote_start_time - Time.zone.now)}
 
