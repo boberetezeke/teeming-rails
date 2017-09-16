@@ -134,9 +134,11 @@ end
 #======================== setup MN State Init ==========================
 
 state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
-['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth'].each do |chapter|
+['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
   Chapter.find_or_create_by(name: chapter, is_state_wide: false)
 end
+
+# account = Account.find_or_create_by_name("Our Revolution Minnesota")
 
 skills_questionnaire = Questionnaire.where(questionnairable_type: 'Chapter', questionnairable_id: state_chapter.id).first
 skills_questionnaire.destroy if skills_questionnaire
@@ -217,7 +219,10 @@ EOT
 initial_board_race = Race.find_or_create_by(name: 'Initial Board Election Race',
                                             election_id: initial_board_election.id,
                                             filing_deadline_date: Date.new(2017, 9, 2),
-                                            candidates_announcement_date: Date.new(2017, 9, 9), notes: initial_board_race_notes)
+                                            candidates_announcement_date: Date.new(2017, 9, 9),
+                                            vote_start_time: Time.zone.local(2017, 9, 16, 16, 00),
+                                            vote_end_time: Time.zone.local(2017, 9, 16, 16, 30),
+                                            notes: initial_board_race_notes)
 initial_board_convention = Event.find_or_create_by(name: 'Founding Convention', occurs_at: DateTime.new(2017, 9, 16, 9, 00), location: 'AAAA Theatre, Alexandria, MN', description: "This convention is to not only launch the organization with its first elected board, but also to bring together people from all around the state to start to take it back to its progressive roots.")
 initial_board_questionnaire = Questionnaire.where(questionnairable_type: 'Race', questionnairable_id: initial_board_race.id).first
 

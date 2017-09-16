@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, :controllers => {:registrations => "registrations"}
   namespace :api do
     resources :members
     resources :users
@@ -27,6 +27,19 @@ Rails.application.routes.draw do
   resources :chapters, only: [:index, :show]
   resources :elections, only: [:index, :show] do
     resources :races, shallow: true
+  end
+  resources :races, only: [] do
+    resources :votes, shallow: true, only: [:index, :create] do
+      collection do
+        get :tallies
+        get :view
+        get :wait
+        get :missed
+        get :disqualified
+        get :enter
+        put :delete_votes
+      end
+    end
   end
   resources :events, only: [:index, :show]
   resources :event_rsvps, only: [:new, :create, :edit, :update]

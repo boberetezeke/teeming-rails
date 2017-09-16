@@ -1,0 +1,14 @@
+%h2 Your vote for #{@race.name}
+
+%p
+  Your votes are the
+  %strong X - bold
+  selections
+  - DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes).each do |district_name, candidacies|
+    %h3 District #{district_name}
+    - candidacies.each do |candidacy, vote|
+      %div
+        - if vote.present?
+          %strong X - #{candidacy.name}
+        - else
+          = candidacy.name

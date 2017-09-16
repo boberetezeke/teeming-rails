@@ -1,6 +1,8 @@
 class Race < ApplicationRecord
   belongs_to :election
   has_many :candidacies, dependent: :destroy
+  has_many :votes, dependent: :destroy
+  has_many :vote_completions, dependent: :destroy
   has_one  :questionnaire, as: :questionnairable
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
   belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
@@ -64,5 +66,32 @@ class Race < ApplicationRecord
     local_time = Time.zone.utc_to_local(utc_time)
     local_date = Date.new(local_time.year, local_time.month, local_time.day)
     local_date <= filing_deadline_date.utc.to_date
+  end
+
+  #
+  # see also DistrictVoting.votes_valid?
+  #
+  def votes_valid?(votes)
+    DistrictVoting.votes_valid?(votes)
+  end
+
+  def voting_rules
+    DistrictVoting.voting_rules
+  end
+
+  #
+  # tally the votes for this race
+  #
+  # @returns [Hash<Candidacy, Integer>] - a hash from candidacy and a count of votes
+  #
+  def tally_votes
+    tallies = {}
+    votes.each do |vote|
+      candidacy = vote.candidacy
+      tallies[candidacy] ||= 0
+      tallies[candidacy] += 1
+    end
+
+    tallies
   end
 end

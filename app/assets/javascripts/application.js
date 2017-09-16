@@ -15,3 +15,40 @@
 //= require twitter/bootstrap
 //= require turbolinks
 //= require_tree .
+
+function display_time(selector, secs_left)
+{
+    if (secs_left > 0) {
+        var hours = Math.floor(secs_left / 3600)
+        var after_hours_secs = Math.floor(secs_left % 3600)
+        var mins = Math.floor(after_hours_secs / 60)
+        var secs = Math.floor(after_hours_secs % 60)
+
+        if (hours <= 9) {
+            hours = "0" + hours;
+        }
+
+        if (mins <= 9) {
+            mins = "0" + mins
+        }
+
+        if (secs <= 9) {
+            secs = "0" + secs
+        }
+
+        secs_left = secs_left - 1
+
+        $(selector).html(hours + ":" + mins + ":" + secs)
+
+        return secs_left;
+    }
+    else {
+        $(selector).html("00:00:00")
+        return 0
+    }
+}
+
+function reload_votes()
+{
+    window.location = window.location.href.replace(/\/races\/(\d+)\/votes\/(.*)$/, "/races/$1/votes")
+}

@@ -1,0 +1,10 @@
+%h2 Vote tallies for #{@race.name}
+
+- DistrictVoting.group_candidacy_tallies_by_district(@tallies).each do |district_name, candidacies|
+  %h3 District #{district_name}
+  - candidacies.each do |candidacy, count|
+    %div
+      #{candidacy.name} - #{count} votes
+
+%hr
+= link_to "Delete Votes", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }

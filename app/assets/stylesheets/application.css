@@ -146,6 +146,15 @@ form.formtastic li.in-formtastic {
     overflow-y: visible;
 }
 
+.countdown {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.error {
+    color: red
+}
+
 .error-link {
     color: red;
 }

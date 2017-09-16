@@ -1,0 +1,26 @@
+%h2 Vote for #{@race.name}
+
+%p You can vote until #{@race.vote_end_time.strftime('%I:%M%P')}. The voting will end in
+
+.countdown
+
+%hr
+%p= @race.voting_rules
+%hr
+
+= render partial: 'vote', locals: { enter_vote: false }
+
+:javascript
+  var secs_left = #{(@race.vote_end_time - Time.zone.now)}
+
+  $(function() {
+    secs_left = display_time(".countdown", secs_left)
+
+    setInterval(function() {
+      secs_left = display_time(".countdown", secs_left)
+
+      if (secs_left <= 0) {
+        reload_votes()
+      }
+    }, 1000)
+  })

@@ -23,6 +23,9 @@ class User < ApplicationRecord
   has_one  :member, dependent: :destroy
   accepts_nested_attributes_for :member
 
+  has_many :votes
+  has_many :vote_completions
+
   belongs_to :role
 
   before_save :setup_wizard
@@ -51,8 +54,20 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
-  def can_show_internal_candidacies?
-    role && role.can_show_internal_candidacies?
+  def is_disqualified_to_vote_in_race?(race)
+    vote_completions.for_race(race).disqualifications.first
+  end
+
+  def voted_in_race?(race)
+    vote_completions.for_race(race).completed.first
+  end
+
+  def method_missing(sym, *args, &block)
+    if sym.to_s =~ /^can_/
+      if role && role.respond_to?(sym)
+        role.send(sym)
+      end
+    end
   end
 
   private
