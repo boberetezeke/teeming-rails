@@ -1,17 +1,11 @@
-%h2 Vote for #{@race.name}
+%h2 Waiting to vote in #{@race.name}
 
-%p You can vote until #{@race.vote_end_time.strftime('%I:%M%P')}. The voting will end in
+The voting will commence in
 
 .countdown
 
-%hr
-%p= @race.voting_rules
-%hr
-
-= render partial: 'vote', locals: { enter_vote: false }
-
 :javascript
-  var secs_left = #{(@race.vote_end_time - Time.zone.now)}
+  var secs_left = #{(@race.vote_start_time - Time.zone.now)}
 
   $(function() {
     secs_left = display_time(".countdown", secs_left)
@@ -20,8 +14,9 @@
       secs_left = display_time(".countdown", secs_left)
 
       console.log("secs left = " + secs_left)
-      if (secs_left <= 0) {
+      if (secs_left <= 0 || Math.floor(secs_left % 5) == 0) {
         window.location = "/races/17/votes";
       }
     }, 1000)
   })
+

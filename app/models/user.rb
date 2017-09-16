@@ -54,6 +54,10 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
+  def is_disqualified_to_vote_in_race?(race)
+    vote_completions.for_race(race).disqualifications.first
+  end
+
   def voted_in_race?(race)
     vote_completions.for_race(race).completed.first
   end

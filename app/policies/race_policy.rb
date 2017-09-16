@@ -24,6 +24,18 @@ class RacePolicy < ApplicationPolicy
     @user.voted_in_race?(@record)
   end
 
+  def wait?
+    true
+  end
+
+  def disqualified?
+    true
+  end
+
+  def missed?
+    true
+  end
+
   def tallies?
     @user.can_show_vote_tallies?
   end

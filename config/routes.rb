@@ -33,6 +33,9 @@ Rails.application.routes.draw do
       collection do
         get :tallies
         get :view
+        get :wait
+        get :missed
+        get :disqualified
         get :enter
         put :delete_votes
       end
