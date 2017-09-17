@@ -4,7 +4,7 @@
   %h3 District #{district_name}
   - candidacies.each do |candidacy, count|
     %div
-      #{candidacy.name} - #{count} votes
+      #{candidacy.name} (#{candidacy.user.email}) - #{count} votes
 
 %hr
 = link_to "Delete Votes", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }
