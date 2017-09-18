@@ -12,7 +12,7 @@
   .row
     .col-md-6
       %h3 Upcoming Events
-      = render partial: 'events/table', locals: {events: Event.all, user: current_user, show_stats: true}
+      = render partial: 'events/table', locals: {events: Event.future, user: current_user, show_stats: true}
 - else
   = render partial: "#{@user.setup_state}"
 

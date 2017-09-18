@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!
 
-  STATES = ['step_setup_user_details', 'step_volunteer_or_donate', 'step_declare_candidacy']
+  STATES = ['step_setup_user_details', 'step_volunteer_or_donate']
 
   def home
     @user = current_user
