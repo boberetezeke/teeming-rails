@@ -17,4 +17,8 @@ class Role < ApplicationRecord
   def can_delete_votes?
     privileges.where(action: 'delete', subject: 'vote').count > 0
   end
+
+  def can_view_members?
+    privileges.where(action: 'view', subject: 'member').count > 0
+  end
 end
