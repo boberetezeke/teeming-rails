@@ -48,21 +48,21 @@ describe "Signup process" do
       expect(page).to have_selector("#user_interested_in_volunteering")
     end
 
-    it "loads the RSVP page", js: true do
-      fill_in_member_info
-      check("Accept bylaws and code of conduct")
-      click_on("Next Step")
-      click_on("Next Step")
-
-      expect(page).to have_selector("#user_event_rsvps_attributes_0_rsvp_type_input")
-    end
+    # it "loads the RSVP page", js: true do
+    #   fill_in_member_info
+    #   check("Accept bylaws and code of conduct")
+    #   click_on("Next Step")
+    #   click_on("Next Step")
+    #
+    #   expect(page).to have_selector("#user_event_rsvps_attributes_0_rsvp_type_input")
+    # end
 
     it "loads the desktop page with a modal in front of it", js: true do
       fill_in_member_info
       check("Accept bylaws and code of conduct")
       click_on("Next Step")
-      click_on("Next Step")
-      choose "user_event_rsvps_attributes_0_rsvp_type_in-person"
+      # click_on("Next Step")
+      #choose "user_event_rsvps_attributes_0_rsvp_type_in-person"
       click_on("Done")
 
       expect(page).to have_selector("input[value=Ok]")
