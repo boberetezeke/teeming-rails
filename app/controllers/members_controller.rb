@@ -7,10 +7,11 @@ class MembersController < ApplicationController
 
     @members = policy_scope(Member)
     if params[:show_potential_members]
-      @members = @members.potential_chapter_members(@chapter).paginate(page: params[:page], per_page: params[:per_page])
+      @members = @members.potential_chapter_members(@chapter)
       @title = "Potential Members"
     else
       @title = "Chapter Members"
+      @members = @members.chapter_members(@chapter)
     end
     @members = @members.paginate(page: params[:page], per_page: params[:per_page])
 
