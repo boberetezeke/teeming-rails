@@ -14,6 +14,7 @@ class MembersController < ApplicationController
       @members = @members.chapter_members(@chapter)
     end
     @members = @members.paginate(page: params[:page], per_page: params[:per_page])
+    @members = @members.order('city asc')
 
     breadcrumbs members_breadcrumbs, @title
   end
