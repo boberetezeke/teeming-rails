@@ -14,7 +14,7 @@ class Member < ApplicationRecord
 
   scope :potential_chapter_members, ->(chapter) {
     where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
-      Member.arel_table[:chapter_id].eq(nil)
+      Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
     ))
   }
   scope :chapter_members, ->(chapter) { where(chapter_id: chapter.id) }
