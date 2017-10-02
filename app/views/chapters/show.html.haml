@@ -4,5 +4,6 @@ This page where chapter leaders can manage their local chapters (COMING SOON)
 
 %hr
 - if can?(current_user, :index, Member)
-  = link_to("Members", chapter_members_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-primary')
-  = link_to("Potential Members", chapter_members_path(chapter_id: @chapter.id, show_potential_members: true), class: 'btn btn-sm btn-info')
+  = link_to("Members (#{Member.chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-primary')
+  - unless @chapter.is_state_wide
+    = link_to("Potential Members (#{Member.potential_chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id, show_potential_members: true), class: 'btn btn-sm btn-info')
