@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
   def home
     @user = current_user
+    @title = "Our Revolution MN Membership"
 
     @setup_state = @user.setup_state
     if @setup_state.present?

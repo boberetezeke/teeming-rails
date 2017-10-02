@@ -33,6 +33,10 @@ module ApplicationHelper
     end
   end
 
+  def can?(user, action, klass_or_object)
+    Pundit.policy(user, klass_or_object).send("#{action}?")
+  end
+
   def bylaws_text
     "Bylaws " * 100
   end

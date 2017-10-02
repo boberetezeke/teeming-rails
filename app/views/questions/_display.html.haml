@@ -5,9 +5,12 @@
   - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
     %p= answer.text
   - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-    %ul
-      - answer.choices_text.each do |choice|
-        %li= choice
+    %ul.in-formtastic
+      - if answer.choices_text.empty?
+        %li.in-formtastic No choices selected
+      - else
+        - answer.choices_text.each do |choice|
+          %li.in-formtastic #{choice}
   - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
     %p #{answer.choices_text.join(', ')}
   - else

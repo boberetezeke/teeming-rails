@@ -6,7 +6,7 @@
   = f.semantic_fields_for :member do |ff|
     = ff.hidden_field :id
     = ff.hidden_field :with_user_input
-    = render partial: 'members/user_details', locals: { f: ff }
+    = render partial: 'members/user_details', locals: { f: ff, disabled: false }
 
   .row
     .col-md-12

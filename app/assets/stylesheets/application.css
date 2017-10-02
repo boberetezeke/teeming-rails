@@ -120,6 +120,10 @@ form.formtastic li.in-formtastic {
     list-style-type: disc;
 }
 
+.answers {
+    list-style: circle;
+}
+
 .bylaws {
     background-color: #EEEEEE;
     padding: 10px;

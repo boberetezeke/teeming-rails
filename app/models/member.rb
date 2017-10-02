@@ -11,6 +11,12 @@ class Member < ApplicationRecord
   validates :state, presence: true,                  if: ->{ with_user_input }
   validates :zip, presence: true,                    if: ->{ with_user_input }
 
+  scope :potential_chapter_members,->(chapter) {
+    where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+      Member.arel_table[:chapter_id].eq(nil)
+    ))
+  }
+
   scope :valid_email, -> {
     where(
       '(status != ? AND status != ? AND status != ? AND status != ?)',

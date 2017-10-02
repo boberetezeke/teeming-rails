@@ -1,0 +1,12 @@
+= semantic_form_for @user do |f|
+  = f.semantic_fields_for :member do |ff|
+    = render partial: 'members/user_details', locals: { f: ff, disabled: true }
+
+  %hr
+  %h2 Volunteering
+  = f.inputs do
+    .check_box_or_radio
+      = f.input :interested_in_volunteering, input_html: { disabled: true}
+
+  - @user.answers.each do |answer|
+    = render partial: 'answers/show', locals: { answer: answer }
