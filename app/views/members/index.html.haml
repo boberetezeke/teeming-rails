@@ -6,6 +6,7 @@
       %th Name
       %th Email
       %th Volunteer?
+      %th City
       %th Action
   %tbody
     - @members.each do |member|
@@ -13,6 +14,7 @@
         %td= link_to(member.name, member)
         %td= member.user ? member.user.email : member.email
         %td= member.user ? (member.user.interested_in_volunteering ? "Yes" : "No") : "No"
+        %td= member.city
         %td
           = link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-success'
           = link_to 'Delete', member_path(member), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
