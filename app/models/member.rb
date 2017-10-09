@@ -2,6 +2,7 @@ class Member < ApplicationRecord
   # validates :databank_id, presence: true, uniqueness: true
   belongs_to :user
   belongs_to :chapter
+  belongs_to :potential_chapter, foreign_key: :potential_chapter_id, class_name: "Chapter"
 
   attr_accessor :with_user_input
 
@@ -10,6 +11,13 @@ class Member < ApplicationRecord
   validates :city, presence: true,                   if: ->{ with_user_input }
   validates :state, presence: true,                  if: ->{ with_user_input }
   validates :zip, presence: true,                    if: ->{ with_user_input }
+
+  scope :potential_chapter_members, ->(chapter) {
+    where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+      Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
+    ))
+  }
+  scope :chapter_members, ->(chapter) { where(chapter_id: chapter.id) }
 
   scope :valid_email, -> {
     where(
@@ -23,6 +31,6 @@ class Member < ApplicationRecord
   }
 
   def name
-    first_name + ' ' + last_name
+    "#{first_name}  #{last_name}"
   end
 end

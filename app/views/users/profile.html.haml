@@ -4,7 +4,7 @@
 
 = semantic_form_for @user do |f|
   = f.semantic_fields_for :member do |ff|
-    = render partial: 'members/user_details', locals: { f: ff }
+    = render partial: 'members/user_details', locals: { f: ff, disabled: false }
 
   %hr
   %h2 Volunteering

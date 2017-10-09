@@ -3,6 +3,7 @@ class ChaptersController < ApplicationController
 
   def index
     @chapters = Chapter.all
+    @title = "Chapters"
 
     breadcrumbs chapters_breadcrumbs(include_link: false)
   end
@@ -10,6 +11,7 @@ class ChaptersController < ApplicationController
   def show
     @chapter = Chapter.find(params[:id])
 
+    @title = "#{@chapter.name} Chapter"
     breadcrumbs chapters_breadcrumbs, @chapter.name
   end
 

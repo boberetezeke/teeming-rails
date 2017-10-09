@@ -24,7 +24,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :chapters, only: [:index, :show]
+  resources :chapters, only: [:index, :show] do
+    resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
+  end
   resources :elections, only: [:index, :show] do
     resources :races, shallow: true
   end
