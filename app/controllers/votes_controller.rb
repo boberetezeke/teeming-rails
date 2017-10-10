@@ -150,6 +150,38 @@ class VotesController < ApplicationController
     redirect_to @race
   end
 
+  def generate_tallies
+    @race = Race.find(params[:race_id])
+    @race.vote_tallies.destroy_all
+    @race.write_tallies
+
+    redirect_to tallies_race_votes_path(@race)
+  end
+
+  def download_votes
+    @race = Race.find(params[:race_id])
+
+    csv = CSV.generate do |csv_gen|
+      csv_gen << [
+        "Candidate",
+        "User Name",
+        "User Email"
+      ]
+
+      @race.votes.by_user.each do |vote|
+        csv_gen << [
+          vote.candidacy.name,
+          vote.user.email,
+          vote.user.member.name
+        ]
+      end
+    end
+
+    send_data csv,
+      :type => 'text/csv; charset=iso-8859-1; header=present',
+      :disposition => "attachment; filename=votes-#{@race.name}.csv"
+  end
+
   private
 
   def votes_breadcrumbs(include_link: true)

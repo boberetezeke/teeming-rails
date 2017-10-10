@@ -1,4 +1,9 @@
-%h2 Vote tallies for #{@race.name}
+%h2
+  Vote tallies for #{@race.name}
+  - if @race.vote_tallies.present?
+    (from tallies)
+  - else
+    (from votes)
 
 - DistrictVoting.group_candidacy_tallies_by_district(@tallies).each do |district_name, candidacies|
   %h3 District #{district_name}
@@ -7,4 +12,6 @@
       #{candidacy.name} (#{candidacy.user.email}) - #{count} votes
 
 %hr
-= link_to "Delete Votes", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }
+= link_to "Download Votes", download_votes_race_votes_path(@race), class: 'btn btn-sm btn-primary'
+= link_to "Generate Tallies", generate_tallies_race_votes_path(@race), class: 'btn btn-sm btn-success'
+= link_to "Delete Votes (#{@race.votes.count})", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }

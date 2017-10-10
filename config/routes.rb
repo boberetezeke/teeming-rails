@@ -39,6 +39,8 @@ Rails.application.routes.draw do
         get :missed
         get :disqualified
         get :enter
+        get :download_votes
+        get :generate_tallies
         put :delete_votes
       end
     end

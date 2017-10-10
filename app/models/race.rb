@@ -3,6 +3,7 @@ class Race < ApplicationRecord
   has_many :candidacies, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :vote_completions, dependent: :destroy
+  has_many :vote_tallies, dependent: :destroy
   has_one  :questionnaire, as: :questionnairable
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
   belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
@@ -86,12 +87,24 @@ class Race < ApplicationRecord
   #
   def tally_votes
     tallies = {}
-    votes.each do |vote|
-      candidacy = vote.candidacy
-      tallies[candidacy] ||= 0
-      tallies[candidacy] += 1
+    if vote_tallies.present?
+      vote_tallies.each do |vote_tally|
+        tallies[vote_tally.candidacy] = vote_tally.vote_count
+      end
+    else
+      votes.each do |vote|
+        candidacy = vote.candidacy
+        tallies[candidacy] ||= 0
+        tallies[candidacy] += 1
+      end
     end
 
     tallies
+  end
+
+  def write_tallies
+    tally_votes.each do |candidacy, count|
+      VoteTally.create(race: self, candidacy: candidacy, vote_count: count)
+    end
   end
 end
