@@ -3,4 +3,7 @@
     %strong District #{district_name}
     - candidacies.each do |candidacy, count|
       %div
-      #{link_to(candidacy.name, candidacy)} (#{candidacy.user.email}) - #{count} votes
+      #{link_to(candidacy.name, candidacy)}
+      - if current_user.can_show_vote_tallies?
+        (#{candidacy.user.email})
+      = "- #{count} votes"
