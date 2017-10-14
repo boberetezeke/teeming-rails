@@ -1,7 +1,24 @@
 - if race.election.internal?
   %h5 #{link_to(race.complete_name, race)}
-  - if race.candidates_announcement_date && policy(race).show_candidacies?
-    %span.note Click on the link to see all the candidate questionnaire responses together in a table
+  - if Time.zone.now < race.vote_end_time
+    = render partial: 'races/show_candidacies_note', locals: { race: race }
+
+  %p
+    = render partial: 'races/vote_date_and_time', locals: { race: race }
+
+  - if Time.zone.now < race.vote_start_time
+    = render partial: 'races/show_dates', locals: { race: race }
+    = render partial: 'races/show_candidacies', locals: { race: race }
+
+  - elsif Time.zone.now < race.vote_end_time
+    = render partial: 'races/show_candidacies', locals: { race: race }
+    = render partial: 'races/candidacy_action',  locals: { race: race }
+    .vote-dates
+      Voting is from: #{voting_date_and_time_str(race.vote_start_time)} to #{voting_date_and_time_str(race.vote_end_time)}
+  - elsif Time.now >= race.vote_end_time
+    = render partial: 'races/vote_results.html.haml', locals: { race: race }
+  .vote-actions
+    = render partial: 'races/vote_actions', locals: { race: race }
 - else
   %h5
     #{link_to(race.type_and_locale, race)}
@@ -10,52 +27,3 @@
   - if show_all && race.notes
     %p.strong Notes:
     %p= race.notes
-- if race.filing_deadline_date
-  %p
-    Filing date:
-    %strong #{race.filing_deadline_date.utc.to_date}
-    - unless race.before_filing_deadline?(Time.now.utc)
-      (Closed)
-- if race.candidates_announcement_date
-  %p
-    Candidates announced on:
-    %strong #{race.candidates_announcement_date}
-  - if policy(race).show_candidacies?
-    Candidates: #{race.candidacies.map{|c| link_to(c.name, c) }.join(', ').html_safe }
-  - else
-    - if race.candidacies.count > 0
-      %p
-        #{race.candidacies.count} #{"candidate".pluralize(race.candidacies.count)} signed up
-  %p
-    Election on:
-    %strong #{race.election.vote_date}
-- if race.election.internal?
-  - candidacy = current_user.candidacies.where(race: race).first
-  - if candidacy
-    = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
-    = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
-  - else
-    - if race.before_filing_deadline?(Time.now.utc)
-      = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
-    - else
-    The filing deadline for this race has past.
-  - if Time.zone.now < race.vote_end_time
-    .vote-dates
-      Voting is from: #{voting_date_and_time_str(race.vote_start_time)} to #{voting_date_and_time_str(race.vote_end_time)}
-  - elsif Time.now >= race.vote_end_time
-    .vote-dates
-      Voting is complete
-  .vote-actions
-    - if policy(race).vote? && !current_user.voted_in_race?(race)
-      = link_to("Vote", race_votes_path(race), class: 'btn btn-sm btn-info')
-    - if current_user.voted_in_race?(race)
-      = link_to("View Your Vote", view_race_votes_path(race), class: 'btn btn-sm btn-success')
-    - if policy(race).enter?
-      = link_to("Enter Paper Ballots", enter_race_votes_path(race), class: 'btn btn-sm btn-primary')
-    - if policy(race).tallies?
-      = link_to("View Vote Tallies", tallies_race_votes_path(race), class: 'btn btn-sm btn-warning')
-
-
-
-
-

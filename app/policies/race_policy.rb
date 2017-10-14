@@ -37,7 +37,11 @@ class RacePolicy < ApplicationPolicy
   end
 
   def tallies?
-    @user.can_show_vote_tallies?
+    if @user.can_show_vote_tallies?
+      true
+    else
+      @record.show_vote_tallies
+    end
   end
 
   def enter?

@@ -1,15 +1,13 @@
 %h2
   Vote tallies for #{@race.name}
-  - if @race.vote_tallies.present?
-    (from tallies)
-  - else
-    (from votes)
+= render partial: 'show_tallies', locals: { race: @race, tallies: @tallies}
 
-- DistrictVoting.group_candidacy_tallies_by_district(@tallies).each do |district_name, candidacies|
-  %h3 District #{district_name}
-  - candidacies.each do |candidacy, count|
-    %div
-      #{candidacy.name} (#{candidacy.user.email}) - #{count} votes
+%p
+%p
+  - if @race.vote_tallies.present?
+    %em counted from vote tallies
+  - else
+    %em counted from raw votes
 
 %hr
 -if policy(@race).download_votes?

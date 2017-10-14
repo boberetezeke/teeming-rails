@@ -1,6 +1,5 @@
 %h2= @election.name
 
-
 - if @election.races.empty? && @election.external?
   %h4 There are no races for this election, click Add Race to add one
 - else

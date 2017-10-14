@@ -1,18 +1,23 @@
-- elections.each_with_index do |election, index|
-  %h4
-    - if election.internal?
-      = election.name
-    - else
-      =link_to(election.name, election_races_path(election))
-    (#{election.races.count} #{'race'.pluralize(election.races.count)})
+- last_election_type = nil
+- elections.by_election_type.each_with_index do |election, index|
+  - unless election.hide_on_dashboard
+    - if index != 0
+      %hr
+    - if election.election_type != last_election_type
+      %h3 #{election.election_type.capitalize} Elections
+      - last_election_type = election.election_type
+    %h4
+      - if election.internal?
+        = election.name
+      - else
+        =link_to(election.name, election_races_path(election))
+      (#{election.races.count} #{'race'.pluralize(election.races.count)})
 
-  - if short_list_of_races
-    - if election.external?
-      %span.note Click on the link above to add races/candidacy in your area
-    - election.races.by_last_update.take(3).each do |race|
-      = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false }
-  - else
-    - election.races.each do |race|
-      = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false }
-  - if index < elections.count - 1
-    %hr
+    - if short_list_of_races
+      - if election.external?
+        %span.note Click on the link above to add races/candidacy in your area
+      - election.races.by_last_update.take(3).each do |race|
+        = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false }
+    - else
+      - election.races.each do |race|
+        = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false }

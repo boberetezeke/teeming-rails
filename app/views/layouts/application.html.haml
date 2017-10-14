@@ -65,4 +65,6 @@
         .alert.alert-danger= flash[:alert]
       - if flash[:notice]
         .alert.alert-info= flash[:notice]
+      - if Rails.env.development?
+        Time now: #{Time.zone.now.strftime("%m/%d/%Y %H:%M:%S")}
       = yield

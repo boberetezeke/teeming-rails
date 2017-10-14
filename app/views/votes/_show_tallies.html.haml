@@ -1,0 +1,6 @@
+- DistrictVoting.group_candidacy_tallies_by_district(tallies).each do |district_name, candidacies|
+  %div
+    %strong District #{district_name}
+    - candidacies.each do |candidacy, count|
+      %div
+      #{link_to(candidacy.name, candidacy)} (#{candidacy.user.email}) - #{count} votes

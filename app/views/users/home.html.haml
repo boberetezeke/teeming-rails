@@ -1,7 +1,6 @@
 - if @user.setup_state.blank?
   .row
     .col-md-6
-      %h3 Current Elections
       = render partial: 'elections/table', locals: {elections: Election.all, short_list_of_races: true}
     .col-md-6
       %h3= link_to("Chapters", chapters_path)
@@ -12,7 +11,10 @@
   .row
     .col-md-6
       %h3 Upcoming Events
-      = render partial: 'events/table', locals: {events: Event.future, user: current_user, show_stats: true}
+      - if Event.future.blank?
+        There are no upcoming events scheduled at this time
+      - else
+        = render partial: 'events/table', locals: {events: Event.future, user: current_user, show_stats: true}
 - else
   = render partial: "#{@user.setup_state}"
 

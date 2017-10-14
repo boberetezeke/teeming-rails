@@ -1,0 +1,10 @@
+%div{ style: 'padding-top: 10px;'}
+  - if policy(race).vote? && !current_user.voted_in_race?(race)
+    = link_to("Vote", race_votes_path(race), class: 'btn btn-sm btn-info')
+  - if current_user.voted_in_race?(race)
+    = link_to("View Your Vote", view_race_votes_path(race), class: 'btn btn-sm btn-success')
+
+  - if policy(race).enter?
+    = link_to("Enter Paper Ballots", enter_race_votes_path(race), class: 'btn btn-sm btn-primary')
+  - if current_user.can_show_vote_tallies?
+    = link_to("View Vote Tallies", tallies_race_votes_path(race), class: 'btn btn-sm btn-warning')

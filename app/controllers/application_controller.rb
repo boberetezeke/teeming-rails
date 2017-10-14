@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
   # after_action :verify_authorized, except: :index
   # after_action :verify_policy_scoped, only: :index
 
+  before_action :set_time_from_params
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   # Prevent CSRF attacks by raising an exception.
@@ -14,6 +16,27 @@ class ApplicationController < ActionController::Base
   respond_to :html
 
   private
+
+  def set_time_from_params
+    if Rails.env.development? && params[:time]
+      m = /((\d+)_(\d+)_(\d+)T)?(\d+)_(\d+)/.match(params[:time])
+      puts "m = #{m}"
+      if m
+        if m[1]
+          month = m[2].to_i
+          day = m[3].to_i
+          year = m[4].to_i
+        else
+          month, day, year = Time.now.month, Time.now.day, Time.now.year
+        end
+
+        hour = m[5].to_i
+        minute = m[6].to_i
+
+        Timecop.freeze(year, month, day, hour, minute)
+      end
+    end
+  end
 
   # each controller can have its own "user_not_authorized" method
   def user_not_authorized
