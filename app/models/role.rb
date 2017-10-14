@@ -2,23 +2,24 @@ class Role < ApplicationRecord
   has_many :users
   has_many :privileges
 
-  def can_show_internal_candidacies?
-    privileges.where(action: 'show_internal', subject: 'candidacy').count > 0
-  end
+  PRIVILEGES = [
+      # action                  # subject       # method name
+      ['show_internal',         'candidacy'                                   ],
 
-  def can_show_vote_tallies?
-    privileges.where(action: 'show_tallies', subject: 'vote').count > 0
-  end
+      ['show_tallies',          'vote',         'show_vote_tallies'           ],
+      ['enter',                 'vote'                                        ],
+      ['delete',                'vote'                                        ],
+      ['download',              'vote'                                        ],
+      ['generate_tallies_for',  'vote',         'generate_vote_tallies'       ],
 
-  def can_enter_votes?
-    privileges.where(action: 'enter', subject: 'vote').count > 0
-  end
+      ['view',                  'member'                                      ],
+      ['show_internal',         'candidacy'                                   ],
+  ]
 
-  def can_delete_votes?
-    privileges.where(action: 'delete', subject: 'vote').count > 0
-  end
-
-  def can_view_members?
-    privileges.where(action: 'view', subject: 'member').count > 0
+  PRIVILEGES.each do |action, subject, method_name|
+    method_name = "#{action}_#{subject.pluralize}" unless method_name
+    define_method("can_#{method_name}?") do
+      privileges.where(action: action, subject: subject).count > 0
+    end
   end
 end

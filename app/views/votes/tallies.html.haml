@@ -12,6 +12,9 @@
       #{candidacy.name} (#{candidacy.user.email}) - #{count} votes
 
 %hr
-= link_to "Download Votes", download_votes_race_votes_path(@race), class: 'btn btn-sm btn-primary'
-= link_to "Generate Tallies", generate_tallies_race_votes_path(@race), class: 'btn btn-sm btn-success'
-= link_to "Delete Votes (#{@race.votes.count})", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }
+-if policy(@race).download_votes?
+  = link_to "Download Votes", download_votes_race_votes_path(@race), class: 'btn btn-sm btn-primary'
+-if policy(@race).generate_tallies?
+  = link_to "Generate Tallies", generate_tallies_race_votes_path(@race), class: 'btn btn-sm btn-success'
+-if policy(@race).delete_votes?
+  = link_to "Delete Votes (#{@race.votes.count})", delete_votes_race_votes_path(@race), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }

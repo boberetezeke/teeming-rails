@@ -44,6 +44,14 @@ class RacePolicy < ApplicationPolicy
     @user.can_enter_votes?
   end
 
+  def download_votes?
+    @user.can_download_votes?
+  end
+
+  def generate_tallies?
+    @user.can_generate_vote_tallies?
+  end
+
   def delete_votes?
     @user.can_delete_votes?
   end

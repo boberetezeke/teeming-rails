@@ -152,6 +152,8 @@ class VotesController < ApplicationController
 
   def generate_tallies
     @race = Race.find(params[:race_id])
+    authorize @race, :generate_tallies?
+
     @race.vote_tallies.destroy_all
     @race.write_tallies
 
@@ -160,6 +162,7 @@ class VotesController < ApplicationController
 
   def download_votes
     @race = Race.find(params[:race_id])
+    authorize @race, :download_votes?
 
     csv = CSV.generate do |csv_gen|
       csv_gen << [
