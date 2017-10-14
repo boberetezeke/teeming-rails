@@ -168,14 +168,17 @@ class VotesController < ApplicationController
       csv_gen << [
         "Candidate",
         "User Name",
-        "User Email"
+        "User Email",
+        "Vote Type"
       ]
 
       @race.votes.by_user.each do |vote|
+        vote_completion = VoteCompletion.find_by(race: vote.race, user: vote.user)
         csv_gen << [
           vote.candidacy.name,
+          vote.user.member.name,
           vote.user.email,
-          vote.user.member.name
+          vote_completion.vote_type
         ]
       end
     end
