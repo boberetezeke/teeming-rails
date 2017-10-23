@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   resources :events, only: [:index, :show]
   resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :candidacies
+  resources :messages, only: [:index, :new, :create, :show, :edit, :update]
 
   # resources :questionnaires do
   #   resources :questionnaire_sections, shallow: true do
