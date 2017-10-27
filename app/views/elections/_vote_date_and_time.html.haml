@@ -1,0 +1,15 @@
+
+- if election.vote_date
+  - if election.vote_start_time
+    - if Time.zone.now < election.vote_end_time
+      Election on:
+      %strong #{election.vote_date}
+      from
+      %strong= election.vote_start_time.strftime("%H:%M")
+      to
+      %strong= election.vote_end_time.strftime("%H:%M")
+    - else
+      Election was on:
+      %strong #{election.vote_date}
+  - else
+    Election will be on: #{election.vote_date} (time not yet specified)

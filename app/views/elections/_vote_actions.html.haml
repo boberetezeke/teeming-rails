@@ -1,0 +1,15 @@
+%div{ style: 'padding-top: 10px;'}
+  - if election.vote_date && election.vote_start_time
+    - if Time.zone.now < election.vote_start_time
+    - elsif Time.zone.now < election.vote_end_time
+      - if policy(election).vote? && !current_user.voted_in_election?(election)
+        = link_to("Vote", election_votes_path(election), class: 'btn btn-sm btn-info')
+      - if current_user.voted_in_election?(election)
+        = link_to("View Your Vote", view_election_votes_path(election), class: 'btn btn-sm btn-success')
+    - elsif Time.zone.now >= election.vote_end_time
+      - if current_user.voted_in_election?(election)
+        = link_to("View Your Vote", view_election_votes_path(election), class: 'btn btn-sm btn-success')
+      - if policy(election).enter?
+        = link_to("Enter Paper Ballots", enter_election_votes_path(election), class: 'btn btn-sm btn-primary')
+      - if current_user.can_show_vote_tallies?
+        = link_to("View Vote Tallies", tallies_election_votes_path(election), class: 'btn btn-sm btn-warning')

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171014212947) do
+ActiveRecord::Schema.define(version: 20171027211828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,9 @@ ActiveRecord::Schema.define(version: 20171014212947) do
     t.text    "text"
     t.integer "order_index"
     t.integer "user_id"
+    t.string  "answerable_type"
+    t.integer "answerable_id"
+    t.index ["answerable_id"], name: "index_answers_on_answerable_id", using: :btree
     t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
   end
 
@@ -65,12 +68,16 @@ ActiveRecord::Schema.define(version: 20171014212947) do
   end
 
   create_table "elections", force: :cascade do |t|
-    t.integer "chapter_id"
-    t.string  "name"
-    t.text    "description"
-    t.date    "vote_date"
-    t.string  "election_type"
-    t.boolean "hide_on_dashboard"
+    t.integer  "chapter_id"
+    t.string   "name"
+    t.text     "description"
+    t.date     "vote_date"
+    t.string   "election_type"
+    t.boolean  "hide_on_dashboard"
+    t.integer  "member_group_id"
+    t.datetime "vote_start_time"
+    t.datetime "vote_end_time"
+    t.index ["member_group_id"], name: "index_elections_on_member_group_id", using: :btree
   end
 
   create_table "event_rsvps", force: :cascade do |t|
@@ -88,6 +95,28 @@ ActiveRecord::Schema.define(version: 20171014212947) do
     t.string   "location"
     t.float    "longitude"
     t.float    "latitude"
+  end
+
+  create_table "issues", force: :cascade do |t|
+    t.integer "election_id"
+    t.string  "name"
+    t.integer "created_by_user_id"
+    t.integer "updated_by_user_id"
+    t.index ["created_by_user_id"], name: "index_issues_on_created_by_user_id", using: :btree
+    t.index ["election_id"], name: "index_issues_on_election_id", using: :btree
+    t.index ["updated_by_user_id"], name: "index_issues_on_updated_by_user_id", using: :btree
+  end
+
+  create_table "member_group_memberships", force: :cascade do |t|
+    t.integer "member_id"
+    t.integer "member_groups_id"
+    t.index ["member_groups_id"], name: "index_member_group_memberships_on_member_groups_id", using: :btree
+    t.index ["member_id"], name: "index_member_group_memberships_on_member_id", using: :btree
+  end
+
+  create_table "member_groups", force: :cascade do |t|
+    t.string "name"
+    t.string "group_type"
   end
 
   create_table "members", force: :cascade do |t|
@@ -116,6 +145,31 @@ ActiveRecord::Schema.define(version: 20171014212947) do
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
     t.index ["potential_chapter_id"], name: "index_members_on_potential_chapter_id", using: :btree
     t.index ["user_id"], name: "index_members_on_user_id", using: :btree
+  end
+
+  create_table "message_controls", force: :cascade do |t|
+    t.integer  "member_id"
+    t.integer  "unsubscribed_from_message_id_id"
+    t.datetime "unsubscribed_at"
+    t.string   "unsubscribe_reason"
+    t.index ["member_id"], name: "index_message_controls_on_member_id", using: :btree
+    t.index ["unsubscribed_from_message_id_id"], name: "index_message_controls_on_unsubscribed_from_message_id_id", using: :btree
+  end
+
+  create_table "message_recipients", force: :cascade do |t|
+    t.integer "message_id"
+    t.integer "member_id"
+    t.index ["member_id"], name: "index_message_recipients_on_member_id", using: :btree
+    t.index ["message_id"], name: "index_message_recipients_on_message_id", using: :btree
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "user_id"
+    t.string  "subject"
+    t.string  "body"
+    t.string  "to"
+    t.string  "message_type"
+    t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
 
   create_table "privileges", force: :cascade do |t|
@@ -210,6 +264,8 @@ ActiveRecord::Schema.define(version: 20171014212947) do
     t.string  "token"
     t.string  "vote_type"
     t.string  "disqualification_message"
+    t.integer "election_id"
+    t.index ["election_id"], name: "index_vote_completions_on_election_id", using: :btree
     t.index ["race_id"], name: "index_vote_completions_on_race_id", using: :btree
     t.index ["token"], name: "index_vote_completions_on_token", using: :btree
     t.index ["user_id"], name: "index_vote_completions_on_user_id", using: :btree

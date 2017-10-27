@@ -54,12 +54,12 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
-  def is_disqualified_to_vote_in_race?(race)
-    vote_completions.for_race(race).disqualifications.first
+  def is_disqualified_to_vote_in_election?(election)
+    vote_completions.for_election(election).disqualifications.first
   end
 
-  def voted_in_race?(race)
-    vote_completions.for_race(race).completed.first
+  def voted_in_election?(election)
+    vote_completions.for_election(election).completed.first
   end
 
   def method_missing(sym, *args, &block)

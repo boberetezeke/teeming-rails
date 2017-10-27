@@ -8,7 +8,10 @@
       - last_election_type = election.election_type
     %h4
       - if election.internal?
-        = election.name
+        - if Pundit.policy(current_user, election).show?
+          =link_to(election.name, election_path(election))
+        - else
+          = election.name
       - else
         =link_to(election.name, election_races_path(election))
       (#{election.races.count} #{'race'.pluralize(election.races.count)})

@@ -1,2 +1,5 @@
 = semantic_form_for @candidacy do |f|
-  = render partial: 'answers/form', locals: { f: f, edit_tools: true }
+  - if f.object.answers.blank?
+    = render partial: 'questionnaire_sections/show', locals: { section: @section, edit_tools: true }
+  - else
+    = render partial: 'answers/form', locals: { f: f, edit_tools: true }

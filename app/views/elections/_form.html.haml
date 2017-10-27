@@ -1,0 +1,13 @@
+= semantic_form_for @election do |f|
+  = f.semantic_errors
+  = f.input :name
+  = f.input :election_type, as: :select, collection: [Election::ELECTION_TYPE_INTERNAL, Election::ELECTION_TYPE_EXTERNAL]
+  = f.input :vote_date_str, label: 'Vote Date'
+  = f.input :vote_start_time_str, label: 'Vote Start Time'
+  = f.input :vote_end_time_str, label: 'Vote End Time'
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function() {
+    $("#election_vote_date_str").datepicker({orientation: 'bottom'})
+  })

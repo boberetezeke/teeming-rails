@@ -4,6 +4,9 @@ class Member < ApplicationRecord
   belongs_to :chapter
   belongs_to :potential_chapter, foreign_key: :potential_chapter_id, class_name: "Chapter"
 
+  has_many :member_group_memberships
+  has_many :member_groups, through: :member_group_memberships
+
   attr_accessor :with_user_input
 
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }

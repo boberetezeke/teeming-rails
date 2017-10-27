@@ -9,6 +9,7 @@ class QuestionnairesController < ApplicationController
   def show
     @questionnaire = Questionnaire.find(params[:id])
     @candidacy = Candidacy.new(answers: @questionnaire.new_answers)
+    @section = @questionnaire.questionnaire_sections.where(order_index: 1).first
     breadcrumbs questionnaires_breadcrumbs, @questionnaire.name
   end
 

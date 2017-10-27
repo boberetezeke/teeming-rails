@@ -2,49 +2,52 @@ class VotesController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @race = Race.find(params[:race_id])
+    @election = Election.find(params[:election_id])
     now = Time.zone.now
 
-    if current_user.is_disqualified_to_vote_in_race?(@race)
-      redirect_to disqualified_race_votes_path(race_id: @race)
+    if current_user.is_disqualified_to_vote_in_election?(@election)
+      redirect_to disqualified_election_votes_path(election_id: @election)
     else
       breadcrumbs votes_breadcrumbs, "Vote"
 
-      if now < @race.vote_start_time
-        redirect_to wait_race_votes_path(race_id: @race)
-      elsif now >= @race.vote_end_time
-        if current_user.voted_in_race?(@race)
-          redirect_to view_race_votes_path(race_id: @race)
+      if now < @election.vote_start_time
+        redirect_to wait_election_votes_path(election_id: @election)
+      elsif now >= @election.vote_end_time
+        if current_user.voted_in_election?(@election)
+          redirect_to view_election_votes_path(election_id: @election)
         else
-          redirect_to missed_race_votes_path(race_id: @race)
+          redirect_to missed_election_votes_path(election_id: @election)
         end
       else
-        @votes = current_user.votes.for_race(@race).includes(:candidacy)
-        @overflow_districts = {}
+        @issue = @election.issues.first
+        @issue.answers = @issue.questionnaire.new_answers
+
+        # @votes = current_user.votes.for_election(@election).includes(:candidacy)
+        # @overflow_districts = {}
       end
     end
   end
 
   def view
-    @race = Race.find(params[:race_id])
-    if current_user.is_disqualified_to_vote_in_race?(@race)
-      redirect_to disqualified_race_votes_path(race_id: @race)
+    @election = Election.find(params[:election_id])
+    if current_user.is_disqualified_to_vote_in_election?(@election)
+      redirect_to disqualified_election_votes_path(election_id: @election)
     else
-      authorize @race, :view_vote?
+      authorize @election, :view_vote?
 
-      @votes = current_user.votes.for_race(@race).includes(:candidacy)
+      @votes = current_user.votes.for_election(@election).includes(:candidacy)
 
       breadcrumbs votes_breadcrumbs, "View Votes"
     end
   end
 
   def create
-    @race = Race.find(params[:race_id])
+    @election = Election.find(params[:election_id])
 
-    if current_user.is_disqualified_to_vote_in_race?(@race)
-      redirect_to disqualified_race_votes_path(race_id: @race)
+    if current_user.is_disqualified_to_vote_in_election?(@election)
+      redirect_to disqualified_election_votes_path(election_id: @election)
     else
-      authorize @race, :vote?
+      authorize @election, :vote?
 
       breadcrumbs votes_breadcrumbs, "Vote"
 
@@ -56,7 +59,7 @@ class VotesController < ApplicationController
         user = User.find_by_email(params[:voter_email])
 
         if user
-          if vote_completion = user.voted_in_race?(@race)
+          if vote_completion = user.voted_in_election?(@election)
             user_valid = false
             @voter_email_error = "voter has already voted (#{vote_completion.vote_type})"
           end
@@ -66,7 +69,7 @@ class VotesController < ApplicationController
         end
       else
         user = current_user
-        if user.voted_in_race?(@race)
+        if user.voted_in_election?(@election)
           user_valid = false
           @voter_error = "you have already voted"
         end
@@ -74,24 +77,24 @@ class VotesController < ApplicationController
 
       if params[:votes]
         @votes = params[:votes].keys.map do |candidacy_id|
-          Vote.new(candidacy: Candidacy.find(candidacy_id), user: user, race: @race)
+          Vote.new(candidacy: Candidacy.find(candidacy_id), user: user, election: @election)
         end
       else
         @votes = []
       end
 
-      votes_valid, @overflow_districts = @race.votes_valid?(@votes)
+      votes_valid, @overflow_districts = @election.votes_valid?(@votes)
 
       if votes_valid && user_valid
         @votes.each { |vote| vote.save }
-        VoteCompletion.create(race: @race, user: user, has_voted: true, vote_type: vote_completion_type)
+        VoteCompletion.create(election: @election, user: user, has_voted: true, vote_type: vote_completion_type)
 
         if params[:voter_email]
           flash[:notice] = "The vote has been recorded"
-          redirect_to enter_race_votes_path(@race)
+          redirect_to enter_election_votes_path(@election)
         else
           flash[:notice] = "Your votes have been recorded"
-          redirect_to view_race_votes_path(@race)
+          redirect_to view_election_votes_path(@election)
         end
 
       else
@@ -105,34 +108,34 @@ class VotesController < ApplicationController
   end
 
   def disqualified
-    @race = Race.find(params[:race_id])
-    authorize @race, :disqualified?
+    @election = Election.find(params[:election_id])
+    authorize @election, :disqualified?
 
-    @vote_completion = current_user.vote_completions.for_race(@race).disqualifications.first
+    @vote_completion = current_user.vote_completions.for_election(@election).disqualifications.first
   end
 
   def wait
-    @race = Race.find(params[:race_id])
-    authorize @race, :wait?
+    @election = Election.find(params[:election_id])
+    authorize @election, :wait?
   end
 
   def missed
-    @race = Race.find(params[:race_id])
-    authorize @race, :missed?
+    @election = Election.find(params[:election_id])
+    authorize @election, :missed?
   end
 
   def tallies
-    @race = Race.find(params[:race_id])
-    authorize @race, :tallies?
+    @election = Election.find(params[:election_id])
+    authorize @election, :tallies?
 
-    @tallies = @race.tally_votes
+    @tallies = @election.tally_votes
 
     breadcrumbs votes_breadcrumbs, "Vote"
   end
 
   def enter
-    @race = Race.find(params[:race_id])
-    authorize @race, :enter?
+    @election = Election.find(params[:election_id])
+    authorize @election, :enter?
 
     @votes = []
     @overflow_districts = {}
@@ -141,28 +144,28 @@ class VotesController < ApplicationController
   end
 
   def delete_votes
-    @race = Race.find(params[:race_id])
-    authorize @race, :delete_votes?
+    @election = Election.find(params[:election_id])
+    authorize @election, :delete_votes?
 
-    @race.votes.destroy_all
-    @race.vote_completions.destroy_all
+    @election.votes.destroy_all
+    @election.vote_completions.destroy_all
 
-    redirect_to @race
+    redirect_to @election
   end
 
   def generate_tallies
-    @race = Race.find(params[:race_id])
-    authorize @race, :generate_tallies?
+    @election = Election.find(params[:election_id])
+    authorize @election, :generate_tallies?
 
-    @race.vote_tallies.destroy_all
-    @race.write_tallies
+    @election.vote_tallies.destroy_all
+    @election.write_tallies
 
-    redirect_to tallies_race_votes_path(@race)
+    redirect_to tallies_election_votes_path(@election)
   end
 
   def download_votes
-    @race = Race.find(params[:race_id])
-    authorize @race, :download_votes?
+    @election = Election.find(params[:election_id])
+    authorize @election, :download_votes?
 
     csv = CSV.generate do |csv_gen|
       csv_gen << [
@@ -172,8 +175,8 @@ class VotesController < ApplicationController
         "Vote Type"
       ]
 
-      @race.votes.by_user.each do |vote|
-        vote_completion = VoteCompletion.find_by(race: vote.race, user: vote.user)
+      @election.votes.by_user.each do |vote|
+        vote_completion = VoteCompletion.find_by(election: vote.election, user: vote.user)
         csv_gen << [
           vote.candidacy.name,
           vote.user.member.name,
@@ -185,12 +188,12 @@ class VotesController < ApplicationController
 
     send_data csv,
       :type => 'text/csv; charset=iso-8859-1; header=present',
-      :disposition => "attachment; filename=votes-#{@race.name}.csv"
+      :disposition => "attachment; filename=votes-#{@election.name}.csv"
   end
 
   private
 
   def votes_breadcrumbs(include_link: true)
-    [@race.name, race_path(@race)]
+    [@election.name, election_path(@election)]
   end
 end
