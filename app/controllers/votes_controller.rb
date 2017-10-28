@@ -19,8 +19,10 @@ class VotesController < ApplicationController
           redirect_to missed_election_votes_path(election_id: @election)
         end
       else
-        @issue = @election.issues.first
-        @issue.answers = @issue.questionnaire.new_answers
+        @election.issues.each do |issue|
+          issue.answers = issue.questionnaire.new_answers
+          issue.answers.each{|a| a.user_id = current_user.id}
+        end
 
         # @votes = current_user.votes.for_election(@election).includes(:candidacy)
         # @overflow_districts = {}
@@ -35,7 +37,8 @@ class VotesController < ApplicationController
     else
       authorize @election, :view_vote?
 
-      @votes = current_user.votes.for_election(@election).includes(:candidacy)
+      # @votes = current_user.votes.for_election(@election).includes(:candidacy)
+      @votes = []
 
       breadcrumbs votes_breadcrumbs, "View Votes"
     end
@@ -69,12 +72,17 @@ class VotesController < ApplicationController
         end
       else
         user = current_user
-        if user.voted_in_election?(@election)
-          user_valid = false
-          @voter_error = "you have already voted"
-        end
-      end
+        @election.update(election_params)
 
+        redirect_to view_election_votes_path(@election)
+        # if user.voted_in_election?(@election)
+        #   user_valid = false
+        #   @voter_error = "you have already voted"
+        # end
+      end
+    end
+
+=begin
       if params[:votes]
         @votes = params[:votes].keys.map do |candidacy_id|
           Vote.new(candidacy: Candidacy.find(candidacy_id), user: user, election: @election)
@@ -105,6 +113,7 @@ class VotesController < ApplicationController
         end
       end
     end
+=end
   end
 
   def disqualified
@@ -192,6 +201,19 @@ class VotesController < ApplicationController
   end
 
   private
+
+  def election_params
+    params.require(:election).permit(
+        {
+          issues_attributes: [
+            :id,
+            {
+              answers_attributes: [:text, :user_id, :question_id, :order_index, :id, :answerable_type, :answerable_id]
+            }
+          ]
+        }
+    )
+  end
 
   def votes_breadcrumbs(include_link: true)
     [@election.name, election_path(@election)]

@@ -1,8 +1,13 @@
 class Election < ApplicationRecord
   belongs_to :chapter
   belongs_to :member_group
+
   has_many :races, dependent: :destroy
+  accepts_nested_attributes_for :races
+
   has_many :issues, dependent: :destroy
+  accepts_nested_attributes_for :issues
+
   has_many :vote_completions, dependent: :destroy
 
   ELECTION_TYPE_INTERNAL = 'internal'

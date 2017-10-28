@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171027211828) do
+ActiveRecord::Schema.define(version: 20171028134555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20171027211828) do
     t.integer  "member_group_id"
     t.datetime "vote_start_time"
     t.datetime "vote_end_time"
+    t.boolean  "show_vote_tallies"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id", using: :btree
   end
 

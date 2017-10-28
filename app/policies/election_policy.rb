@@ -23,7 +23,7 @@ class ElectionPolicy < ApplicationPolicy
   end
 
   def show?
-    @user.can_view_internal_elections?
+    @user.can_view_internal_elections? || @user.can_vote_in_election?(@record)
   end
 
   def new?
@@ -52,6 +52,7 @@ class ElectionPolicy < ApplicationPolicy
         (@record.internal? &&
             (@record.vote_start_time && @record.vote_end_time) &&
             (@record.vote_start_time <= now && now < @record.vote_end_time) &&
+            @user.can_vote_in_election?(@record) &&
             !@user.voted_in_election?(@record))
   end
 
@@ -60,7 +61,7 @@ class ElectionPolicy < ApplicationPolicy
   end
 
   def wait?
-    true
+    @user.can_enter_votes? || @user.can_vote_in_election?(@record)
   end
 
   def disqualified?

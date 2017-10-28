@@ -58,6 +58,10 @@ class User < ApplicationRecord
     vote_completions.for_election(election).disqualifications.first
   end
 
+  def can_vote_in_election?(election)
+    vote_completions.for_election(election).can_vote.first
+  end
+
   def voted_in_election?(election)
     vote_completions.for_election(election).completed.first
   end

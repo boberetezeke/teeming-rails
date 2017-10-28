@@ -51,5 +51,5 @@ function display_time(selector, secs_left)
 
 function reload_votes()
 {
-    window.location = window.location.href.replace(/\/races\/(\d+)\/votes\/(.*)$/, "/races/$1/votes")
+    window.location = window.location.href.replace(/\/elections\/(\d+)\/votes\/(.*)$/, "/elections/$1/votes")
 }

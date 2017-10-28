@@ -9,12 +9,10 @@
     %h4
       - if election.internal?
         - if Pundit.policy(current_user, election).show?
-          =link_to(election.name, election_path(election))
-        - else
-          = election.name
+          = render partial: 'elections/show', locals: { election: election }
       - else
         =link_to(election.name, election_races_path(election))
-      (#{election.races.count} #{'race'.pluralize(election.races.count)})
+        (#{election.races.count} #{'race'.pluralize(election.races.count)})
 
     - if short_list_of_races
       - if election.external?
