@@ -28,4 +28,13 @@ class Question < ApplicationRecord
   def has_choices?
     question_type == QUESTION_TYPE_CHECKBOXES || question_type == QUESTION_TYPE_MULTIPLE_CHOICE
   end
+
+  def answer_totals
+    totals = {}
+    answers.each do |answer|
+      totals[answer.text] ||= 0
+      totals[answer.text] += 1
+    end
+    totals
+  end
 end
