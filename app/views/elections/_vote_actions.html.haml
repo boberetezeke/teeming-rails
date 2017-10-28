@@ -8,6 +8,8 @@
         = link_to("Vote", election_votes_path(election), class: 'btn btn-sm btn-info')
       - if current_user.voted_in_election?(election)
         = link_to("View Your Vote", view_election_votes_path(election), class: 'btn btn-sm btn-success')
+      - if current_user.can_show_vote_tallies?
+        = link_to("View Vote Tallies", tallies_election_votes_path(election), class: 'btn btn-sm btn-warning')
     - elsif Time.zone.now >= election.vote_end_time
       - if current_user.voted_in_election?(election)
         = link_to("View Your Vote", view_election_votes_path(election), class: 'btn btn-sm btn-success')
