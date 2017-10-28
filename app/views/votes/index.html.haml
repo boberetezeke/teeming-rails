@@ -11,9 +11,9 @@
 /= render partial: 'vote', locals: { enter_vote: false }
 = semantic_form_for @election, url: election_votes_path(@election), method: :post do |f|
   = f.fields_for :races do |ff|
-    = render partial: 'answers/form', locals: { f: ff, edit_tools: false }
+    = render partial: 'answers/form', locals: { f: ff, edit_tools: false, read_only: false }
   = f.fields_for :issues do |ff|
-    = render partial: 'answers/form', locals: { f: ff, edit_tools: false }
+    = render partial: 'answers/form', locals: { f: ff, edit_tools: false, read_only: false }
   = f.submit "Vote", class: 'btn btn-sm btn-info btn-with-padding'
 
 :javascript

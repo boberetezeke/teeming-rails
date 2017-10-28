@@ -37,9 +37,6 @@ class VotesController < ApplicationController
     else
       authorize @election, :view_vote?
 
-      # @votes = current_user.votes.for_election(@election).includes(:candidacy)
-      @votes = []
-
       breadcrumbs votes_breadcrumbs, "View Votes"
     end
   end
@@ -72,9 +69,16 @@ class VotesController < ApplicationController
         end
       else
         user = current_user
-        @election.update(election_params)
+        vote_completion = user.vote_completions.for_election(@election).first
+        if vote_completion && !vote_completion.has_voted
+          @election.update(election_params)
+          vote_completion.update(has_voted: true)
+          redirect_to view_election_votes_path(@election)
+        else
+          flash[:alert] = "You are not able to vote"
+          redirect_to root_path
+        end
 
-        redirect_to view_election_votes_path(@election)
         # if user.voted_in_election?(@election)
         #   user_valid = false
         #   @voter_error = "you have already voted"

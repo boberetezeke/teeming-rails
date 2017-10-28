@@ -12,6 +12,6 @@
     .check_box_or_radio
       = f.input :interested_in_volunteering
 
-  = render partial: 'answers/form', locals: { f: f, edit_tools: false }
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: false }
 
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
