@@ -3,18 +3,14 @@
 - if election.races.empty? && election.external?
   %h4 There are no races for this election, click Add Race to add one
 - else
-  %p Before vote date and time
   = render partial: 'elections/vote_date_and_time', locals: { election: election }
   - if election.vote_date
-    %p after if vote date
     - if election.vote_start_time
-      %p after if vote start time
       - if Time.zone.now < election.vote_start_time
       - elsif Time.zone.now < election.vote_start_time
       - elsif Time.now >= election.vote_end_time
         = render partial: 'elections/vote_results', locals: { election: election }
 
-  %p After vote date and time
   - election.races.each do |race|
     = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: false, show_all: false }
   - election.issues.each do |issue|

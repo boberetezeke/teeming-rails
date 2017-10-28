@@ -8,8 +8,8 @@
       - last_election_type = election.election_type
     %h4
       - if election.internal?
-        - if Pundit.policy(current_user, election).show?
-          = render partial: 'elections/show', locals: { election: election }
+        /- if Pundit.policy(current_user, election).show?
+        = render partial: 'elections/show', locals: { election: election }
       - else
         =link_to(election.name, election_races_path(election))
         (#{election.races.count} #{'race'.pluralize(election.races.count)})
