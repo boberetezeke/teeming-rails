@@ -9,7 +9,7 @@ class Election < ApplicationRecord
   accepts_nested_attributes_for :issues
 
   has_many :vote_completions, dependent: :destroy
-  has_many :vote_tallies, dependent: :destroy
+  # has_many :vote_tallies, dependent: :destroy
 
   ELECTION_TYPE_INTERNAL = 'internal'
   ELECTION_TYPE_EXTERNAL = 'external'
