@@ -1,34 +1,35 @@
 %h2
   Vote tallies for #{@election.name}
-= render partial: 'show_tallies', locals: { election: @election, tallies: @tallies}
+  - if @election.races.present?
+    = render partial: 'show_tallies', locals: { race: @race, tallies: @tallies}
+    %p
+    %p
+      - if @election.vote_tallies.present?
+        %em counted from vote tallies
+      - else
+        %em counted from raw votes
 
-- @election.issues.each do |issue|
-  - if issue.answers.present?
-    - group_by_questions(issue.answers.first.question.answers).each do |question, answers|
-      %h3= question.text
-      %hr
-      - answers.each do |answer|
-        - if answer.user
-          %p #{answer.user.email} - #{answer.text}
-        - else
-          %p unknown - #{answer.text}
-      %hr
-      - question.answer_totals.each do |answer_text, count|
-        #{answer_text} - #{count}
-  - else
-    No votes yet
+    -#%hr
+    -#-if policy(@election).download_votes?
+    -#  = link_to "Download Votes", download_votes_election_votes_path(@election), class: 'btn btn-sm btn-primary'
+    -#-if policy(@election).generate_tallies?
+    -#  = link_to "Generate Tallies", generate_tallies_election_votes_path(@election), class: 'btn btn-sm btn-success'
+    -#-if policy(@election).delete_votes?
+    -#  = link_to "Delete Votes (#{@election.votes.count})", delete_votes_election_votes_path(@election), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }
+  - elsif @election.issues.present?
+    - @election.issues.each do |issue|
+      - if issue.answers.present?
+        - group_by_questions(issue.answers.first.question.answers).each do |question, answers|
+          %h3= question.text
+          %hr
+          - answers.each do |answer|
+            - if answer.user
+              %p #{answer.user.email} - #{answer.text}
+            - else
+              %p unknown - #{answer.text}
+          %hr
+          - question.answer_totals.each do |answer_text, count|
+            #{answer_text} - #{count}
+      - else
+        No votes yet
 
-%p
--#%p
--#  - if @election.vote_tallies.present?
--#    %em counted from vote tallies
--#  - else
--#    %em counted from raw votes
-
--#%hr
--#-if policy(@election).download_votes?
--#  = link_to "Download Votes", download_votes_election_votes_path(@election), class: 'btn btn-sm btn-primary'
--#-if policy(@election).generate_tallies?
--#  = link_to "Generate Tallies", generate_tallies_election_votes_path(@election), class: 'btn btn-sm btn-success'
--#-if policy(@election).delete_votes?
--#  = link_to "Delete Votes (#{@election.votes.count})", delete_votes_election_votes_path(@election), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }
