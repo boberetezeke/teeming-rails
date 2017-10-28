@@ -8,7 +8,10 @@
       %h3= question.text
       %hr
       - answers.each do |answer|
-        %p #{answer.user.email} - #{answer.text}
+        - if answer.user
+          %p #{answer.user.email} - #{answer.text}
+        - else
+          %p unknown - #{answer.text}
       %hr
       - question.answer_totals.each do |answer_text, count|
         #{answer_text} - #{count}
