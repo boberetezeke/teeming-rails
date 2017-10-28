@@ -1,7 +1,7 @@
 %div{ style: 'padding-top: 10px;'}
   - if election.vote_date && election.vote_start_time
     - if Time.zone.now < election.vote_start_time
-      - if policy(election).vote? && !current_user.voted_in_election?(election)
+      - if policy(election).wait? && !current_user.voted_in_election?(election)
         = link_to("Wait to Vote", election_votes_path(election), class: 'btn btn-sm btn-info')
     - elsif Time.zone.now < election.vote_end_time
       - if policy(election).vote? && !current_user.voted_in_election?(election)
