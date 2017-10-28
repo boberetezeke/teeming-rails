@@ -86,7 +86,7 @@ class Election < ApplicationRecord
         return false
       end
 
-      self.send("#{time_sym}=", Time.local(2017, 1, 1, hour, minute))
+      self.send("#{time_sym}=", Time.zone.local(2017, 1, 1, hour, minute))
       return true
     else
       errors.add(time_str_sym, "invalid time")
