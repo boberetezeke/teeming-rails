@@ -37,6 +37,10 @@ class Election < ApplicationRecord
     election_type == ELECTION_TYPE_INTERNAL
   end
 
+  def is_frozen?
+    is_frozen
+  end
+
   def tally_votes
     if races.present?
       races.first.tally_votes
@@ -103,12 +107,12 @@ class Election < ApplicationRecord
     m = /(\d+)\/(\d+)\/(\d+)/.match(date_str)
     if m
       month, day, year = m.captures.map(&:to_i)
-      if month < 1 || month >= 12
+      if month < 1 || month > 12
         errors.add(date_sym_str, "invalid month '#{month}'")
         return false
       end
 
-      if day < 0 || day >= 31
+      if day < 0 || day > 31
         errors.add(date_sym_str, "invalid day '#{day}'")
         return false
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171028134555) do
+ActiveRecord::Schema.define(version: 20171101045012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,7 @@ ActiveRecord::Schema.define(version: 20171028134555) do
     t.datetime "vote_start_time"
     t.datetime "vote_end_time"
     t.boolean  "show_vote_tallies"
+    t.boolean  "is_frozen"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id", using: :btree
   end
 
@@ -110,8 +111,8 @@ ActiveRecord::Schema.define(version: 20171028134555) do
 
   create_table "member_group_memberships", force: :cascade do |t|
     t.integer "member_id"
-    t.integer "member_groups_id"
-    t.index ["member_groups_id"], name: "index_member_group_memberships_on_member_groups_id", using: :btree
+    t.integer "member_group_id"
+    t.index ["member_group_id"], name: "index_member_group_memberships_on_member_group_id", using: :btree
     t.index ["member_id"], name: "index_member_group_memberships_on_member_id", using: :btree
   end
 

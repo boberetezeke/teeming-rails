@@ -59,6 +59,7 @@ class User < ApplicationRecord
   end
 
   def can_vote_in_election?(election)
+    vcs = vote_completions.for_election(election)
     vote_completions.for_election(election).can_vote.first
   end
 

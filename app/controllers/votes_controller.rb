@@ -10,6 +10,7 @@ class VotesController < ApplicationController
     else
       breadcrumbs votes_breadcrumbs, "Vote"
 
+      @vote_completion = current_user.vote_completions.for_election(@election).first
       if now < @election.vote_start_time
         redirect_to wait_election_votes_path(election_id: @election)
       elsif now >= @election.vote_end_time
@@ -19,9 +20,9 @@ class VotesController < ApplicationController
           redirect_to missed_election_votes_path(election_id: @election)
         end
       else
+        @vote_completion.answers = []
         @election.issues.each do |issue|
-          issue.answers = issue.questionnaire.new_answers
-          issue.answers.each{|a| a.user_id = current_user.id}
+          @vote_completion.answers << issue.questionnaire.new_answers(user: current_user)
         end
 
         # @votes = current_user.votes.for_election(@election).includes(:candidacy)
@@ -37,6 +38,7 @@ class VotesController < ApplicationController
     else
       authorize @election, :view_vote?
 
+      @vote_completion = current_user.vote_completions.for_election(@election).first
       breadcrumbs votes_breadcrumbs, "View Votes"
     end
   end
@@ -71,7 +73,7 @@ class VotesController < ApplicationController
         user = current_user
         vote_completion = user.vote_completions.for_election(@election).first
         if vote_completion && !vote_completion.has_voted
-          @election.update(election_params)
+          vote_completion.update(vote_completion_params)
           vote_completion.update(has_voted: true)
           redirect_to view_election_votes_path(@election)
         else
@@ -206,16 +208,11 @@ class VotesController < ApplicationController
 
   private
 
-  def election_params
-    params.require(:election).permit(
-        {
-          issues_attributes: [
-            :id,
-            {
-              answers_attributes: [:text, :user_id, :question_id, :order_index, :id, :answerable_type, :answerable_id]
-            }
-          ]
-        }
+  def vote_completion_params
+    params.require(:vote_completion).permit(
+      {
+        answers_attributes: [:text, :user_id, :question_id, :order_index, :id, :answerable_type, :answerable_id]
+      }
     )
   end
 

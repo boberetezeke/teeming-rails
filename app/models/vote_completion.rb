@@ -1,5 +1,11 @@
 class VoteCompletion < ApplicationRecord
   belongs_to :election
+  accepts_nested_attributes_for :election
+
+  has_many :answers, as: :answerable
+
+  accepts_nested_attributes_for :answers
+
   belongs_to :user
 
   VOTE_COMPLETION_TYPE_ONLINE =         'online'

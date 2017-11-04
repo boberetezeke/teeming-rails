@@ -1,7 +1,7 @@
 class ElectionsController < ApplicationController
   before_filter :authenticate_user!
 
-  before_action :set_election, only: [:show, :edit, :update, :destroy]
+  before_action :set_election, only: [:show, :edit, :update, :destroy, :unfreeze, :freeze]
 
   def index
     authorize Election
@@ -30,6 +30,7 @@ class ElectionsController < ApplicationController
 
   def edit
     @election.set_accessors
+    @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
     breadcrumbs elections_breadcrumbs, "Edit #{@election.name}"
   end
 
@@ -37,6 +38,23 @@ class ElectionsController < ApplicationController
     @election.update(election_params)
 
     respond_with(@election)
+  end
+
+  def freeze
+    @election.update(is_frozen: true)
+    @election.member_group.members.each do |member|
+      user = member.user
+      if user
+        VoteCompletion.create(election: @election, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
+      end
+    end
+    redirect_to @election
+  end
+
+  def unfreeze
+    @election.update(is_frozen: false)
+    @election.vote_completions.destroy_all
+    redirect_to @election
   end
 
   def destroy
@@ -52,7 +70,7 @@ class ElectionsController < ApplicationController
   end
 
   def election_params
-    params.require(:election).permit(:name, :election_type, :vote_date_str, :vote_start_time_str, :vote_end_time_str)
+    params.require(:election).permit(:name, :election_type, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
   end
 
   def elections_breadcrumbs(include_link: true)

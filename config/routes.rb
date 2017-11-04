@@ -28,6 +28,10 @@ Rails.application.routes.draw do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
   end
   resources :elections do
+    member do
+      put :freeze
+      put :unfreeze
+    end
     resources :votes, shallow: true, only: [:index, :create] do
       collection do
         get :tallies

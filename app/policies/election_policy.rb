@@ -38,6 +38,14 @@ class ElectionPolicy < ApplicationPolicy
     @user.can_view_internal_elections?
   end
 
+  def freeze?
+    @user.can_view_internal_elections?
+  end
+
+  def unfreeze?
+    @user.can_view_internal_elections?
+  end
+
   def update?
     @user.can_view_internal_elections?
   end
@@ -48,7 +56,7 @@ class ElectionPolicy < ApplicationPolicy
 
   def vote?
     now = Time.now.utc
-    @user.can_enter_votes? ||
+    #@user.can_enter_votes? ||
         (@record.internal? &&
             (@record.vote_start_time && @record.vote_end_time) &&
             (@record.vote_start_time <= now && now < @record.vote_end_time) &&
