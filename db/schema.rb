@@ -149,31 +149,6 @@ ActiveRecord::Schema.define(version: 20171101045012) do
     t.index ["user_id"], name: "index_members_on_user_id", using: :btree
   end
 
-  create_table "message_controls", force: :cascade do |t|
-    t.integer  "member_id"
-    t.integer  "unsubscribed_from_message_id_id"
-    t.datetime "unsubscribed_at"
-    t.string   "unsubscribe_reason"
-    t.index ["member_id"], name: "index_message_controls_on_member_id", using: :btree
-    t.index ["unsubscribed_from_message_id_id"], name: "index_message_controls_on_unsubscribed_from_message_id_id", using: :btree
-  end
-
-  create_table "message_recipients", force: :cascade do |t|
-    t.integer "message_id"
-    t.integer "member_id"
-    t.index ["member_id"], name: "index_message_recipients_on_member_id", using: :btree
-    t.index ["message_id"], name: "index_message_recipients_on_message_id", using: :btree
-  end
-
-  create_table "messages", force: :cascade do |t|
-    t.integer "user_id"
-    t.string  "subject"
-    t.string  "body"
-    t.string  "to"
-    t.string  "message_type"
-    t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
-  end
-
   create_table "privileges", force: :cascade do |t|
     t.integer "role_id"
     t.string  "subject"
