@@ -18,22 +18,28 @@ class ApplicationController < ActionController::Base
   private
 
   def set_time_from_params
-    if Rails.env.development? && params[:time]
-      m = /((\d+)_(\d+)_(\d+)T)?(\d+)_(\d+)/.match(params[:time])
-      puts "m = #{m}"
-      if m
-        if m[1]
-          month = m[2].to_i
-          day = m[3].to_i
-          year = m[4].to_i
+    if Rails.env.development?
+      if params[:time]
+        m = /((\d+)_(\d+)_(\d+)T)?(\d+)_(\d+)/.match(params[:time])
+        puts "m = #{m}"
+        if m
+          if m[1]
+            month = m[2].to_i
+            day = m[3].to_i
+            year = m[4].to_i
+          else
+            month, day, year = Time.now.month, Time.now.day, Time.now.year
+          end
+
+          hour = m[5].to_i
+          minute = m[6].to_i
+
+          Timecop.freeze(year, month, day, hour, minute)
         else
-          month, day, year = Time.now.month, Time.now.day, Time.now.year
+          Timecop.return
         end
-
-        hour = m[5].to_i
-        minute = m[6].to_i
-
-        Timecop.freeze(year, month, day, hour, minute)
+      else
+        Timecop.return
       end
     end
   end

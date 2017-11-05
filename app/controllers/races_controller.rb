@@ -16,6 +16,7 @@ class RacesController < ApplicationController
   def new
     @election = Election.find(params[:election_id])
     @race = Race.new(election: @election)
+    breadcrumbs races_breadcrumbs(@race.election), "New Race"
   end
 
   def create
@@ -56,6 +57,10 @@ class RacesController < ApplicationController
   end
 
   def races_breadcrumbs(election, include_link: true)
-    ["#{election.name} Races", include_link ? election_races_path(election) : nil]
+    if election.external?
+      ["#{election.name} Races", include_link ? election_races_path(election) : nil]
+    else
+      ["#{election.name}", include_link ? election_path(election) : nil]
+    end
   end
 end

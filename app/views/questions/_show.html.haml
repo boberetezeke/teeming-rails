@@ -1,14 +1,15 @@
 - section = question.questionnaire_section
 - questionnaire = section.questionnaire
+- disabled = read_only
 %div{class:'col-md-9'}
   - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
-    = f.input :text, as: :string, label: question.text
+    = f.input :text, as: :string, label: question.text, input_html: { disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
-    = f.input :text, label: question.text, input_html: {rows: 2}
+    = f.input :text, label: question.text, input_html: {rows: 2, disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-    = f.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
+    = f.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}], input_html: { disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
-    = f.input :text, label: question.text, as: :radio, collection: Hash[question.choices.map{|c| [c.title, c.value]}]
+    = f.input :text, label: question.text, as: :radio, collection: Hash[question.choices.map{|c| [c.title, c.value]}], input_html: { disabled: disabled }
   - else
     %p Question: #{question.id}, #{question.text}, type: #{question.question_type}
 - if edit_tools

@@ -1,17 +1,20 @@
-%h2 Vote for #{@race.name}
+%h2 Vote for #{@election.name}
 
-%p You can vote until #{@race.vote_end_time.strftime('%I:%M%P')}. The voting will end in
+%p You can vote until #{@election.vote_end_time.strftime('%I:%M%P')}. The voting will end in
 
 .countdown
 
-%hr
-%p= @race.voting_rules
+/%hr
+/%p= @race.voting_rules
 %hr
 
-= render partial: 'vote', locals: { enter_vote: false }
+/= render partial: 'vote', locals: { enter_vote: false }
+= semantic_form_for @vote_completion, url: election_votes_path(@election), method: :post do |f|
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: false }
+  = f.submit "Vote", class: 'btn btn-sm btn-info btn-with-padding'
 
 :javascript
-  var secs_left = #{(@race.vote_end_time - Time.zone.now)}
+  var secs_left = #{(@election.vote_end_time - Time.zone.now)}
 
   $(function() {
     secs_left = display_time(".countdown", secs_left)

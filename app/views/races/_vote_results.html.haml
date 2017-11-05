@@ -1,7 +1,0 @@
-.vote-dates
-  - if policy(race).tallies?
-    %h5 Vote Results:
-    %div{style: 'padding-left: 10px;'}
-      = render partial: 'votes/show_tallies', locals: { race: race, tallies: race.tally_votes }
-  - else
-    Voting is complete

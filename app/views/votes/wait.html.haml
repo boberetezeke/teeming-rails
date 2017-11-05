@@ -1,15 +1,15 @@
-%h2 Waiting to vote in #{@race.name}
+%h2 Waiting to vote in #{@election.name}
 
 The voting will commence in
 
 .countdown
 
-While you wait, check out the candidate questionnaire responses below
+/While you wait, check out the candidate questionnaire responses below
 
-= render partial: 'candidacies/table', locals: { race: @race, candidacies: @race.candidacies }
+/= render partial: 'candidacies/table', locals: { race: @race, candidacies: @race.candidacies }
 
 :javascript
-  var secs_left = #{(@race.vote_start_time - Time.zone.now)}
+  var secs_left = #{(@election.vote_start_time - Time.zone.now)}
 
   $(function() {
     secs_left = display_time(".countdown", secs_left)

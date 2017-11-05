@@ -97,4 +97,13 @@ module ApplicationHelper
   def in_formtastic(html)
     html.gsub(/<(p|ul|li)>/) { "<#{$1} class=\"in-formtastic\">" }
   end
+
+  def group_by_questions(answers)
+    questions = {}
+    answers.each do |answer|
+      questions[answer.question] ||= []
+      questions[answer.question].push(answer)
+    end
+    questions
+  end
 end

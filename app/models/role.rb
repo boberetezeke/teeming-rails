@@ -4,7 +4,8 @@ class Role < ApplicationRecord
 
   PRIVILEGES = [
       # action                  # subject       # method name
-      ['show_internal',         'candidacy'                                   ],
+      ['view_internal',         'election'                                    ],
+      ['modify',                'election'                                    ],
 
       ['show_tallies',          'vote',         'show_vote_tallies'           ],
       ['enter',                 'vote'                                        ],
@@ -13,7 +14,7 @@ class Role < ApplicationRecord
       ['generate_tallies_for',  'vote',         'generate_vote_tallies'       ],
 
       ['view',                  'member'                                      ],
-      ['show_internal',         'candidacy'                                   ],
+      ['view_internal',         'candidacy'                                   ],
   ]
 
   PRIVILEGES.each do |action, subject, method_name|

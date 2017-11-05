@@ -2,7 +2,6 @@ class Race < ApplicationRecord
   belongs_to :election
   has_many :candidacies, dependent: :destroy
   has_many :votes, dependent: :destroy
-  has_many :vote_completions, dependent: :destroy
   has_many :vote_tallies, dependent: :destroy
   has_one  :questionnaire, as: :questionnairable
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
@@ -14,6 +13,9 @@ class Race < ApplicationRecord
 
   scope :active_for_time, ->(time){ where(Race.arel_table[:filing_deadline_date].gt(time) ) }
   scope :by_last_update, ->{  order("updated_at desc") }
+
+  attr_accessor :filing_deadline_date_str
+  attr_accessor :candidates_announcement_date_str
 
   LEVEL_OF_GOVERNMENT_TYPE_SCHOOL_BOARD =           'school_board'
   LEVEL_OF_GOVERNMENT_TYPE_MAYOR =                  'mayor'

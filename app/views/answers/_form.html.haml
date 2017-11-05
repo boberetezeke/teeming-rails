@@ -5,13 +5,14 @@
     = ff.hidden_field :id
     = ff.hidden_field :question_id
     = ff.hidden_field :candidacy_id
+    = ff.hidden_field :user_id
     = ff.hidden_field :order_index
 
     - if question.order_index == 1
       - before_and_current_sections_for_question(question) do |section|
         = render partial: 'questionnaire_sections/show', locals: { section: section, edit_tools: edit_tools }
     .row
-      = render partial: 'questions/show', locals: { question: question, edit_tools: edit_tools, f: ff }
+      = render partial: 'questions/show', locals: { question: question, edit_tools: edit_tools, f: ff, read_only: read_only }
 
     - empty_after_sections_for_question(question) do |section|
       = render partial: 'questionnaire_sections/show', locals: { section: section, edit_tools: edit_tools }

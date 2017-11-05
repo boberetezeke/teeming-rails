@@ -1,7 +1,7 @@
 = f.hidden_field :race_id
 - if race.election.internal?
   = f.hidden_field :user_id
-  = render partial: 'answers/form', locals: { f: f, edit_tools: false }
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: false }
 - else
   = f.input :name
   = f.input :party_affiliation, as: :select, collection: Candidacy::PARTY_AFFILATION_TYPES, include_blank: false

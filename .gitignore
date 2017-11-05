@@ -20,5 +20,8 @@
 /db/data/
 db/backups/
 
+# More Members CSV
+members
+
 .env
 .DS_Store

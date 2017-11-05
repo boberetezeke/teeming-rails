@@ -1,14 +1,13 @@
-%h2 Your vote for #{@race.name}
+%h2 Your vote for #{@election.name}
 
 %p
-  Your votes are the
-  %strong X - bold
-  selections
-  - DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes).each do |district_name, candidacies|
-    %h3 District #{district_name}
-    - candidacies.each do |candidacy, vote|
-      %div
-        - if vote.present?
-          %strong X - #{candidacy.name}
-        - else
-          = candidacy.name
+  = semantic_form_for @vote_completion, url: election_votes_path(@election), method: :post do |f|
+    = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
+  -#- DistrictVoting.group_candidacies_by_district(@race.candidacies, @votes).each do |district_name, candidacies|
+  -#  %h3 District #{district_name}
+  -#  - candidacies.each do |candidacy, vote|
+  -#    %div
+  -#      - if vote.present?
+  -#        %strong X - #{candidacy.name}
+  -#      - else
+  -#        = candidacy.name

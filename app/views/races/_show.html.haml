@@ -1,24 +1,15 @@
 - if race.election.internal?
   %h5 #{link_to(race.complete_name, race)}
-  - if Time.zone.now < race.vote_end_time
+  - if Time.zone.now < race.election.vote_end_time
     = render partial: 'races/show_candidacies_note', locals: { race: race }
 
-  %p
-    = render partial: 'races/vote_date_and_time', locals: { race: race }
-
-  - if Time.zone.now < race.vote_start_time
+  - if Time.zone.now < race.election.vote_start_time
     = render partial: 'races/show_dates', locals: { race: race }
     = render partial: 'races/show_candidacies', locals: { race: race }
 
-  - elsif Time.zone.now < race.vote_end_time
+  - elsif Time.zone.now < race.election.vote_end_time
     = render partial: 'races/show_candidacies', locals: { race: race }
     = render partial: 'races/candidacy_action',  locals: { race: race }
-    .vote-dates
-      Voting is from: #{voting_date_and_time_str(race.vote_start_time)} to #{voting_date_and_time_str(race.vote_end_time)}
-  - elsif Time.now >= race.vote_end_time
-    = render partial: 'races/vote_results.html.haml', locals: { race: race }
-  .vote-actions
-    = render partial: 'races/vote_actions', locals: { race: race }
 - else
   %h5
     #{link_to(race.type_and_locale, race)}

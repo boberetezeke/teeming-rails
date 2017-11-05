@@ -21,11 +21,20 @@ class Question < ApplicationRecord
 
   default_scope ->{ order('order_index asc') }
 
-  def new_answer(candidacy: nil, index: nil)
-    Answer.new(candidacy: candidacy, question: self, order_index: index)
+  def new_answer(candidacy: nil, index: nil, user: nil)
+    Answer.new(candidacy: candidacy, question: self, order_index: index, user: user)
   end
 
   def has_choices?
     question_type == QUESTION_TYPE_CHECKBOXES || question_type == QUESTION_TYPE_MULTIPLE_CHOICE
+  end
+
+  def answer_totals
+    totals = {}
+    answers.each do |answer|
+      totals[answer.text] ||= 0
+      totals[answer.text] += 1
+    end
+    totals
   end
 end

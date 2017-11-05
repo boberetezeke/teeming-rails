@@ -1,5 +1,8 @@
 %h2 Elections
 
+- if Pundit.policy(current_user, Election).new?
+  = link_to("New Election", new_election_path, class: 'btn btn-sm btn-success')
+
 %h3 Internal (for Our Revolution MN)
 
 = render partial: 'table', locals: { elections: @internal_elections, short_list_of_races: false }
@@ -7,3 +10,4 @@
 %h3 External (for Minnesota offices)
 
 = render partial: 'table', locals: { elections: @external_elections, short_list_of_races: false  }
+

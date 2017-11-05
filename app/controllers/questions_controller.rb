@@ -31,7 +31,13 @@ class QuestionsController < ApplicationController
   def update
     @question = Question.find(params[:id])
 
-    if @question.update(question_params)
+    q_params = question_params.to_hash
+    if q_params["question_type"] == "multiple_choice" || q_params["question_type"] == "single_choice"
+      q_params["choices_attributes"].each do  |key, choice_param|
+        choice_param['value'] = choice_param['title']
+      end
+    end
+    if @question.update(q_params)
       if params[:redirect_location].blank?
         redirect_to @question.questionnaire_section.questionnaire
       else

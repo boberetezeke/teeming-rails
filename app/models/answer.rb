@@ -2,6 +2,7 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :candidacy
   belongs_to :user
+  belongs_to :answerable, polymorphic: true
 
   attr_accessor :text_checkboxes
 

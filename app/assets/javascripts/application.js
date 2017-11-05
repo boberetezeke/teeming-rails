@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require turbolinks
+//= require bootstrap-datepicker
 //= require_tree .
 
 function display_time(selector, secs_left)
@@ -50,5 +51,5 @@ function display_time(selector, secs_left)
 
 function reload_votes()
 {
-    window.location = window.location.href.replace(/\/races\/(\d+)\/votes\/(.*)$/, "/races/$1/votes")
+    window.location = window.location.href.replace(/\/elections\/(\d+)\/votes\/(.*)$/, "/elections/$1/votes")
 }

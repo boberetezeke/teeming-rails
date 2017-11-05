@@ -1,9 +1,17 @@
 = semantic_form_for [election, race] do |f|
   - if race.election.internal?
     = f.input :name
+    = f.input :filing_deadline_date_str, label: 'Filing Deadline Date'
+    = f.input :candidates_announcement_date_str, label: 'Candidates Announcment Date'
   - else
     = f.input :level_of_government, as: :select, collection: Race::LEVEL_OF_GOVERNMENT_TYPES, include_blank: false
     = f.input :locale, hint: "Enter the appropriate jurisdiction for the office (e.g. Ramsey for County Commissioner)"
     = f.input :notes, hint: "Enter in general information about the race and perhaps strategy", html_input: { rows: 4, cols: 80 }
   = f.hidden_field :election_id
   = f.submit class: 'btn btn-sm btn-primary'
+
+:javascript
+  $(function() {
+    $("#race_filing_deadline_date_str").datepicker({orientation: 'bottom'})
+    $("#race_candidates_announcement_date_str").datepicker({orientation: 'bottom'})
+  })
