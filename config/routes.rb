@@ -45,7 +45,11 @@ Rails.application.routes.draw do
         put :delete_votes
       end
     end
-    resources :races, shallow: true
+    resources :races, shallow: true do
+      member do
+        put :create_questionnaire
+      end
+    end
     resources :issues, shallow: true do
       member do
         put :create_questionnaire

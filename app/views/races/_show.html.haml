@@ -1,5 +1,5 @@
 - if race.election.internal?
-  %h5 #{link_to(race.complete_name, race)}
+  %h5 Race for #{link_to(race.complete_name, race)}
   - if Time.zone.now < race.election.vote_end_time
     = render partial: 'races/show_candidacies_note', locals: { race: race }
 
