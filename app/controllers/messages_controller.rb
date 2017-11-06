@@ -14,6 +14,7 @@ class MessagesController < ApplicationController
 
   def new
     @message = Message.new
+    @member_groups = MemberGroup.all
     breadcrumbs messages_breadcrumbs, "New Message"
   end
 
@@ -24,8 +25,8 @@ class MessagesController < ApplicationController
     if params[:commit] == "Send"
       if @message.valid?
         @message.create_message_recipients
-        @message.message_recipients.each do |message_recipient|
-          MembersMailer.send_normal(@message, message_recipient.member).deliver
+        @message.reload.message_recipients.each do |message_recipient|
+          MembersMailer.send_normal(@message, message_recipient.member).deliver_later
         end
       end
     end
@@ -34,6 +35,7 @@ class MessagesController < ApplicationController
 
   def edit
     @message = Message.find(params[:id])
+    @member_groups = MemberGroup.all
     breadcrumbs messages_breadcrumbs, truncate("Edit #{@message.subject}", length: 25)
   end
 
@@ -47,7 +49,7 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).permit(:subject, :body, :to)
+    params.require(:message).permit(:subject, :body, :member_group_id)
   end
 
   def messages_breadcrumbs(include_link: true)

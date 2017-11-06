@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171101045012) do
+ActiveRecord::Schema.define(version: 20171105230928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -171,6 +171,8 @@ ActiveRecord::Schema.define(version: 20171101045012) do
     t.string  "body"
     t.string  "to"
     t.string  "message_type"
+    t.integer "member_group_id"
+    t.index ["member_group_id"], name: "index_messages_on_member_group_id", using: :btree
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
 

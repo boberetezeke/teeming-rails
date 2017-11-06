@@ -1,5 +1,5 @@
 = semantic_form_for message do |f|
-  = f.input :to
+  = f.input :member_group_id, as: :select, collection: member_groups, include_blank: false
   = f.input :subject
   = f.input :body, as: :text, input_html: { rows: 5, cols: 100 }
   = f.submit "Save Draft", class: 'btn btn-sm btn-info btn-with-padding'
