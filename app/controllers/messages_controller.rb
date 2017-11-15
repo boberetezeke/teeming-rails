@@ -3,16 +3,25 @@ class MessagesController < ApplicationController
   include ActionView::Helpers::TextHelper
 
   def index
-    @messages = Message.all
+    authorize Message
+    @chapter = Chapter.find(params[:chapter_id])
+
+    @messages = policy_scope(Message)
+    @messages = @messages.for_chapter(@chapter)
+
     breadcrumbs messages_breadcrumbs(include_link: false)
   end
 
   def show
     @message = Message.find(params[:id])
+    authorize @message
+
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)
   end
 
   def new
+    authorize Message
+
     @message = Message.new
     @member_groups = MemberGroup.all
     breadcrumbs messages_breadcrumbs, "New Message"
@@ -20,6 +29,8 @@ class MessagesController < ApplicationController
 
   def create
     @message = Message.new(message_params)
+    authorize @message
+
     @message.save
 
     if params[:commit] == "Send"
@@ -35,12 +46,17 @@ class MessagesController < ApplicationController
 
   def edit
     @message = Message.find(params[:id])
+
+    authorize @message
+
     @member_groups = MemberGroup.all
     breadcrumbs messages_breadcrumbs, truncate("Edit #{@message.subject}", length: 25)
   end
 
   def update
     @message = Message.find(params[:id])
+    authorize @message
+
     @message.update(message_params)
 
     respond_with @message
