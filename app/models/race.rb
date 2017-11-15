@@ -49,11 +49,11 @@ class Race < ApplicationRecord
       "Secretary of State" =>    LEVEL_OF_GOVERNMENT_TYPE_SECRETARY_OF_STATE,
       "Governor" =>              LEVEL_OF_GOVERNMENT_TYPE_GOVERNOR,
       "U.S. Congressperson" =>   LEVEL_OF_GOVERNMENT_TYPE_CONGRESSPERSON,
-      "U.S. Senator" =>          LEVEL_OF_GOVERNMENT_TYPE_SENATOR
-      "Attorney General" =>      LEVEL_OF_GOVERNMENT_TYPE_ATTORNEY_GENERAL
-      "Supreme Court Judge" =>   LEVEL_OF_GOVERNMENT_TYPE_SUPREME_COURT_JUDGE
-      "Appellate Court Judge" => LEVEL_OF_GOVERNMENT_TYPE_APPELLATE_COURT_JUDGE
-      "Local Judge" =>           LEVEL_OF_GOVERNMENT_TYPE_LOCAL_JUDGE
+      "U.S. Senator" =>          LEVEL_OF_GOVERNMENT_TYPE_SENATOR,
+      "Attorney General" =>      LEVEL_OF_GOVERNMENT_TYPE_ATTORNEY_GENERAL,
+      "Supreme Court Judge" =>   LEVEL_OF_GOVERNMENT_TYPE_SUPREME_COURT_JUDGE,
+      "Appellate Court Judge" => LEVEL_OF_GOVERNMENT_TYPE_APPELLATE_COURT_JUDGE,
+      "Local Judge" =>           LEVEL_OF_GOVERNMENT_TYPE_LOCAL_JUDGE,
       "Park Commissioner" =>     LEVEL_OF_GOVERNMENT_TYPE_PARK_COMMISSIONER
   }
 
