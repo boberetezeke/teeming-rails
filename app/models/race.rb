@@ -30,21 +30,31 @@ class Race < ApplicationRecord
   LEVEL_OF_GOVERNMENT_TYPE_CONGRESSPERSON =         'congressperson'
   LEVEL_OF_GOVERNMENT_TYPE_SENATOR =                'senator'
   LEVEL_OF_GOVERNMENT_TYPE_GOVERNOR =               'govenor'
+  LEVEL_OF_GOVERNMENT_TYPE_ATTORNEY_GENERAL =       'attorney_general'
+  LEVEL_OF_GOVERNMENT_TYPE_SUPREME_COURT_JUDGE =    'supreme_court_judge'
+  LEVEL_OF_GOVERNMENT_TYPE_APPELLATE_COURT_JUDGE =  'appellate_court_judge'
+  LEVEL_OF_GOVERNMENT_TYPE_LOCAL_JUDGE =            'local_judge'
+  LEVEL_OF_GOVERNMENT_TYPE_PARK_COMMISSIONER =      'park_commissioner'
 
   LEVEL_OF_GOVERNMENT_TYPES = {
-      "School Board" =>         LEVEL_OF_GOVERNMENT_TYPE_SCHOOL_BOARD,
-      "Mayor" =>                LEVEL_OF_GOVERNMENT_TYPE_MAYOR,
-      "City Council" =>         LEVEL_OF_GOVERNMENT_TYPE_CITY_COUNCIL,
-      "County Commissioner" =>  LEVEL_OF_GOVERNMENT_TYPE_COUNTY_COMMISSIONER,
-      "County Prosecutor" =>    LEVEL_OF_GOVERNMENT_TYPE_COUNTY_PROSECUTOR,
-      "Sheriff" =>              LEVEL_OF_GOVERNMENT_TYPE_SHERIFF,
-      "State Representative" => LEVEL_OF_GOVERNMENT_TYPE_STATE_REPRESENTATIVE,
-      "State Senator" =>        LEVEL_OF_GOVERNMENT_TYPE_STATE_SENATOR,
-      "State Auditor" =>        LEVEL_OF_GOVERNMENT_TYPE_STATE_AUDITOR,
-      "Secretary of State" =>   LEVEL_OF_GOVERNMENT_TYPE_SECRETARY_OF_STATE,
-      "Governor" =>             LEVEL_OF_GOVERNMENT_TYPE_GOVERNOR,
-      "US. Congressperson" =>   LEVEL_OF_GOVERNMENT_TYPE_CONGRESSPERSON,
-      "US. Senator" =>          LEVEL_OF_GOVERNMENT_TYPE_SENATOR
+      "School Board" =>          LEVEL_OF_GOVERNMENT_TYPE_SCHOOL_BOARD,
+      "Mayor" =>                 LEVEL_OF_GOVERNMENT_TYPE_MAYOR,
+      "City Council" =>          LEVEL_OF_GOVERNMENT_TYPE_CITY_COUNCIL,
+      "County Commissioner" =>   LEVEL_OF_GOVERNMENT_TYPE_COUNTY_COMMISSIONER,
+      "County Prosecutor" =>     LEVEL_OF_GOVERNMENT_TYPE_COUNTY_PROSECUTOR,
+      "Sheriff" =>               LEVEL_OF_GOVERNMENT_TYPE_SHERIFF,
+      "State Representative" =>  LEVEL_OF_GOVERNMENT_TYPE_STATE_REPRESENTATIVE,
+      "State Senator" =>         LEVEL_OF_GOVERNMENT_TYPE_STATE_SENATOR,
+      "State Auditor" =>         LEVEL_OF_GOVERNMENT_TYPE_STATE_AUDITOR,
+      "Secretary of State" =>    LEVEL_OF_GOVERNMENT_TYPE_SECRETARY_OF_STATE,
+      "Governor" =>              LEVEL_OF_GOVERNMENT_TYPE_GOVERNOR,
+      "U.S. Congressperson" =>   LEVEL_OF_GOVERNMENT_TYPE_CONGRESSPERSON,
+      "U.S. Senator" =>          LEVEL_OF_GOVERNMENT_TYPE_SENATOR
+      "Attorney General" =>      LEVEL_OF_GOVERNMENT_TYPE_ATTORNEY_GENERAL
+      "Supreme Court Judge" =>   LEVEL_OF_GOVERNMENT_TYPE_SUPREME_COURT_JUDGE
+      "Appellate Court Judge" => LEVEL_OF_GOVERNMENT_TYPE_APPELLATE_COURT_JUDGE
+      "Local Judge" =>           LEVEL_OF_GOVERNMENT_TYPE_LOCAL_JUDGE
+      "Park Commissioner" =>     LEVEL_OF_GOVERNMENT_TYPE_PARK_COMMISSIONER
   }
 
   def candidates_announced?
