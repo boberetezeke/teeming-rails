@@ -162,7 +162,7 @@ skills_questionnaire.destroy if skills_questionnaire
 
 minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
 minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
-initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), election_type: Election::ELECTION_TYPE_INTERNAL)
+initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), vote_start_time: Time.zone.local(2017, 9, 16, 16, 00), vote_end_time: Time.zone.local(2017, 9, 16, 16, 30), election_type: Election::ELECTION_TYPE_INTERNAL)
 
 =begin
   %p.in-formtastic

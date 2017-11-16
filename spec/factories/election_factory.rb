@@ -1,5 +1,7 @@
 FactoryGirl.define do
   factory :election do
+    vote_date Date.new(2017, 3, 30)
+
     election_type Election::ELECTION_TYPE_INTERNAL
 
     trait :internal do
