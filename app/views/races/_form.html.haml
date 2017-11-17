@@ -1,5 +1,6 @@
 = semantic_form_for [election, race] do |f|
   = f.semantic_errors
+  = f.input :chapter_id, as: :select, collection: Chapter.all, include_blank: false
   - if race.election.internal?
     = f.input :name
     = f.input :filing_deadline_date_str, label: 'Filing Deadline Date'

@@ -17,7 +17,7 @@
     - if short_list_of_races
       - if election.external?
         %span.note Click on the link above to add races/candidacy in your area
-      - election.races.by_last_update.take(3).each do |race|
+      - election.races.for_chapter(chapter).by_last_update.take(3).each do |race|
         = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false }
     - else
       - election.races.each do |race|

@@ -27,7 +27,9 @@ Rails.application.routes.draw do
   resources :chapters, only: [:index, :show] do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
     resources :events, shallow: true
+    resources :messages, only: [:index, :new, :create, :show, :edit, :update], shallow: true
   end
+
   resources :elections do
     member do
       put :freeze
@@ -64,7 +66,7 @@ Rails.application.routes.draw do
   end
   resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :candidacies
-  resources :messages, only: [:index, :new, :create, :show, :edit, :update]
+  # resources :messages, only: [:index, :new, :create, :show, :edit, :update]
   resources :member_groups do
     resources :members
   end

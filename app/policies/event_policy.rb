@@ -6,6 +6,7 @@ class EventPolicy < ApplicationPolicy
   end
 
   def show?
+    true
   end
 
   def new?

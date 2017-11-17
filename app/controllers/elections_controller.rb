@@ -18,6 +18,7 @@ class ElectionsController < ApplicationController
 
   def new
     @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL)
+    @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
     breadcrumbs elections_breadcrumbs, 'New election'
   end
 

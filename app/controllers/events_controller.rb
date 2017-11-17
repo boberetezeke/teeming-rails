@@ -1,12 +1,13 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!
 
-  # before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   def index
     @events = Event.all
+    @chapter = Chapter.find(params[:chapter_id])
 
-    breadcrumbs event_breadcrumbs(include_link: false)
+    breadcrumbs [@chapter.name, @chapter], "Events"
   end
 
   def show
@@ -56,6 +57,6 @@ class EventsController < ApplicationController
   end
 
   def event_breadcrumbs(include_link: true)
-    ["Events", include_link ? events_path : nil]
+    ["Events", include_link ? chapter_events_path(@event.chapter) : nil]
   end
 end

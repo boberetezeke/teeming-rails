@@ -1,5 +1,6 @@
 class Message < ApplicationRecord
   belongs_to :user
+  belongs_to :chapter
   has_many :message_recipients
   belongs_to :member_group
 

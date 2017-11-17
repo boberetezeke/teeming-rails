@@ -1,7 +1,7 @@
 - if @user.setup_state.blank?
   .row
     .col-md-6
-      = render partial: 'elections/table', locals: {elections: Election.all, short_list_of_races: true}
+      = render partial: 'elections/table', locals: {elections: Election.all, short_list_of_races: true, chapter: nil}
     .col-md-6
       %h3= link_to("Chapters", chapters_path)
       = render partial: 'chapters/stats_table', locals: {chapters: Chapter.all}

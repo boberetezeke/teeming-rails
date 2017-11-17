@@ -14,8 +14,9 @@ class Race < ApplicationRecord
 
   validate :dates_are_valid
 
-  scope :active_for_time, ->(time){ where(Race.arel_table[:filing_deadline_date].gt(time) ) }
-  scope :by_last_update, ->{  order("updated_at desc") }
+  scope :active_for_time, ->(time)    { where(Race.arel_table[:filing_deadline_date].gt(time) ) }
+  scope :by_last_update,  ->          {  order("updated_at desc") }
+  scope :for_chapter,     ->(chapter) { chapter ? where(chapter_id: chapter.id) : where("true") }
 
   attr_accessor :filing_deadline_date_str
   attr_accessor :candidates_announcement_date_str
@@ -129,19 +130,21 @@ class Race < ApplicationRecord
   end
 
   def dates_are_valid
-    valid_filing_deadline_date = validate_date(:filing_deadline_date)
-    valid_candidates_announcemnt_date = validate_date(:candidates_announcement_date)
-    if valid_filing_deadline_date && valid_candidates_announcemnt_date
-      if self.filing_deadline_date > self.candidates_announcement_date
-        errors.add(:base, "filing date must be at or before candidates announcement date")
-      end
+    if election.internal?
+      valid_filing_deadline_date = validate_date(:filing_deadline_date)
+      valid_candidates_announcemnt_date = validate_date(:candidates_announcement_date)
+      if valid_filing_deadline_date && valid_candidates_announcemnt_date
+        if self.filing_deadline_date > self.candidates_announcement_date
+          errors.add(:base, "filing date must be at or before candidates announcement date")
+        end
 
-      if self.filing_deadline_date > self.election.vote_date
-        errors.add(:base, "filing date must be before the vote date")
-      end
+        if self.filing_deadline_date > self.election.vote_date
+          errors.add(:base, "filing date must be before the vote date")
+        end
 
-      if self.candidates_announcement_date > self.election.vote_date
-        errors.add(:base, "candidate announcement date must be before the vote date")
+        if self.candidates_announcement_date > self.election.vote_date
+          errors.add(:base, "candidate announcement date must be before the vote date")
+        end
       end
     end
   end

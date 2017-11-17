@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
     @messages = policy_scope(Message)
     @messages = @messages.for_chapter(@chapter)
 
-    breadcrumbs messages_breadcrumbs(include_link: false)
+    breadcrumbs [@chapter.name, @chapter], "Messages"
   end
 
   def show
@@ -22,7 +22,8 @@ class MessagesController < ApplicationController
   def new
     authorize Message
 
-    @message = Message.new
+    @chapter = Chapter.find(params[:chapter_id])
+    @message = Message.new(chapter: @chapter)
     @member_groups = MemberGroup.all
     breadcrumbs messages_breadcrumbs, "New Message"
   end
@@ -69,6 +70,6 @@ class MessagesController < ApplicationController
   end
 
   def messages_breadcrumbs(include_link: true)
-    ["Messages", include_link ? messages_path : nil]
+    ["Messages", include_link ? chapter_messages_path(@message.chapter) : nil]
   end
 end

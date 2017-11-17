@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171116040222) do
+ActiveRecord::Schema.define(version: 20171117212304) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -182,6 +182,8 @@ ActiveRecord::Schema.define(version: 20171116040222) do
     t.string  "to"
     t.string  "message_type"
     t.integer "member_group_id"
+    t.integer "chapter_id"
+    t.index ["chapter_id"], name: "index_messages_on_chapter_id", using: :btree
     t.index ["member_group_id"], name: "index_messages_on_member_group_id", using: :btree
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
@@ -233,6 +235,8 @@ ActiveRecord::Schema.define(version: 20171116040222) do
     t.datetime "vote_start_time"
     t.datetime "vote_end_time"
     t.boolean  "show_vote_tallies"
+    t.integer  "chapter_id"
+    t.index ["chapter_id"], name: "index_races_on_chapter_id", using: :btree
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id", using: :btree
   end
