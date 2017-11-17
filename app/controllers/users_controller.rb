@@ -14,7 +14,7 @@ class UsersController < ApplicationController
 
       convert_answer_checkboxes_from_text
       # for user info page
-      @user.member = Member.new unless @user.member
+      @user.member = Member.new(email: @user.email) unless @user.member
       @user.member.with_user_input = true
 
       # for candidancies page
@@ -127,6 +127,8 @@ class UsersController < ApplicationController
   def update_email
     @user = User.find(params[:id])
     if @user.update(user_params(params))
+      # HACK: temporary way to keep user email and member email in sync. Should override confirmations controller
+      @user.member.update(email: @user.unconfirmed_email)
       flash[:notice] = "An email has been sent to you to confirm your email change. The change won't take effect until you click the confirmation link."
       redirect_to root_path
     else
@@ -177,7 +179,7 @@ class UsersController < ApplicationController
                                  {answers_attributes: CandidaciesController.answers_atributes},
                                  {event_rsvps_attributes: [:rsvp_type, :event_id] },
                                  {member_attributes: [
-                                    :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
+                                    :email, :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
                                     :with_user_input
                                  ]},

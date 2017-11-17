@@ -16,6 +16,7 @@ class Role < ApplicationRecord
       ['generate_tallies_for',  'vote',         'generate_vote_tallies'       ],
 
       ['view',                  'member'                                      ],
+      ['send',                  'message'                                     ],
       ['view_internal',         'candidacy'                                   ],
   ]
 

@@ -20,6 +20,7 @@ gem 'responders'
 gem 'kramdown'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
+gem 'sidekiq'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'

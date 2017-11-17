@@ -12,6 +12,8 @@ class Race < ApplicationRecord
   validates :level_of_government, presence: true, if: ->{ election.external? }
   validates :locale, presence: true,              if: ->{ election.external? }
 
+  validate :dates_are_valid
+
   scope :active_for_time, ->(time){ where(Race.arel_table[:filing_deadline_date].gt(time) ) }
   scope :by_last_update, ->{  order("updated_at desc") }
 
@@ -57,6 +59,11 @@ class Race < ApplicationRecord
       "Local Judge" =>           LEVEL_OF_GOVERNMENT_TYPE_LOCAL_JUDGE,
       "Park Commissioner" =>     LEVEL_OF_GOVERNMENT_TYPE_PARK_COMMISSIONER
   }
+
+  def set_accessors
+    self.filing_deadline_date_str = self.filing_deadline_date.strftime("%m/%d/%Y")                  if self.filing_deadline_date
+    self.candidates_announcement_date_str = self.candidates_announcement_date.strftime("%m/%d/%Y")  if self.candidates_announcement_date
+  end
 
   def candidates_announced?
     false
@@ -118,6 +125,24 @@ class Race < ApplicationRecord
   def write_tallies
     tally_votes.each do |candidacy, count|
       VoteTally.create(race: self, candidacy: candidacy, vote_count: count)
+    end
+  end
+
+  def dates_are_valid
+    valid_filing_deadline_date = validate_date(:filing_deadline_date)
+    valid_candidates_announcemnt_date = validate_date(:candidates_announcement_date)
+    if valid_filing_deadline_date && valid_candidates_announcemnt_date
+      if self.filing_deadline_date > self.candidates_announcement_date
+        errors.add(:base, "filing date must be at or before candidates announcement date")
+      end
+
+      if self.filing_deadline_date > self.election.vote_date
+        errors.add(:base, "filing date must be before the vote date")
+      end
+
+      if self.candidates_announcement_date > self.election.vote_date
+        errors.add(:base, "candidate announcement date must be before the vote date")
+      end
     end
   end
 end

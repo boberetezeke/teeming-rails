@@ -3,7 +3,7 @@ require 'rails_helper'
 describe RacePolicy do
   describe "show_candidacies?" do
     let(:external_election)               { create(:election, :external) }
-    let(:internal_election)               { create(:election, :internal) }
+    let(:internal_election)               { create(:election, :internal, vote_date: Date.new(2017, 9, 10)) }
     let(:external_race)                   { create(:race, election: external_election)}
     let(:internal_race)                   { create(:race, election: internal_election, candidates_announcement_date:  Date.new(2017,9,9))}
 

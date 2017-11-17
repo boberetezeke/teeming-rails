@@ -12,6 +12,8 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  config.active_job.queue_adapter = :sidekiq
+
   # Enable/disable caching. By default caching is disabled.
   if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
@@ -28,8 +30,9 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { :host => "localhost:3000" }
 
-  # comment out if you don't want sending to MockSMTP
-  config.action_mailer.raise_delivery_errors = false
+  # comment out if you doon't want sending to MockSMTP
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.smtp_settings = {
       address: 'localhost',
       port: 1025,

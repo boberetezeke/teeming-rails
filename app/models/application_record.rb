@@ -25,7 +25,6 @@ class ApplicationRecord < ActiveRecord::Base
       else
         self.send("#{time_sym}=", time_value)
       end
-
       return true
     else
       errors.add(time_str_sym, "invalid time")

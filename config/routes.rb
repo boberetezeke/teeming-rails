@@ -46,7 +46,11 @@ Rails.application.routes.draw do
         put :delete_votes
       end
     end
-    resources :races, shallow: true
+    resources :races, shallow: true do
+      member do
+        put :create_questionnaire
+      end
+    end
     resources :issues, shallow: true do
       member do
         put :create_questionnaire
@@ -60,6 +64,10 @@ Rails.application.routes.draw do
   end
   resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :candidacies
+  resources :messages, only: [:index, :new, :create, :show, :edit, :update]
+  resources :member_groups do
+    resources :members
+  end
 
   resources :questionnaires do
     resources :questionnaire_sections, shallow: true do

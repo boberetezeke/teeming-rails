@@ -1,0 +1,13 @@
+%table.table
+  %tr.row
+    %th Subject
+    %th To
+    %th Actions
+  - @messages.each do |message|
+    %tr.row
+      %td= link_to(message.subject, message)
+      %td= message.to
+      %td
+        = link_to("Edit", edit_message_path(message), class: 'btn btn-sm btn-primary')
+
+= link_to("New Message", new_message_path, class: 'btn btn-sm btn-success')
