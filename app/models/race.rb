@@ -6,6 +6,7 @@ class Race < ApplicationRecord
   has_one  :questionnaire, as: :questionnairable
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
   belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
+  belongs_to  :chapter
 
   validates :name, presence: true,                if: ->{ election.internal? }
   validates :level_of_government, presence: true, if: ->{ election.external? }

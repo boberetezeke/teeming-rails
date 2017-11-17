@@ -7,6 +7,8 @@ class Role < ApplicationRecord
       ['view_internal',         'election'                                    ],
       ['modify',                'election'                                    ],
 
+      ['write',                 'event'                                       ],
+
       ['show_tallies',          'vote',         'show_vote_tallies'           ],
       ['enter',                 'vote'                                        ],
       ['delete',                'vote'                                        ],

@@ -2,7 +2,7 @@
   .col-md-4
     %span.event-title What
     %br
-    %span.event-data= event.name
+    %span.event-data= link_to(event.name, event)
   .col-md-4
     %span.event-title Where
     %br
@@ -23,7 +23,12 @@
     .col-md-12
       .strong RSVP Stats:
       In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
-%hr
+
+- if policy(event).edit?
+  = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
+- if policy(event).destroy?
+  = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger'
+
 - if show_rsvp && event_rsvp
   .row
     .col-md-12
@@ -32,4 +37,7 @@
     .col-md-12
       = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
       = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
+%hr
+
+
 

@@ -1,0 +1,10 @@
+= semantic_form_for @event_sign_in do |f|
+  %div If you have signed in, in the past, enter your email.
+  = f.input :email
+  = f.submit "Check In"
+
+= semantic_form_for @event_sign_in do |f|
+  %div
+  = f.fields_for :member do |ff|
+    = render partial: 'user_details', locals: { f: ff }
+  = f.submit "Sign Up"

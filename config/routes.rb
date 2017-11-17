@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
   resources :chapters, only: [:index, :show] do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
+    resources :events, shallow: true
   end
   resources :elections do
     member do
@@ -54,7 +55,9 @@ Rails.application.routes.draw do
   end
   resources :races, only: [] do
   end
-  resources :events, only: [:index, :show]
+  resources :events do
+    resources :event_sign_ins, shallow: true
+  end
   resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :candidacies
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171101045012) do
+ActiveRecord::Schema.define(version: 20171116040222) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,14 @@ ActiveRecord::Schema.define(version: 20171101045012) do
     t.index ["user_id"], name: "index_event_rsvps_on_user_id", using: :btree
   end
 
+  create_table "event_sign_ins", force: :cascade do |t|
+    t.integer "event_id"
+    t.integer "memeber_id"
+    t.string  "sign_in_type"
+    t.index ["event_id"], name: "index_event_sign_ins_on_event_id", using: :btree
+    t.index ["memeber_id"], name: "index_event_sign_ins_on_memeber_id", using: :btree
+  end
+
   create_table "events", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -97,6 +105,8 @@ ActiveRecord::Schema.define(version: 20171101045012) do
     t.string   "location"
     t.float    "longitude"
     t.float    "latitude"
+    t.integer  "chapter_id"
+    t.index ["chapter_id"], name: "index_events_on_chapter_id", using: :btree
   end
 
   create_table "issues", force: :cascade do |t|
@@ -147,6 +157,33 @@ ActiveRecord::Schema.define(version: 20171101045012) do
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true, using: :btree
     t.index ["potential_chapter_id"], name: "index_members_on_potential_chapter_id", using: :btree
     t.index ["user_id"], name: "index_members_on_user_id", using: :btree
+  end
+
+  create_table "message_controls", force: :cascade do |t|
+    t.integer  "member_id"
+    t.integer  "unsubscribed_from_message_id_id"
+    t.datetime "unsubscribed_at"
+    t.string   "unsubscribe_reason"
+    t.index ["member_id"], name: "index_message_controls_on_member_id", using: :btree
+    t.index ["unsubscribed_from_message_id_id"], name: "index_message_controls_on_unsubscribed_from_message_id_id", using: :btree
+  end
+
+  create_table "message_recipients", force: :cascade do |t|
+    t.integer "message_id"
+    t.integer "member_id"
+    t.index ["member_id"], name: "index_message_recipients_on_member_id", using: :btree
+    t.index ["message_id"], name: "index_message_recipients_on_message_id", using: :btree
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.integer "user_id"
+    t.string  "subject"
+    t.string  "body"
+    t.string  "to"
+    t.string  "message_type"
+    t.integer "member_group_id"
+    t.index ["member_group_id"], name: "index_messages_on_member_group_id", using: :btree
+    t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
 
   create_table "privileges", force: :cascade do |t|

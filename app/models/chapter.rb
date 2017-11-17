@@ -1,6 +1,7 @@
 class Chapter < ApplicationRecord
   has_many :elections
   has_many :members
+  has_many :events
 
   has_one :skills_questionnaire, as: :questionnairable, class_name: 'Questionnaire'
 
