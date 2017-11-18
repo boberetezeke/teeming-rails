@@ -12,7 +12,7 @@
     = render partial: 'races/candidacy_action',  locals: { race: race }
 - else
   %h5
-    #{link_to(race.type_and_locale, race)}
+    #{link_to(race.type_and_locale, race_path(race, chapter ? {chapter_id: chapter.id} : {}))}
     (#{race.candidacies.count} #{'candidate'.pluralize(race.candidacies.count)})
     %span.updated Updated #{time_ago_in_words(race.updated_at)} ago
   - if show_all && race.notes

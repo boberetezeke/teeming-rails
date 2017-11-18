@@ -51,11 +51,14 @@ Rails.application.routes.draw do
     resources :races, shallow: true do
       member do
         put :create_questionnaire
+        put :email_questionnaire
+        delete :delete_questionnaire
       end
     end
     resources :issues, shallow: true do
       member do
         put :create_questionnaire
+        delete :delete_questionnaire
       end
     end
   end

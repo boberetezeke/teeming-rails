@@ -5,5 +5,6 @@
 - else
   = f.input :name
   = f.input :party_affiliation, as: :select, collection: Candidacy::PARTY_AFFILATION_TYPES, include_blank: false
+  = f.input :email, label: "Official Email"
   = f.input :notes, html_input: { rows: 2, cols: 80 }
 

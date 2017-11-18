@@ -2,6 +2,8 @@ class ElectionsController < ApplicationController
   before_filter :authenticate_user!
 
   before_action :set_election, only: [:show, :edit, :update, :destroy, :unfreeze, :freeze]
+  before_action :set_chapter
+  before_action :set_context_params
 
   def index
     authorize Election
@@ -9,10 +11,12 @@ class ElectionsController < ApplicationController
     @internal_elections = Election.internal
     @external_elections = Election.external
 
-    breadcrumbs elections_breadcrumbs(include_link: false)
+    breadcrumbs *elections_breadcrumbs(include_link: false)
   end
 
   def show
+    @chapter = @election.chapter
+    set_context_params
     breadcrumbs elections_breadcrumbs, @election.name
   end
 
@@ -70,12 +74,28 @@ class ElectionsController < ApplicationController
     authorize @election
   end
 
+  def set_chapter
+    @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
+  end
+
+  def set_context_params
+    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
+  end
+
   def election_params
-    params.require(:election).permit(:name, :election_type, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
+    params.require(:election).permit(:name, :chapter_id, :election_type, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
   end
 
   def elections_breadcrumbs(include_link: true)
-    ["Elections", include_link ? elections_path : nil]
+    if include_link
+      ["Elections", elections_path(@context_params)]
+    else
+      if @chapter
+        [[@chapter.name, @chapter], "Elections"]
+      else
+        [["Elections", nil]]
+      end
+    end
   end
 
 end

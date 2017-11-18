@@ -60,7 +60,21 @@ class RacesController < ApplicationController
     questionnaire = Questionnaire.create(questionnairable: race, name: race.name)
     QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
 
-    redirect_to questionnaire
+    redirect_to questionnaire_path(questionnaire, @chapter_params)
+  end
+
+  def email_questionnaire
+    race = Race.find(params[:id])
+    flash[:notice] = "Questionnaire emailed out to candidates"
+    redirect_to race_path(race, @chapter_params)
+  end
+
+  def delete_questionnaire
+    race = Race.find(params[:id])
+
+    race.questionnaire.destroy
+
+    redirect_to race_path(race, @chapter_params)
   end
 
   def destroy

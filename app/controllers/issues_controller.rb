@@ -67,7 +67,7 @@ class IssuesController < ApplicationController
   private
 
   def issue_params
-    params.require(:issue).permit(:name, :election_id)
+    params.require(:issue).permit(:name, :election_id, :chapter_id)
   end
 
   def issues_breadcrumbs(election, include_link: true)

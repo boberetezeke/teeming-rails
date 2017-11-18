@@ -21,6 +21,7 @@ class Election < ApplicationRecord
   attr_accessor :vote_date_str
   attr_accessor :vote_start_time_str, :vote_end_time_str
 
+  validates :name, presence: true
   validate :dates_and_times_are_valid
 
   def set_accessors

@@ -22,7 +22,12 @@ class CandidaciesController < ApplicationController
       flash[:alert] = 'the filing deadline is past'
       redirect_to candidacies_path
     else
-      @candidacy = Candidacy.new(race: @race, user: current_user)
+     if @race.election.internal?
+        @candidacy = Candidacy.new(race: @race, user: current_user)
+     else
+       @candidacy = Candidacy.new(race: @race)
+     end
+
       if @race.election.internal?
         @candidacy.answers = @race.questionnaire.new_answers
         breadcrumbs candidacies_breadcrumbs, "New Candidacy"

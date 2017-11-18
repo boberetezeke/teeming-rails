@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117212304) do
+ActiveRecord::Schema.define(version: 20171118202115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20171117212304) do
     t.datetime "updated_at"
     t.string   "party_affiliation"
     t.text     "notes"
+    t.string   "email"
     t.index ["created_by_user_id"], name: "index_candidacies_on_created_by_user_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_candidacies_on_updated_by_user_id", using: :btree
   end
@@ -114,6 +115,8 @@ ActiveRecord::Schema.define(version: 20171117212304) do
     t.string  "name"
     t.integer "created_by_user_id"
     t.integer "updated_by_user_id"
+    t.integer "chapter_id"
+    t.index ["chapter_id"], name: "index_issues_on_chapter_id", using: :btree
     t.index ["created_by_user_id"], name: "index_issues_on_created_by_user_id", using: :btree
     t.index ["election_id"], name: "index_issues_on_election_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_issues_on_updated_by_user_id", using: :btree
