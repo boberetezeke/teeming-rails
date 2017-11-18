@@ -7,10 +7,10 @@
     %tbody
       - races.each do |race|
         %tr.row
-          %td= link_to race.complete_name, race
+          %td= link_to race.complete_name, race_path(race, @chapter_params)
           %td
-            = link_to 'Edit', edit_race_path(race), class: 'btn btn-sm btn-success'
-            = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+            = link_to 'Edit', edit_race_path(race, @chapter_params), class: 'btn btn-sm btn-success'
+            = link_to 'Delete', race_path(race, @chapter_params), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
   - else
     %thead
       %tr.row
@@ -20,8 +20,8 @@
     %tbody
       - races.each do |race|
         %tr.row
-          %td= link_to race.type_and_locale, race
+          %td= link_to race.type_and_locale, race_path(race, @chapter_params)
           %td= Race::LEVEL_OF_GOVERNMENT_TYPES.invert[race.level_of_government]
           %td
-            = link_to 'Edit', edit_race_path(race), class: 'btn btn-sm btn-success'
-            = link_to 'Delete', race_path(race), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+            = link_to 'Edit', edit_race_path(race, @chapter_params), class: 'btn btn-sm btn-success'
+            = link_to 'Delete', race_path(race, @chapter_params), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}

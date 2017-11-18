@@ -1,4 +1,5 @@
 = render partial: 'table', locals: { election: @election, races: @races }
 
 .actions
-  = link_to("Add Race", new_election_race_path(@election), class: 'btn btn-sm btn-primary')
+  - params = @chapter ? {chapter_id: @chapter.id} : {}
+  = link_to("Add Race", new_election_race_path(@election, params), class: 'btn btn-sm btn-primary')

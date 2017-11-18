@@ -11,7 +11,7 @@
         /- if Pundit.policy(current_user, election).show?
         = render partial: 'elections/show', locals: { election: election }
       - else
-        =link_to(election.name, election_races_path(election))
+        =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
         (#{election.races.count} #{'race'.pluralize(election.races.count)})
 
     - if short_list_of_races

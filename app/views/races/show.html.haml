@@ -10,11 +10,11 @@
 
 - if @race.election.external?
   .actions
-    = link_to("Add Candidacy", new_candidacy_path(race_id: @race.id), class: 'btn btn-sm btn-primary')
-    = link_to("Edit", edit_race_path(@race), class: 'btn btn-sm btn-primary')
+    = link_to("Add Candidacy", new_candidacy_path({race_id: @race.id}.merge(@chapter_params)), class: 'btn btn-sm btn-primary')
+    = link_to("Edit", edit_race_path(@race, @chapter_params), class: 'btn btn-sm btn-primary')
 - else
   .actions
-    = link_to("Edit", edit_race_path(@race), class: 'btn btn-sm btn-primary')
+    = link_to("Edit", edit_race_path(@race, @chapter_params), class: 'btn btn-sm btn-primary')
     - if @race.questionnaire
       = link_to("Edit questionnaire", questionnaire_path(@race.questionnaire), class: 'btn btn-sm btn-info')
     - else

@@ -1,6 +1,9 @@
 class CandidaciesController < ApplicationController
   before_filter :authenticate_user!
 
+  before_action :set_race_and_chapter
+  before_action :set_context_params
+
   def index
     @candidacies = current_user.candidacies.joins(race: :election).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_INTERNAL))
     @races = Race.active_for_time(Time.now)
@@ -45,11 +48,15 @@ class CandidaciesController < ApplicationController
     else
       @candidacy = Candidacy.new(candidacy_params(params))
       @candidacy.created_by_user = current_user
+
+      @chapter = @race.chapter
+      set_context_params
+
       if @candidacy.save
         if @race.election.internal?
           redirect_to root_path
         else
-          redirect_to @race
+          redirect_to race_path(@race, @context_params)
         end
       else
         render 'new'
@@ -91,7 +98,11 @@ class CandidaciesController < ApplicationController
       if @candidacy.race.election.internal?
         redirect_to root_path
       else
-        redirect_to @candidacy.race
+        @race = @candidacy.race
+        @chapter = @race.chapter
+        set_context_params
+
+        redirect_to race_path(@candidacy.race, @context_params)
       end
     else
       render 'edit'
@@ -107,7 +118,7 @@ class CandidaciesController < ApplicationController
     if race.election.internal?
       redirect_to root_path
     else
-      redirect_to @candidacy.race
+      redirect_to race_path(@candidacy.race, @context_params)
     end
   end
 
@@ -121,12 +132,27 @@ class CandidaciesController < ApplicationController
 
   private
 
+  def set_race_and_chapter
+    if params[:chapter_id]
+      @chapter = Chapter.find(params[:chapter_id])
+    end
+    if params[:race_id]
+      @race = Race.find(params[:race_id])
+    end
+  end
+
+  def set_context_params
+    @context_params = {}
+    @context_params[:chapter_id] = @chapter.id if @chapter
+    @context_params[:race_id] = @race.id       if @race
+  end
+
   def candidacy_params(params)
     params.require(:candidacy).permit(*self.class.candidacy_attributes)
   end
 
   def candidacies_breadcrumbs(include_link: true)
-    ["Candidacies", include_link ? candidacies_path : nil]
+    ["Candidacies", include_link ? candidacies_path(@context_params) : nil]
   end
 end
 
