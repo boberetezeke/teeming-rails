@@ -69,6 +69,14 @@ class RacesController < ApplicationController
     redirect_to race_path(race, @chapter_params)
   end
 
+  def copy_questionnaire
+    race = Race.find(params[:id])
+    questionnaire = Questionnaire.find(params[:race][:questionnaire])
+    race.update(questionnaire: questionnaire.copy)
+
+    redirect_to race_path(race, @chapter_params)
+  end
+
   def delete_questionnaire
     race = Race.find(params[:id])
 

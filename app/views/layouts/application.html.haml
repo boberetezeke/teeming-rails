@@ -55,7 +55,8 @@
                     %li= link_to "Bylaws", bylaws_users_path
                     %li= link_to "Code of Conduct", code_of_conduct_users_path
                     %li= link_to "Privacy Policy", privacy_policy_users_path
-                    / %li= link_to "Questionnaires", questionnaires_path
+                    - if QuestionnairePolicy.new(current_user, Questionnaire).index?
+                      %li= link_to "Questionnaires", questionnaires_path
                     /%li.divider
                     /%li= link_to "Redo Setup Process", redo_initial_steps_users_path, method: :put
                     %li.divider

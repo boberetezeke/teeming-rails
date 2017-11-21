@@ -1,16 +1,19 @@
 class QuestionnairesController < ApplicationController
   before_filter :authenticate_user!
 
+  before_action :set_questionnaire, only: [:show, :edit, :create, :destroy]
+
   before_action :set_context
   before_action :set_context_params
 
   def index
+    authorize Questionnaire, :index?
+
     @questionnaires = Questionnaire.all
     breadcrumbs questionnaires_breadcrumbs(include_link: false)
   end
 
   def show
-    @questionnaire = Questionnaire.find(params[:id])
     @candidacy = Candidacy.new(answers: @questionnaire.new_answers)
     @section = @questionnaire.questionnaire_sections.where(order_index: 1).first
     questionnaireable = @questionnaire.questionnairable
@@ -20,14 +23,17 @@ class QuestionnairesController < ApplicationController
     else
       breadcrumbs questionnaires_breadcrumbs, @questionnaire.name ? @questionnaire.name : "Questionnaire"
     end
+    @edit_tools = QuestionnairePolicy.new(current_user, @questionnaire).edit?
   end
 
   def new
     @questionnaire = Questionnaire.new
+    authorize @questionnaire
   end
 
   def create
     @questionnaire = Questionnaire.new(questionnaire_params)
+    authorize @questionnaire
 
     @questionnaire.save
 
@@ -35,26 +41,27 @@ class QuestionnairesController < ApplicationController
   end
 
   def edit
-    @questionnaire = Questionnaire.find(params[:id])
     breadcrumbs questionnaires_breadcrumbs, @questionnaire.name
   end
 
   def update
-    @questionnaire = Questionnaire.find(params[:id])
-
     @questionnaire.update(questionnaire_params)
 
     respond_with @questionnaire
   end
 
   def destroy
-    @questionnaire = Questionnaire.find(params[:id])
     @questionnaire.destroy
 
     redirect_to questionnaires_path
   end
 
   private
+
+  def set_questionnaire
+    @questionnaire = Questionnaire.find(params[:id])
+    authorize @questionnaire
+  end
 
   def set_context
     @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]

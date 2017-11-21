@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       member do
         put :create_questionnaire
         put :email_questionnaire
+        patch :copy_questionnaire
         delete :delete_questionnaire
       end
     end

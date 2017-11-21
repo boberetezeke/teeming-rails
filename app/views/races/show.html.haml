@@ -20,3 +20,6 @@
     = link_to("Delete questionnaire", delete_questionnaire_race_path(@race, @chapter_params), method: :delete, data: {confirm: 'Are you sure you want to delete the questionnnaire?'}, class: 'btn btn-sm btn-danger')
   - else
     = link_to("Create questionnaire", create_questionnaire_race_path(@race, @chapter_params), method: :put, class: 'btn btn-sm btn-success')
+    = semantic_form_for @race, url: copy_questionnaire_race_path(@race, @chapter_params), html: {style: "display: inline;"}  do |f|
+      = select :race, :questionnaire, options_for_select(Questionnaire.with_race.map{|q| [q.name, q.id]})
+      = f.submit "Copy questionnaire", class: 'btn btn-sm btn-warning btn-with-padding'

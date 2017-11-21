@@ -37,4 +37,14 @@ class Question < ApplicationRecord
     end
     totals
   end
+
+  def copy
+    new_question = self.dup
+    new_question.save
+    self.choices.each do |choice|
+      new_question.choices << choice.copy
+    end
+
+    new_question
+  end
 end

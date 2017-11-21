@@ -18,6 +18,8 @@ class Role < ApplicationRecord
       ['view',                  'member'                                      ],
       ['send',                  'message'                                     ],
       ['view_internal',         'candidacy'                                   ],
+      ['view',                  'questionnaire'                               ],
+      ['write',                 'questionnaire'                               ],
   ]
 
   PRIVILEGES.each do |action, subject, method_name|
