@@ -24,6 +24,7 @@ class MessagesController < ApplicationController
 
     @chapter = Chapter.find(params[:chapter_id])
     @message = Message.new(chapter: @chapter)
+    @chapters = Chapter.all
     @member_groups = MemberGroup.all
     breadcrumbs messages_breadcrumbs, "New Message"
   end

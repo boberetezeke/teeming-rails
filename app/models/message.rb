@@ -7,7 +7,7 @@ class Message < ApplicationRecord
   scope :for_chapter, ->(chapter) { where(chapter_id: chapter.id) }
 
   def create_message_recipients
-    member_group.members.find_each do |member|
+    member_group.all_members(scope, chapter).find_each do |member|
       self.message_recipients << MessageRecipient.new(member: member)
     end
   end
