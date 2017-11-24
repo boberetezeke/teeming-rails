@@ -8,18 +8,22 @@
   - else
     %h3 No Candidacies
 
+  %h3 Messages
+  - if @race.messages
+    = render partial: 'messages/table', locals: { messages: @race.messages }
+
 .actions
   - if @race.election.external?
-    = link_to("Add Candidacy", new_candidacy_path({race_id: @race.id}.merge(@chapter_params)), class: 'btn btn-sm btn-success')
-  = link_to("Edit", edit_race_path(@race, @chapter_params), class: 'btn btn-sm btn-primary')
-  = link_to("Delete", race_path(@race, @chapter_params), method: :delete, data: {confirm: 'Are you sure you want to delete this race?'}, class: 'btn btn-sm btn-danger')
+    = link_to("Add Candidacy", new_candidacy_path({race_id: @race.id}.merge(@context_params)), class: 'btn btn-sm btn-success')
+  = link_to("Edit", edit_race_path(@race, @context_params), class: 'btn btn-sm btn-primary')
+  = link_to("Delete", race_path(@race, @context_params), method: :delete, data: {confirm: 'Are you sure you want to delete this race?'}, class: 'btn btn-sm btn-danger')
   |
   - if @race.questionnaire
-    = link_to("Edit questionnaire", questionnaire_path(@race.questionnaire, @chapter_params), class: 'btn btn-sm btn-info')
-    = link_to("Email questionnaire", email_questionnaire_race_path(@race, @chapter_params), method: :put, class: 'btn btn-sm btn-warning')
-    = link_to("Delete questionnaire", delete_questionnaire_race_path(@race, @chapter_params), method: :delete, data: {confirm: 'Are you sure you want to delete the questionnnaire?'}, class: 'btn btn-sm btn-danger')
+    = link_to("Edit questionnaire", questionnaire_path(@race.questionnaire, @context_params), class: 'btn btn-sm btn-info')
+    = link_to("Email questionnaire", email_questionnaire_race_path(@race, @context_params), method: :put, class: 'btn btn-sm btn-warning')
+    = link_to("Delete questionnaire", delete_questionnaire_race_path(@race, @context_params), method: :delete, data: {confirm: 'Are you sure you want to delete the questionnnaire?'}, class: 'btn btn-sm btn-danger')
   - else
-    = link_to("Create questionnaire", create_questionnaire_race_path(@race, @chapter_params), method: :put, class: 'btn btn-sm btn-success')
-    = semantic_form_for @race, url: copy_questionnaire_race_path(@race, @chapter_params), html: {style: "display: inline;"}  do |f|
+    = link_to("Create questionnaire", create_questionnaire_race_path(@race, @context_params), method: :put, class: 'btn btn-sm btn-success')
+    = semantic_form_for @race, url: copy_questionnaire_race_path(@race, @context_params), html: {style: "display: inline;"}  do |f|
       = select :race, :questionnaire, options_for_select(Questionnaire.with_race.map{|q| [q.name, q.id]})
       = f.submit "Copy questionnaire", class: 'btn btn-sm btn-warning btn-with-padding'

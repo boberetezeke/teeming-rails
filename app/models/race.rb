@@ -3,6 +3,7 @@ class Race < ApplicationRecord
   has_many :candidacies, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :vote_tallies, dependent: :destroy
+  has_many :messages, dependent: :destroy
   has_one  :questionnaire, as: :questionnairable
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
   belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'

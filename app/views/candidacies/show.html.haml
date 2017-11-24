@@ -1,4 +1,4 @@
 %h3= @candidacy.name
 
-- @candidacy.answers.each do |answer|
-  = render partial: 'answers/show', locals: { answer: answer }
+= semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }

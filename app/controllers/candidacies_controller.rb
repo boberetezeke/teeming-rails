@@ -1,7 +1,7 @@
 class CandidaciesController < ApplicationController
   before_filter :authenticate_user!
 
-  before_action :set_race_and_chapter
+  before_action :set_context
   before_action :set_context_params
 
   def index
@@ -14,6 +14,8 @@ class CandidaciesController < ApplicationController
   def show
     @candidacy = Candidacy.find(params[:id])
     authorize @candidacy
+
+    breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
 
   def new
@@ -64,6 +66,7 @@ class CandidaciesController < ApplicationController
           redirect_to race_path(@race, @context_params)
         end
       else
+        breadcrumbs candidacies_breadcrumbs, @candidacy.name
         render 'new'
       end
     end
@@ -84,7 +87,7 @@ class CandidaciesController < ApplicationController
       end
     end
 
-    breadcrumbs candidacies_breadcrumbs, @candidacy.race.complete_name
+    breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
 
   def update
@@ -132,12 +135,12 @@ class CandidaciesController < ApplicationController
   end
 
   def self.candidacy_attributes
-    [:race_id, :user_id, :name, :party_affiliation, :notes, {answers_attributes: answers_atributes}]
+    [:race_id, :user_id, :name, :party_affiliation, :email, :notes, {answers_attributes: answers_atributes}]
   end
 
   private
 
-  def set_race_and_chapter
+  def set_context
     if params[:chapter_id]
       @chapter = Chapter.find(params[:chapter_id])
     end
@@ -157,7 +160,11 @@ class CandidaciesController < ApplicationController
   end
 
   def candidacies_breadcrumbs(include_link: true)
-    ["Candidacies", include_link ? candidacies_path(@context_params) : nil]
+    if @race
+      [@race.complete_name, race_path(@race, @context_params)]
+    else
+      [@candidacy.race.complete_name, include_link ? race_path(@candidacy.race, @context_params) : nil]
+    end
   end
 end
 

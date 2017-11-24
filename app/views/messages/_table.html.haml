@@ -2,10 +2,21 @@
   %tr.row
     %th Subject
     %th To
+    %th Time Sent
     %th Actions
   - messages.each do |message|
     %tr.row
-      %td= link_to(message.subject, message)
-      %td= message.to
+      %td= link_to(message.subject, message_path(message, @context_params))
       %td
-        = link_to("Edit", edit_message_path(message), class: 'btn btn-sm btn-primary')
+        - if message.sent?
+          #{message.message_recipients.count} recipients
+        - else
+          - if message.race
+            All Candidates
+          - else
+            = message.to
+      %td= date_and_time_str(message.sent_at)
+      %td
+        - unless message.sent?
+          = link_to("Edit Draft", edit_message_path(message, @context_params), class: 'btn btn-sm btn-primary')
+        = link_to("Delete", message_path(message, @context_params), method: :delete, data: { confirm: 'Are you sure' }, class: 'btn btn-sm btn-danger')

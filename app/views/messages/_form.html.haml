@@ -1,6 +1,18 @@
 = semantic_form_for [chapter, message] do |f|
-  = f.input :chapter, as: :select, collection: @chapters, include_blank: false
-  = f.input :member_group_id, label: 'Subset', as: :select, collection: member_groups, include_blank: false
+  - @context_params.each do |key, value|
+    = hidden_field_tag key, value
+  %h2 To
+  - if @race
+    .strong #{@race.complete_name} Candidacies:
+    #{candidacies_names_and_emails(@race.candidacies)}
+    = f.input :race_id, as: :hidden
+  -elsif @election
+    %h4 #{@election.name} Candidacies: #{members_names_and_emails(@election.member_group.all_members(@chapter))}
+    = f.input :election_id, as: :hidden
+  - else
+    = f.input :chapter, as: :select, collection: @chapters, include_blank: false
+    = f.input :member_group_id, label: 'Subset', as: :select, collection: member_groups, include_blank: false
+  %h2 Content
   = f.input :subject
   = f.input :body, as: :text, input_html: { rows: 5, cols: 100 }
   = f.submit "Save Draft", class: 'btn btn-sm btn-info btn-with-padding'

@@ -211,7 +211,7 @@ class VotesController < ApplicationController
   def vote_completion_params
     params.require(:vote_completion).permit(
       {
-        answers_attributes: [:text, :user_id, :question_id, :order_index, :id, :answerable_type, :answerable_id]
+        answers_attributes: QuestionnairesController.permitted_answer_attributes
       }
     )
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171121050646) do
+ActiveRecord::Schema.define(version: 20171124194428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,9 @@ ActiveRecord::Schema.define(version: 20171121050646) do
     t.string   "party_affiliation"
     t.text     "notes"
     t.string   "email"
+    t.string   "token"
+    t.datetime "questionnaire_submitted_at"
+    t.datetime "unlock_requested_at"
     t.index ["created_by_user_id"], name: "index_candidacies_on_created_by_user_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_candidacies_on_updated_by_user_id", using: :btree
   end
@@ -175,20 +178,29 @@ ActiveRecord::Schema.define(version: 20171121050646) do
   create_table "message_recipients", force: :cascade do |t|
     t.integer "message_id"
     t.integer "member_id"
+    t.integer "candidacy_id"
+    t.index ["candidacy_id"], name: "index_message_recipients_on_candidacy_id", using: :btree
     t.index ["member_id"], name: "index_message_recipients_on_member_id", using: :btree
     t.index ["message_id"], name: "index_message_recipients_on_message_id", using: :btree
   end
 
   create_table "messages", force: :cascade do |t|
-    t.integer "user_id"
-    t.string  "subject"
-    t.string  "body"
-    t.string  "to"
-    t.string  "message_type"
-    t.integer "member_group_id"
-    t.integer "chapter_id"
+    t.integer  "user_id"
+    t.string   "subject"
+    t.string   "body"
+    t.string   "to"
+    t.string   "message_type"
+    t.integer  "member_group_id"
+    t.integer  "chapter_id"
+    t.integer  "election_id"
+    t.integer  "race_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "sent_at"
     t.index ["chapter_id"], name: "index_messages_on_chapter_id", using: :btree
+    t.index ["election_id"], name: "index_messages_on_election_id", using: :btree
     t.index ["member_group_id"], name: "index_messages_on_member_group_id", using: :btree
+    t.index ["race_id"], name: "index_messages_on_race_id", using: :btree
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
 

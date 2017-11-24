@@ -1,3 +1,12 @@
 %h2 #{@message.subject}
 
+%h3 To
+%ul
+  - @message.message_recipients.each do |message_recipient|
+    - if message_recipient.candidacy
+      %li #{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}
+    - else
+      %li #{message_recipient.member.name} <#{message_recipient.member.email}>
+
+%h3 Body
 %p #{@message.body}

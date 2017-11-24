@@ -5,6 +5,8 @@ class Candidacy < ApplicationRecord
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
   belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
 
+  before_create :generate_token
+
   accepts_nested_attributes_for :answers
 
   PARTY_AFFILIATION_REPUBLICAN = 'republican'
@@ -30,6 +32,30 @@ class Candidacy < ApplicationRecord
       user.member.name
     else
       read_attribute(:name)
+    end
+  end
+
+  def generate_token
+    self.token = SecureRandom.hex(10)
+  end
+
+  def questionnaire_submitted?
+    questionnaire_submitted_at.present?
+  end
+
+  def unlock_requested?
+    unlock_requested_at.present?
+  end
+
+  def questionnaire_status_str
+    if questionnaire_submitted?
+      if unlock_requested?
+        "Unlock requested"
+      else
+        "Submitted"
+      end
+    else
+      "Pending"
     end
   end
 end

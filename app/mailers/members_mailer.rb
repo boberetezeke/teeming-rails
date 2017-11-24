@@ -3,7 +3,7 @@ class MembersMailer < ApplicationMailer
 
   def send_normal(message, member)
     @message = message
-    @memerer = member
+    @member = member
     mail(from: 'communications@ourrevolutionmn.com',
          to: member.email,
          subject: message.subject)

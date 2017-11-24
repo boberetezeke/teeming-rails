@@ -1,0 +1,14 @@
+%h2 Candidate Questionnaire for #{@candidacy.name}
+
+= semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: @candidacy.questionnaire_submitted? }
+  - if @candidacy.questionnaire_submitted?
+    = f.submit "Request unlock", class: 'btn btn-sm btn-primary btn-with-padding'
+    - if @candidacy.unlock_requested?
+      .note NOTE: An unlock request was last made at #{date_and_time_str(@candidacy.unlock_requested_at.utc)}
+
+  - else
+    = f.submit "Update",              class: 'btn btn-sm btn-info btn-with-padding'
+    = f.submit "Submit as completed", class: 'btn btn-sm btn-primary btn-with-padding'
+    .note NOTE: When submitted as completed, you will have to request the ability to update it
+

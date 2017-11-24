@@ -14,7 +14,7 @@ class MemberGroup < ApplicationRecord
     end
   end
 
-  def all_members(scope, chapter)
+  def all_members(chapter)
     if group_type == GROUP_TYPE_SCOPE
       if chapter
         scope = chapter.members

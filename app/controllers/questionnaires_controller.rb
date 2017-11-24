@@ -56,6 +56,10 @@ class QuestionnairesController < ApplicationController
     redirect_to questionnaires_path
   end
 
+  def self.permitted_answer_attributes
+    [:text, :user_id, :question_id, :order_index, :id, :answerable_type, :answerable_id]
+  end
+
   private
 
   def set_questionnaire

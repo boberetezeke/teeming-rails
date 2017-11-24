@@ -28,4 +28,8 @@ class MessagePolicy < ApplicationPolicy
   def update?
     @user.can_send_messages?
   end
+
+  def destroy?
+    @user.can_send_messages?
+  end
 end

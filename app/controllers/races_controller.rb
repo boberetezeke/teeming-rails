@@ -1,8 +1,8 @@
 class RacesController < ApplicationController
   before_filter :authenticate_user!
 
-  before_action :set_chapter
-  before_action :set_chapter_params
+  before_action :set_context
+  before_action :set_context_params
 
   def index
     @election = Election.find(params[:election_id])
@@ -18,6 +18,10 @@ class RacesController < ApplicationController
   def show
     @race = Race.find(params[:id])
     authorize @race
+
+    # set this for view from the race
+    @context_params[:race_id] = @race.id
+
     breadcrumbs races_breadcrumbs(@race.election), @race.complete_name
   end
 
@@ -33,9 +37,9 @@ class RacesController < ApplicationController
     @race.created_by_user = current_user
     @race.save
     @chapter = @race.chapter
-    set_chapter_params
+    set_context_params
 
-    respond_with @race, location: race_path(@race, @chapter_params)
+    respond_with @race, location: race_path(@race, @context_params)
   end
 
   def edit
@@ -50,9 +54,9 @@ class RacesController < ApplicationController
     @race.updated_by_user = current_user
     @race.update(race_params)
     @chapter = @race.chapter
-    set_chapter_params
+    set_context_params
 
-    respond_with @race, location: race_path(@race, @chapter_params)
+    respond_with @race, location: race_path(@race, @context_params)
   end
 
   def create_questionnaire
@@ -60,13 +64,12 @@ class RacesController < ApplicationController
     questionnaire = Questionnaire.create(questionnairable: race, name: race.name)
     QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
 
-    redirect_to questionnaire_path(questionnaire, @chapter_params)
+    redirect_to questionnaire_path(questionnaire, @context_params)
   end
 
   def email_questionnaire
     race = Race.find(params[:id])
-    flash[:notice] = "Questionnaire emailed out to candidates"
-    redirect_to race_path(race, @chapter_params)
+    redirect_to new_chapter_message_path(@context_params.merge(race_id: race.id))
   end
 
   def copy_questionnaire
@@ -74,7 +77,7 @@ class RacesController < ApplicationController
     questionnaire = Questionnaire.find(params[:race][:questionnaire])
     race.update(questionnaire: questionnaire.copy)
 
-    redirect_to race_path(race, @chapter_params)
+    redirect_to race_path(race, @context_params)
   end
 
   def delete_questionnaire
@@ -82,7 +85,7 @@ class RacesController < ApplicationController
 
     race.questionnaire.destroy
 
-    redirect_to race_path(race, @chapter_params)
+    redirect_to race_path(race, @context_params)
   end
 
   def destroy
@@ -90,17 +93,17 @@ class RacesController < ApplicationController
     @election = @race.election
     @race.destroy
 
-    redirect_to election_races_path(@election, @chapter_params)
+    redirect_to election_races_path(@election, @context_params)
   end
 
   private
 
-  def set_chapter
+  def set_context
     @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
   end
 
-  def set_chapter_params
-    @chapter_params = @chapter ? { chapter_id: @chapter.id } : {}
+  def set_context_params
+    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
   end
 
   def race_params
@@ -109,9 +112,9 @@ class RacesController < ApplicationController
 
   def races_breadcrumbs(election, include_link: true)
     if election.external?
-      ["#{election.name} Races", include_link ? election_races_path(election, @chapter_params) : nil]
+      ["#{election.name} Races", include_link ? election_races_path(election, @context_params) : nil]
     else
-      ["#{election.name}", include_link ? election_path(election, @chapter_params) : nil]
+      ["#{election.name}", include_link ? election_path(election, @context_params) : nil]
     end
   end
 end

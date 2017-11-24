@@ -16,6 +16,13 @@ module ApplicationHelper
     end
   end
 
+  def candidacies_names_and_emails(candidacies)
+    candidacies.map{|c| "#{c.name}<#{c.email}>"}.join(", ")
+  end
+
+  def member_names_and_emails(members)
+    members.map{|m| "#{m.name}<#{m.email}>"}.join(", ")
+  end
 
   def breadcrumbs(*args)
     @breadcrumbs = args.map do |name_and_link|
@@ -46,7 +53,12 @@ module ApplicationHelper
   end
 
   def voting_date_and_time_str(datetime)
-    datetime.strftime("%m/%d/%Y %H:%M%P")
+    date_and_time_str(datetime)
+  end
+
+  def date_and_time_str(datetime)
+    return "" unless datetime
+    Time.zone.utc_to_local(datetime.utc).strftime("%m/%d/%Y %I:%M%P")
   end
 
   def before_and_current_sections_for_question(question)

@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   resources :chapters, only: [:index, :show] do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
     resources :events, shallow: true
-    resources :messages, only: [:index, :new, :create, :show, :edit, :update], shallow: true
+    resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy], shallow: true
   end
 
   resources :elections do
@@ -110,6 +110,7 @@ Rails.application.routes.draw do
   unauthenticated :user do
     devise_scope :user do
       root 'brochure#home', as: :unauthenticated_root
+      resources :candidate_questionnaires, only: [:edit, :update]
     end
   end
 
