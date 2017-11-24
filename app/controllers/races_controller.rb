@@ -1,6 +1,8 @@
 class RacesController < ApplicationController
   before_filter :authenticate_user!
 
+  before_action :set_race, only: [:show, :edit, :update, :destroy]
+
   before_action :set_context
   before_action :set_context_params
 
@@ -89,7 +91,6 @@ class RacesController < ApplicationController
   end
 
   def destroy
-    @race = Race.find(params[:id])
     @election = @race.election
     @race.destroy
 
@@ -97,6 +98,11 @@ class RacesController < ApplicationController
   end
 
   private
+
+  def set_race
+    @race = Race.find(params[:id])
+    authorize @race
+  end
 
   def set_context
     @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
@@ -107,7 +113,7 @@ class RacesController < ApplicationController
   end
 
   def race_params
-    params.require(:race).permit(:name, :election_id, :chapter_id, :level_of_government, :locale, :notes, :filing_deadline_date_str, :candidates_announcement_date_str)
+    params.require(:race).permit(:name, :election_id, :chapter_id, :level_of_government, :locale, :notes, :filing_deadline_date_str, :candidates_announcement_date_str, :is_official)
   end
 
   def races_breadcrumbs(election, include_link: true)

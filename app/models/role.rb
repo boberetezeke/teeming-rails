@@ -17,7 +17,8 @@ class Role < ApplicationRecord
 
       ['view',                  'member'                                      ],
       ['send',                  'message'                                     ],
-      ['view_internal',         'candidacy'                                   ],
+      ['manage_internal',       'candidacy'                                   ],
+      ['manage_external',       'candidacy'                                   ],
       ['view',                  'questionnaire'                               ],
       ['write',                 'questionnaire'                               ],
   ]

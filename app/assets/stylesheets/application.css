@@ -82,6 +82,11 @@ form.formtastic .check_box_or_radio label {
     font-weight: bold;
 }
 
+form.formtastic .check_box_or_radio #race_is_official {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 form.formtastic .check_box_or_radio #user_accepted_bylaws {
     margin-left: -20px;
     margin-top: 5px;

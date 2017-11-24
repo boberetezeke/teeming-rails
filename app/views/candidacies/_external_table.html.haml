@@ -12,5 +12,6 @@
         %td= Candidacy::PARTY_AFFILATION_TYPES.invert[candidacy.party_affiliation]
         %td= candidacy.questionnaire_status_str
         %td
-          = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary'
-          = link_to 'Delete', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+          - if !candidacy.race.is_official || current_user.can_manage_external_candidacies?
+            = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary'
+            = link_to 'Delete', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}

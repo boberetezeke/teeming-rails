@@ -98,6 +98,7 @@ class MessagesController < ApplicationController
       end
     end
     @message.update(sent_at: Time.now)
+    flash[:notice] = "Message sent to #{@message.message_recipients.count} recipients"
   end
 
   def set_context
@@ -107,7 +108,7 @@ class MessagesController < ApplicationController
 
   def set_context_params
     # @chapter_id = @chapter.id if @chapter
-    @context_params = @chapter ? { chapter_id: @chapter_id } : {}
+    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
   end
 
 

@@ -69,9 +69,17 @@ class User < ApplicationRecord
 
   def method_missing(sym, *args, &block)
     if sym.to_s =~ /^can_/
-      if role && role.respond_to?(sym)
-        role.send(sym)
+      if role
+        if role.respond_to?(sym)
+          role.send(sym)
+        else
+          raise "unknown privilege: #{sym}"
+        end
+      else
+        false
       end
+    else
+      super
     end
   end
 

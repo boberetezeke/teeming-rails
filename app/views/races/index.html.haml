@@ -1,4 +1,4 @@
-= render partial: 'table', locals: { election: @election, races: @races }
+= render partial: 'races/table', locals: { election: @election, races: @races }
 
 .actions
   - params = @chapter ? {chapter_id: @chapter.id} : {}

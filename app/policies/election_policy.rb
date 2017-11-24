@@ -1,7 +1,7 @@
 class ElectionPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if @user.can_view_internal_elections?
+      if @user.can_manage_internal_elections?
         @scope.all
       else
         @scope.joins(member_group: :member_group_membership).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_EXTERNAL).or(
@@ -18,40 +18,40 @@ class ElectionPolicy < ApplicationPolicy
     # if @record.external?
     #   true
     # else
-    #   @user.can_view_internal_elections?
+    #   @user.can_manage_internal_elections?
     # end
   end
 
   def show?
-    @user.can_view_internal_elections? || @user.can_vote_in_election?(@record)
+    @user.can_manage_internal_elections? || @user.can_vote_in_election?(@record)
   end
 
   def new?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def create?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def edit?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def freeze?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def unfreeze?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def update?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def destroy?
-    @user.can_view_internal_elections?
+    @user.can_manage_internal_elections?
   end
 
   def vote?

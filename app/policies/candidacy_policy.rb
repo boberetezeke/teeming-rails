@@ -1,7 +1,7 @@
 class CandidacyPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
-      if @user.can_view_internal_candidacies?
+      if @user.can_manage_internal_candidacies?
         @scope.all
       else
         @scope.joins(race: :election).where(
@@ -17,7 +17,7 @@ class CandidacyPolicy < ApplicationPolicy
     if @record.race.election.external?
       true
     else
-      @user.can_view_internal_candidacies?
+      @user.can_manage_internal_candidacies?
     end
   end
 

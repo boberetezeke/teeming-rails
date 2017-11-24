@@ -74,7 +74,8 @@ class Race < ApplicationRecord
   end
 
   def type_and_locale
-    "#{locale} #{LEVEL_OF_GOVERNMENT_TYPES.invert[level_of_government]}"
+    "#{locale} #{LEVEL_OF_GOVERNMENT_TYPES.invert[level_of_government]}" +
+        (is_official ? " (Official)" : "")
   end
 
   def complete_name
