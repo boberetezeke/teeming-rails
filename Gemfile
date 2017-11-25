@@ -41,7 +41,7 @@ gem 'kaminari'
 gem 'pry-rails'
 gem 'sendgrid-ruby'
 
-# gem 'honeybadger'
+gem 'honeybadger'
 gem 'le'
 
 gem 'dotenv-rails', groups: [:development, :test]
