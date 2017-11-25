@@ -4,6 +4,11 @@
   = f.hidden_field_tag :redirect_location
   = f.input :text, input_html: { rows: 2, cols: 80 }
   = f.input :question_type, as: :select, collection: Question::QUESTION_TYPES, include_blank: false
+
+  - unless question.persisted?
+    .note You must first create a choice question before adding choices to it
+  - if question.persisted? && !question.has_choices?
+    .note If you want a choice question, you must first update to a choice question before adding choices to it
   #choices{class: question.has_choices? ? '' : 'hidden'}
     .row
       .col-md-9
@@ -18,8 +23,9 @@
   $(function() {
     $("#question_question_type").change(function() {
       var question_type =  $("#question_question_type").val();
+      var question_id = #{question.persisted? && question.has_choices? ? question.id : 'null'};
 
-      if (question_type == 'checkboxes' || question_type == 'multiple_choice') {
+      if ((question_type == 'checkboxes' || question_type == 'multiple_choice') && question_id) {
         $("#choices").removeClass('hidden')
       }
       else {

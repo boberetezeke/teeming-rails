@@ -17,7 +17,12 @@ class QuestionsController < ApplicationController
     end
 
     if @question.save
-      redirect_to @questionnaire
+      if @question.question_type == Question::QUESTION_TYPE_CHECKBOXES ||
+         @question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+        redirect_to edit_question(@question)
+      else
+        redirect_to @questionnaire
+      end
     else
       render 'new'
     end
@@ -32,14 +37,19 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
 
     q_params = question_params.to_hash
-    if q_params["question_type"] == "multiple_choice" || q_params["question_type"] == "single_choice"
+    if (q_params["question_type"] == "multiple_choice" || q_params["question_type"] == "single_choice") &&
+       q_params["choices_attributes"]
       q_params["choices_attributes"].each do  |key, choice_param|
         choice_param['value'] = choice_param['title']
       end
     end
     if @question.update(q_params)
       if params[:redirect_location].blank?
-        redirect_to @question.questionnaire_section.questionnaire
+        if @question.has_choices? && @question.choices.blank?
+          redirect_to edit_question_path(@question)
+        else
+          redirect_to @question.questionnaire_section.questionnaire
+        end
       else
         redirect_to params[:redirect_location]
       end
