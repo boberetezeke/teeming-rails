@@ -5,7 +5,7 @@ class Role < ApplicationRecord
   PRIVILEGES = [
       # action                  # subject       # method name
       ['view_internal',         'election'                                    ],
-      ['modify',                'election'                                    ],
+      ['manage_internal',       'election'                                    ],
 
       ['write',                 'event'                                       ],
 
@@ -17,7 +17,6 @@ class Role < ApplicationRecord
 
       ['view',                  'member'                                      ],
       ['send',                  'message'                                     ],
-      ['manage_internal',       'candidacy'                                   ],
       ['manage_external',       'candidacy'                                   ],
       ['view',                  'questionnaire'                               ],
       ['write',                 'questionnaire'                               ],

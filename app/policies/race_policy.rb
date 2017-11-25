@@ -1,6 +1,6 @@
 class RacePolicy < ApplicationPolicy
   def show_candidacies?
-    if @user.can_manage_internal_candidacies?
+    if @user.can_manage_internal_elections?
       true
     else
       @record.election.external? || Time.zone.now.to_date >= @record.candidates_announcement_date
@@ -25,6 +25,6 @@ class RacePolicy < ApplicationPolicy
 
   def can_write_race?
     (@record.election.external? && (!@record.is_official || @user.can_manage_external_candidacies?)) ||
-    (@record.election.internal? && @user.can_manage_internal_candidacies?)
+    (@record.election.internal? && @user.can_manage_internal_elections?)
   end
 end
