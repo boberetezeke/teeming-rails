@@ -9,4 +9,7 @@
       %li #{message_recipient.member.name} <#{message_recipient.member.email}>
 
 %h3 Body
-%p #{@message.body}
+%p #{@message.rendered_body(@message.message_recipients.first)}
+
+- unless @message.sent?
+  = link_to("Edit Draft", edit_message_path(@message, @context_params), class: 'btn btn-sm btn-primary')

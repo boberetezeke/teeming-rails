@@ -64,7 +64,9 @@ class MessagesController < ApplicationController
     authorize @message
 
     if @message.update(message_params)
-      send_email
+      if params[:commit] == "Send"
+        send_email
+      end
     end
 
     respond_with @message, location: ->{ message_path(@message, @context_params) }
@@ -92,9 +94,9 @@ class MessagesController < ApplicationController
     @message.create_message_recipients
     @message.reload.message_recipients.each do |message_recipient|
       if @message.race
-        MembersMailer.send_normal(@message, message_recipient.candidacy).deliver # .deliver_later
+        MembersMailer.send_normal(@message, "endorsements@ourrevolutionmn.com", message_recipient).deliver # .deliver_later
       else
-        MembersMailer.send_normal(@message, message_recipient.member).deliver # .deliver_later
+        MembersMailer.send_normal(@message, "communications@ourrevolutionmn.com", message_recipient).deliver # .deliver_later
       end
     end
     @message.update(sent_at: Time.now)

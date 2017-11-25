@@ -55,6 +55,12 @@ form.formtastic {
     color: lightgrey;
 }
 
+.help-text {
+    background-color: lightblue;
+    padding: 10px 5px 10px 5px;
+    margin: 10px 0px 10px 0px;
+}
+
 .note {
     color: blue;
 }

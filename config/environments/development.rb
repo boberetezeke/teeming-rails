@@ -28,7 +28,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.action_mailer.default_url_options = { :host => "localhost:3000" }
+  config.action_mailer.default_url_options = { :host => "http://localhost:3000" }
 
   # comment out if you doon't want sending to MockSMTP
   config.action_mailer.perform_deliveries = true

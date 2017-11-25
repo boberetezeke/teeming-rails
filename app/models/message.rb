@@ -24,4 +24,23 @@ class Message < ApplicationRecord
   def sent?
     sent_at.present?
   end
+
+  def rendered_body(message_recipient)
+    modified_body = body.gsub(/%(.[^%]*?)%/) do
+      puts "$1 = '#{$1}'"
+      puts "after"
+      case $1
+        when /logo/
+          "<div style=\"text-align: center;\"><a href=\"https://ourrevolutionmn.com\"><img width=\"250px\" height=\"250px\" src=\"https://ourrevolutionmn.herokuapp.com/images/logo-450.jpg\"></a></div>"
+        when /recipient_name/
+          message_recipient.name
+        when /candidate_questionnaire_link/
+          host = Rails.application.config.action_mailer.default_url_options[:host]
+          url = Rails.application.routes.url_helpers.edit_candidate_questionnaire_path(message_recipient.candidacy.token)
+          "<a href=\"#{host}#{url}\">Click here to view/edit candidate questionnaire</a>"
+      end
+    end
+    puts "modified_body = #{modified_body}"
+    Kramdown::Document.new(modified_body).to_html.html_safe
+  end
 end

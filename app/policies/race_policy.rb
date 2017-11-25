@@ -24,7 +24,7 @@ class RacePolicy < ApplicationPolicy
   end
 
   def can_write_race?
-    (@record.election.external? && (!@record.is_official || @user.can_manage_external_candacies?)) ||
+    (@record.election.external? && (!@record.is_official || @user.can_manage_external_candidacies?)) ||
     (@record.election.internal? && @user.can_manage_internal_candidacies?)
   end
 end

@@ -74,6 +74,7 @@ Rails.application.routes.draw do
   resources :member_groups do
     resources :members
   end
+  resources :candidate_questionnaires, only: [:edit, :update]
 
   resources :questionnaires do
     resources :questionnaire_sections, shallow: true do
