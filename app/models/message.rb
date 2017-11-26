@@ -27,8 +27,6 @@ class Message < ApplicationRecord
 
   def rendered_body(message_recipient)
     modified_body = body.gsub(/%(.[^%]*?)%/) do
-      puts "$1 = '#{$1}'"
-      puts "after"
       case $1
         when /logo/
           "<div style=\"text-align: center;\"><a href=\"https://ourrevolutionmn.com\"><img width=\"250px\" height=\"250px\" src=\"https://ourrevolutionmn.herokuapp.com/images/logo-450.jpg\"></a></div>"
