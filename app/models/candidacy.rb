@@ -23,7 +23,7 @@ class Candidacy < ApplicationRecord
       "Green Party" =>                      PARTY_AFFILIATION_GREEN,
       "Democratic Socialists of America" => PARTY_AFFILIATION_DSA,
       "Libertarian" =>                      PARTY_AFFILIATION_LIBERTARIAN,
-      "Indepdence Party" =>                 PARTY_AFFILIATION_INDEPENDENCE_PARTY,
+      "Independence Party" =>               PARTY_AFFILIATION_INDEPENDENCE_PARTY,
       "Other" =>                            PARTY_AFFILIATION_OTHER
   }
 
