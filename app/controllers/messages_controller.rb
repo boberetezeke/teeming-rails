@@ -20,6 +20,10 @@ class MessagesController < ApplicationController
     authorize @message
 
     @race = @message.race
+
+    @message.create_message_recipients if @message.message_recipients.blank?
+    @message_recipient = @message.message_recipients.first
+
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)
   end
 

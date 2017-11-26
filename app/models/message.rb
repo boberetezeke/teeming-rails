@@ -35,9 +35,11 @@ class Message < ApplicationRecord
         when /recipient_name/
           message_recipient.name
         when /candidate_questionnaire_link/
-          host = Rails.application.config.action_mailer.default_url_options[:host]
-          url = Rails.application.routes.url_helpers.edit_candidate_questionnaire_path(message_recipient.candidacy.token)
-          "<a href=\"#{host}#{url}\">Click here to view/edit candidate questionnaire</a>"
+          if message_recipient.candidacy
+            host = Rails.application.config.action_mailer.default_url_options[:host]
+            url = Rails.application.routes.url_helpers.edit_candidate_questionnaire_path(message_recipient.candidacy.token)
+            "<a href=\"#{host}#{url}\">candidate questionnaire</a>"
+          end
       end
     end
     puts "modified_body = #{modified_body}"
