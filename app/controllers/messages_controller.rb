@@ -116,7 +116,9 @@ class MessagesController < ApplicationController
 
   def set_context_params
     # @chapter_id = @chapter.id if @chapter
-    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
+    @context_params = {}
+    @context_params.merge!(@chapter ? { chapter_id: @chapter.id } : {})
+    @context_params.merge!(@race ? { race_id: @race.id } : {})
   end
 
 
