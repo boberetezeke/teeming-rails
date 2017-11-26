@@ -9,6 +9,7 @@ class Message < ApplicationRecord
   scope :for_chapter, ->(chapter) { where(chapter_id: chapter.id) }
 
   def create_message_recipients
+    self.message_recipients = []
     if race
       race.candidacies.each do |candidacy|
         self.message_recipients << MessageRecipient.new(candidacy: candidacy)
