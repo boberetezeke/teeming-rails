@@ -24,6 +24,19 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]
+  resources :candidacies
+  resources :races, only: [] do
+  end
+  resources :event_rsvps, only: [:new, :create, :edit, :update]
+  resources :events do
+    resources :event_sign_ins, shallow: true
+  end
+  resources :member_groups do
+    resources :members
+  end
+  resources :candidate_questionnaires, only: [:edit, :update]
+
   resources :chapters, only: [:index, :show] do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
     resources :events, shallow: true
@@ -63,18 +76,6 @@ Rails.application.routes.draw do
       end
     end
   end
-  resources :races, only: [] do
-  end
-  resources :events do
-    resources :event_sign_ins, shallow: true
-  end
-  resources :event_rsvps, only: [:new, :create, :edit, :update]
-  resources :candidacies
-  # resources :messages, only: [:index, :new, :create, :show, :edit, :update]
-  resources :member_groups do
-    resources :members
-  end
-  resources :candidate_questionnaires, only: [:edit, :update]
 
   resources :questionnaires do
     resources :questionnaire_sections, shallow: true do

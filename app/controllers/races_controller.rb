@@ -71,7 +71,11 @@ class RacesController < ApplicationController
 
   def email_questionnaire
     race = Race.find(params[:id])
-    redirect_to new_chapter_message_path(@context_params.merge(race_id: race.id))
+    if @context_params[:chapter_id]
+      redirect_to new_chapter_message_path(@context_params.merge(race_id: race.id))
+    else
+      redirect_to new_message_path(@context_params.merge(race_id: race.id))
+    end
   end
 
   def copy_questionnaire

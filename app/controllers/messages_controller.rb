@@ -27,10 +27,12 @@ class MessagesController < ApplicationController
     authorize Message
 
     @race = Race.find(params[:race_id]) if params[:race_id]
-    @chapter = Chapter.find(params[:chapter_id])
     if !@race
       @chapters = Chapter.all
       @member_groups = MemberGroup.all
+      @chapter = Chapter.find(params[:chapter_id])
+    else
+      @chapter = @race.chapter
     end
     @message = Message.new(chapter: @chapter, race: @race)
     breadcrumbs messages_breadcrumbs, "New Message"
