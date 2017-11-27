@@ -5,7 +5,7 @@
         %th Name
         %th Action
     %tbody
-      - races.each do |race|
+      - races.sort_by{|r| r.complete_name}.each do |race|
         %tr.row
           %td= link_to race.complete_name, race_path(race, @context_params)
           %td
@@ -20,7 +20,7 @@
         %th Level of government
         %th Action
     %tbody
-      - races.each do |race|
+      - races.sort_by{|r| r.complete_name}.each do |race|
         %tr.row
           %td= link_to race.type_and_locale, race_path(race, @context_params)
           %td= Race::LEVEL_OF_GOVERNMENT_TYPES.invert[race.level_of_government]
