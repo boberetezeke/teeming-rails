@@ -1,4 +1,7 @@
 %h3= @candidacy.name
 
-= semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
-  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
+- if @candidacy.questionnaire_submitted?
+  = semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
+    = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
+- else
+  The questionnaire has not been submitted by the candidate yet.
