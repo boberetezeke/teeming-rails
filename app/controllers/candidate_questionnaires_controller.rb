@@ -14,11 +14,31 @@ class CandidateQuestionnairesController < ApplicationController
       if @candidacy.answers.empty?
         @candidacy.answers = @candidacy.race.questionnaire.new_answers
       end
+
+      @candidacy.answers.each do |answer|
+        if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+          if answer && answer.text
+            answer.text_checkboxes = answer.text.split(/:::/).reject{|a| a.blank?}
+          else
+            answer.text_checkboxes = ''
+          end
+        end
+      end
+
     end
   end
 
   def update
     if @candidacy
+
+      if params['candidacy']['answers_attributes']
+        params['candidacy']['answers_attributes'].values.each do |answer_params|
+          if answer_params['text_checkboxes'].is_a?(Array)
+            answer_params['text'] = answer_params['text_checkboxes'].join(':::')
+          end
+        end
+      end
+
       if @candidacy.update(candidacy_params)
         if params[:commit] == "Update"
           flash[:notice] = "Questionnaire updated"
