@@ -25,7 +25,11 @@ Rails.application.routes.draw do
   end
 
   resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]
-  resources :candidacies
+  resources :candidacies do
+    member do
+      put :unlock
+    end
+  end
   resources :races, only: [] do
   end
   resources :event_rsvps, only: [:new, :create, :edit, :update]

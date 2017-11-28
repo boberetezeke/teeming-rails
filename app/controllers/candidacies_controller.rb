@@ -111,6 +111,15 @@ class CandidaciesController < ApplicationController
     end
   end
 
+  def unlock
+    @candidacy = Candidacy.find(params[:id])
+
+    @candidacy.update(questionnaire_submitted_at: nil)
+
+    flash[:notice] = "#{@candidacy.name} unlocked"
+    redirect_to race_path(@candidacy.race, @context_params)
+  end
+
   def destroy
     @candidacy = Candidacy.find(params[:id])
     race = @candidacy.race
