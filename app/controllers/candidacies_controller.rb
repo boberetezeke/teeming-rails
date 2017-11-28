@@ -15,6 +15,8 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     authorize @candidacy
 
+    setup_answer_checkboxes
+
     breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
 
@@ -77,15 +79,7 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     @race = @candidacy.race
 
-    @candidacy.answers.each do |answer|
-      if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-        if answer && answer.text
-          answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
-        else
-          answer.text_checkboxes = ''
-        end
-      end
-    end
+    setup_answer_checkboxes
 
     breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
@@ -139,6 +133,18 @@ class CandidaciesController < ApplicationController
   end
 
   private
+
+  def setup_answer_checkboxes
+    @candidacy.answers.each do |answer|
+      if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+        if answer && answer.text
+          answer.text_checkboxes = answer.text.split(/:::/).reject{|a| a.blank?}
+        else
+          answer.text_checkboxes = ''
+        end
+      end
+    end
+  end
 
   def set_context
     if params[:chapter_id]
