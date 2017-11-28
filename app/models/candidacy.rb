@@ -27,6 +27,8 @@ class Candidacy < ApplicationRecord
       "Other" =>                            PARTY_AFFILIATION_OTHER
   }
 
+  default_scope ->{ order("name ASC") }
+
   def name
     if user
       user.member.name
