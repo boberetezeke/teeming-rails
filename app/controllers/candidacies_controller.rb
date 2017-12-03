@@ -11,6 +11,23 @@ class CandidaciesController < ApplicationController
     breadcrumbs candidacies_breadcrumbs(include_link: false)
   end
 
+  def with_completed_questionnaires
+    @election = Election.find(params[:election_id])
+    if @election.external?
+      @candidacies = Candidacy.joins(:race => :election).where(
+          Race.arel_table[:election_id].eq(@election.id).and(
+              Candidacy.arel_table[:questionnaire_submitted_at].not_eq(nil)
+          )
+      )
+
+      breadcrumbs candidacies_breadcrumbs(include_link: false), "Candidates"
+    else
+      flash[:alert] = "can't view completed questionnaires for internal elections"
+      redirect_to root_path
+    end
+  end
+
+
   def show
     @candidacy = Candidacy.find(params[:id])
     authorize @candidacy
@@ -175,7 +192,9 @@ class CandidaciesController < ApplicationController
   end
 
   def candidacies_breadcrumbs(include_link: true)
-    if @race
+    if @election
+      [@election.name, election_races_path(@election, @context_params)]
+    elsif @race
       [@race.complete_name, race_path(@race, @context_params)]
     else
       [@candidacy.race.complete_name, include_link ? race_path(@candidacy.race, @context_params) : nil]

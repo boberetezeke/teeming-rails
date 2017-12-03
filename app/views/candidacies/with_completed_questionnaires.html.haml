@@ -1,22 +1,18 @@
-%h2 Candidacies
+%h2 For #{@election.name}
+%h3 Candidacies with a completed questionnnaire
 
 %table.table
   %thead
     %tr.row
-      %th Election
-      %th Race
       %th Name
+      %th Race
       %th Actions
   %tbody
     - @candidacies.each do |candidacy|
       %tr.row
-        %td= candidacy.race.election.name
+        %td= link_to(candidacy.name, candidacy)
         %td= candidacy.race.complete_name
-        %td= candidacy.name
         %td
           = link_to 'Edit', edit_candidacy_path(candidacy), class: 'btn btn-sm btn-success'
           = link_to 'Delete', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
 
-- @races.each do |race|
-  - if !current_user.in_race?(race)
-    = link_to("Run for #{race.complete_name}", new_candidacy_path(race_id: race.id))

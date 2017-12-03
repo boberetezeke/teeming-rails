@@ -29,6 +29,10 @@ Rails.application.routes.draw do
     member do
       put :unlock
     end
+
+    collection do
+      get :with_completed_questionnaires
+    end
   end
   resources :races, only: [] do
   end
