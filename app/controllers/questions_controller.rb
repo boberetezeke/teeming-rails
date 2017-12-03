@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
 
     q_params = question_params.to_hash
-    if (q_params["question_type"] == "multiple_choice" || q_params["question_type"] == "single_choice") &&
+    if (q_params["question_type"] == "multiple_choice" || q_params["question_type"] == "checkboxes") &&
        q_params["choices_attributes"]
       q_params["choices_attributes"].each do  |key, choice_param|
         choice_param['value'] = choice_param['title']
