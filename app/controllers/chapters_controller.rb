@@ -10,6 +10,7 @@ class ChaptersController < ApplicationController
 
   def show
     @chapter = Chapter.find(params[:id])
+    @context_params = {chapter_id: params[:id]}
 
     @title = "#{@chapter.name} Chapter"
     breadcrumbs chapters_breadcrumbs, @chapter.name

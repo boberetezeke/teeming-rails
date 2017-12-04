@@ -53,7 +53,7 @@ class MessagesController < ApplicationController
         send_email
       end
     end
-    respond_with @message, location: ->{ message_path(@message, @context_params) }
+    respond_with @message, location: ->{ @message.chapter ? chapter_messages_path(@message, @context_params) : message_path(@message, @context_params) }
   end
 
   def edit
@@ -123,7 +123,7 @@ class MessagesController < ApplicationController
 
 
   def message_params
-    params.require(:message).permit(:subject, :body, :member_group_id, :race_id, :election_id)
+    params.require(:message).permit(:subject, :body, :member_group_id, :chapter_id, :race_id, :election_id)
   end
 
   def messages_breadcrumbs(include_link: true)

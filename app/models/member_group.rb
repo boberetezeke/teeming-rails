@@ -28,7 +28,7 @@ class MemberGroup < ApplicationRecord
   end
 
   def apply_scope(scope, chapter)
-    if SCOPE_TYPES[scope_type.to_sym]
+    if Member::SCOPE_TYPES[scope_type.to_sym]
       scope.send(scope_type, chapter)
     else
       scope

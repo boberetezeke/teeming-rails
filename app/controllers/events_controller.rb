@@ -4,8 +4,8 @@ class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   def index
-    @events = Event.all
     @chapter = Chapter.find(params[:chapter_id])
+    @events = @chapter.events
 
     breadcrumbs [@chapter.name, @chapter], "Events"
   end
@@ -16,6 +16,8 @@ class EventsController < ApplicationController
 
   def new
     @event = Event.new(chapter_id: params[:chapter_id])
+
+    breadcrumbs event_breadcrumbs, "New Event"
   end
 
   def create
@@ -30,11 +32,13 @@ class EventsController < ApplicationController
   def edit
     @event.set_accessors
     @event = Event.find(params[:id])
+
+    breadcrumbs event_breadcrumbs, @event.name
   end
 
   def update
     if @event.update(event_params)
-      redirect_to event
+      redirect_to @event
     else
       render :edit
     end
