@@ -196,8 +196,10 @@ class CandidaciesController < ApplicationController
       [@election.name, election_races_path(@election, @context_params)]
     elsif @race
       [@race.complete_name, race_path(@race, @context_params)]
-    else
+    elsif @candidacy
       [@candidacy.race.complete_name, include_link ? race_path(@candidacy.race, @context_params) : nil]
+    else
+      ["Home", root_path]
     end
   end
 end
