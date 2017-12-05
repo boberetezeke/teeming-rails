@@ -22,6 +22,9 @@ class ElectionsController < ApplicationController
 
   def new
     @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL)
+    if @chapter
+      @election.chapter = @chapter
+    end
     @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
     breadcrumbs elections_breadcrumbs, 'New election'
   end
@@ -64,7 +67,7 @@ class ElectionsController < ApplicationController
 
   def destroy
     @election.destroy
-    redirect_to elections_path
+    redirect_to @chapter ? @chapter : elections_path
   end
 
   private
@@ -88,7 +91,11 @@ class ElectionsController < ApplicationController
 
   def elections_breadcrumbs(include_link: true)
     if include_link
-      ["Elections", elections_path(@context_params)]
+      if @chapter
+        [@chapter.name, @chapter]
+      else
+        ["Elections", elections_path(@context_params)]
+      end
     else
       if @chapter
         [[@chapter.name, @chapter], "Elections"]

@@ -4,3 +4,5 @@
   - params = @chapter ? {chapter_id: @chapter.id} : {}
   = link_to("Add Race", new_election_race_path(@election, params), class: 'btn btn-sm btn-primary')
   = link_to("View Candidates with Completed Questionnaires", with_completed_questionnaires_candidacies_path({election_id: @election.id}.merge(params)), class: 'btn btn-sm btn-info')
+  - if policy(@election).destroy?
+    = link_to("Delete", election_path(@election), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger')
