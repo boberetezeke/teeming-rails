@@ -22,6 +22,9 @@ class ElectionsController < ApplicationController
 
   def new
     @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL)
+    authorize @election
+
+    @chapters = authorized_associated_objects(@election, :chapters)
     if @chapter
       @election.chapter = @chapter
     end
@@ -39,6 +42,7 @@ class ElectionsController < ApplicationController
   def edit
     @election.set_accessors
     @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
+    @chapters = authorized_associated_objects(@election, :chapters)
     breadcrumbs elections_breadcrumbs, "Edit #{@election.name}"
   end
 

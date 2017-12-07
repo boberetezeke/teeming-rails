@@ -15,6 +15,22 @@ class ApplicationController < ActionController::Base
   
   respond_to :html
 
+  protected
+
+  def authorized_associated_objects(object, *fields)
+    policy = policy(object)
+
+    associated_objects_class = policy.class::AssociatedObjects
+    associated_objects = associated_objects_class.new(current_user, object).send(action_name.to_s + "?")
+    values = fields.map{ |field| associated_objects[field ] }
+
+    if values.size == 1
+      values.first
+    else
+      values
+    end
+  end
+
   private
 
   def set_time_from_params

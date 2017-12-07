@@ -13,6 +13,16 @@ class ElectionPolicy < ApplicationPolicy
     end
   end
 
+  class AssociatedObjects < ApplicationPolicy::AssociatedObjects
+    def new?
+      { chapters: chapters_for_scope(@user.scope_for_manage_internal_elections) }
+    end
+
+    def edit?
+      { chapters: chapters_for_scope(@user.scope_for_manage_internal_elections) }
+    end
+  end
+
   def index?
     true
     # if @record.external?

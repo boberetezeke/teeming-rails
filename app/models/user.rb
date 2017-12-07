@@ -68,7 +68,8 @@ class User < ApplicationRecord
   end
 
   def method_missing(sym, *args, &block)
-    if sym.to_s =~ /^can_/
+    m = /^(can_|scope_for_)(.*)$/.match(sym.to_s)
+    if m && m[1] == "can_"
       if role
         if role.respond_to?(sym)
           role.send(sym)
@@ -78,12 +79,25 @@ class User < ApplicationRecord
       else
         false
       end
+    elsif m && m[1] == "scope_for_"
+      if role
+        if role.respond_to?(m[2])
+          role.send(m[2]).scope
+        else
+          raise "unknown privilege: #{sym}"
+        end
+      else
+        nil
+      end
     else
       super
     end
   end
 
   private
+
+  def role_for
+  end
 
   def setup_wizard
     self.setup_state = 'step_setup_user_details' unless self.persisted?

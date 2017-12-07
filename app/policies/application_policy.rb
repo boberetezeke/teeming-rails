@@ -50,4 +50,23 @@ class ApplicationPolicy
       scope
     end
   end
+
+  class AssociatedObjects
+    attr_reader :user
+
+    def initialize(user, record)
+      @user = user
+      @record = record
+    end
+
+    protected
+
+    def chapters_for_scope(scope)
+      if scope.nil?
+        Chapter.all
+      else
+        Chapter.where(name: scope)
+      end
+    end
+  end
 end

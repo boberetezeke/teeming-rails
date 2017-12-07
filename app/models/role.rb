@@ -27,5 +27,8 @@ class Role < ApplicationRecord
     define_method("can_#{method_name}?") do
       privileges.where(action: action, subject: subject).count > 0
     end
+    define_method(method_name) do
+      privileges.where(action: action, subject: subject).first
+    end
   end
 end
