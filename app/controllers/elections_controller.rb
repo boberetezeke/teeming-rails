@@ -6,7 +6,7 @@ class ElectionsController < ApplicationController
   before_action :set_context_params
 
   def index
-    authorize Election
+    authorize_with_args Election, @context_params
 
     @internal_elections = Election.internal
     @external_elections = Election.external
@@ -22,7 +22,7 @@ class ElectionsController < ApplicationController
 
   def new
     @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL)
-    authorize @election
+    authorize_with_args @election, @context_params
 
     @chapters = authorized_associated_objects(@election, :chapters)
     if @chapter

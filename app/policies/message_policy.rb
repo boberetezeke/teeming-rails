@@ -6,30 +6,36 @@ class MessagePolicy < ApplicationPolicy
   end
 
   def index?
-    @user.can_send_messages?
+    true
   end
 
   def show?
-    @user.can_send_messages?
+    can_send_messages?
   end
 
   def new?
-    @user.can_send_messages?
+    can_for_scope?(@user.can_send_messages?, context_params)
   end
 
   def edit?
-    @user.can_send_messages?
+    can_send_messages?
   end
 
   def create?
-    @user.can_send_messages?
+    can_send_messages?
   end
 
   def update?
-    @user.can_send_messages?
+    can_send_messages?
   end
 
   def destroy?
-    @user.can_send_messages?
+    can_send_messages?
+  end
+
+  private
+
+  def can_send_messages?
+    can_for_scope?(@user.can_send_messages?)
   end
 end

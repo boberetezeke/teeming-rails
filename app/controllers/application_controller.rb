@@ -31,6 +31,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def authorize_with_args(object_or_class, *args)
+    current_user.authorize_args = args
+    authorize object_or_class
+  end
+
   private
 
   def set_time_from_params

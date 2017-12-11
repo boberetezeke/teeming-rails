@@ -10,6 +10,8 @@ class ChaptersController < ApplicationController
 
   def show
     @chapter = Chapter.find(params[:id])
+    authorize_with_args @chapter, {chapter_id: params[:id]}
+
     @context_params = {chapter_id: params[:id]}
 
     @title = "#{@chapter.name} Chapter"

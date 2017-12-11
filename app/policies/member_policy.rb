@@ -6,10 +6,16 @@ class MemberPolicy < ApplicationPolicy
   end
 
   def index?
-    @user.can_view_members?
+    can_for_scope?(@user.can_view_members?, context_params)
   end
 
   def show?
-    @user.can_view_members?
+    can_view_members?
+  end
+
+  private
+
+  def can_view_members?
+    can_for_scope?(@user.can_view_members?)
   end
 end

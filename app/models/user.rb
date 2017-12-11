@@ -30,6 +30,8 @@ class User < ApplicationRecord
 
   before_save :setup_wizard
 
+  attr_accessor :authorize_args
+
   def new_candidacy(race)
     Candidacy.new(user: self, race: race)
   end
@@ -72,7 +74,7 @@ class User < ApplicationRecord
     if m && m[1] == "can_"
       if role
         if role.respond_to?(sym)
-          role.send(sym)
+          role.send(sym, *args)
         else
           raise "unknown privilege: #{sym}"
         end
@@ -81,8 +83,8 @@ class User < ApplicationRecord
       end
     elsif m && m[1] == "scope_for_"
       if role
-        if role.respond_to?(m[2])
-          role.send(m[2]).scope
+        if role.respond_to?(sym)
+          role.send(sym)
         else
           raise "unknown privilege: #{sym}"
         end

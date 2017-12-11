@@ -5,27 +5,37 @@ class EventPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    true
+  end
+
   def show?
     true
   end
 
   def new?
-    @user.can_write_events?
+    can_for_scope?(@user.can_write_events?, context_params)
   end
 
   def create?
-    @user.can_write_events?
+    can_write_events?
   end
 
   def edit?
-    @user.can_write_events?
+    can_write_events?
   end
 
   def update?
-    @user.can_write_events?
+    can_write_events?
   end
 
   def destroy?
-    @user.can_write_events?
+    can_write_events?
+  end
+
+  private
+
+  def can_write_events?
+    can_for_scope?(@user.can_write_events?)
   end
 end

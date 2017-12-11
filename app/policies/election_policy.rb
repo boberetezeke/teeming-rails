@@ -33,35 +33,35 @@ class ElectionPolicy < ApplicationPolicy
   end
 
   def show?
-    @user.can_manage_internal_elections? || @user.can_vote_in_election?(@record)
+    can_manage_internal_elections? || @user.can_vote_in_election?(@record)
   end
 
   def new?
-    @user.can_manage_internal_elections?
+    can_for_scope?(@user.can_manage_internal_elections?, context_params)
   end
 
   def create?
-    @user.can_manage_internal_elections?
+    can_manage_internal_elections?
   end
 
   def edit?
-    @user.can_manage_internal_elections?
+    can_manage_internal_elections?
   end
 
   def freeze?
-    @user.can_manage_internal_elections?
+    can_manage_internal_elections?
   end
 
   def unfreeze?
-    @user.can_manage_internal_elections?
+    can_manage_internal_elections?
   end
 
   def update?
-    @user.can_manage_internal_elections?
+    can_manage_internal_elections?
   end
 
   def destroy?
-    @user.can_manage_internal_elections?
+    can_manage_internal_elections?
   end
 
   def vote?
@@ -112,5 +112,11 @@ class ElectionPolicy < ApplicationPolicy
 
   def delete_votes?
     @user.can_delete_votes?
+  end
+
+  private
+
+  def can_manage_internal_elections?
+    can_for_scope?(@user.can_manage_internal_elections?)
   end
 end

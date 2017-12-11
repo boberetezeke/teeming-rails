@@ -24,9 +24,9 @@
       .strong RSVP Stats:
       In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
 
-- if policy(event).edit?
+- if can?(current_user, :edit, event)
   = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
-- if policy(event).destroy?
+- if can?(current_user, :destroy, event)
   = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger'
 
 - if show_rsvp && event_rsvp

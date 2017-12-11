@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
   before_action :set_context_params
 
   def index
-    authorize Message
+    authorize_with_args Message, @context_params
     @chapter = Chapter.find(params[:chapter_id])
 
     @messages = policy_scope(Message)
@@ -28,7 +28,7 @@ class MessagesController < ApplicationController
   end
 
   def new
-    authorize Message
+    authorize_with_args Message, @context_params
 
     @race = Race.find(params[:race_id]) if params[:race_id]
     if !@race

@@ -1,8 +1,11 @@
 class MembersController < ApplicationController
   before_filter :authenticate_user!
 
+  before_action :set_chapter
+  before_action :set_context_params
+
   def index
-    authorize Member
+    authorize_with_args Member, @context_params
     @chapter = Chapter.find(params[:chapter_id])
 
     @members = policy_scope(Member)
@@ -29,6 +32,14 @@ class MembersController < ApplicationController
   end
 
   private
+
+  def set_chapter
+    @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
+  end
+
+  def set_context_params
+    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
+  end
 
   def members_breadcrumbs
     if @member

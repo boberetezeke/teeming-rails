@@ -1,11 +1,14 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!
 
+  before_action :set_chapter
+  before_action :set_context_params
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
   def index
     @chapter = Chapter.find(params[:chapter_id])
     @events = @chapter.events
+    authorize_with_args Event, @context_params
 
     breadcrumbs [@chapter.name, @chapter], "Events"
   end
@@ -16,12 +19,15 @@ class EventsController < ApplicationController
 
   def new
     @event = Event.new(chapter_id: params[:chapter_id])
+    authorize_with_args @event, @context_params
 
     breadcrumbs event_breadcrumbs, "New Event"
   end
 
   def create
     @event = Event.new(event_params)
+    authorize @event
+
     if @event.save
       redirect_to @event
     else
@@ -54,6 +60,14 @@ class EventsController < ApplicationController
   def set_event
     @event = Event.find(params[:id])
     authorize @event
+  end
+
+  def set_chapter
+    @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
+  end
+
+  def set_context_params
+    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
   end
 
   def event_params

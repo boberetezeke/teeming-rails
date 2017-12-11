@@ -25,8 +25,18 @@ class Role < ApplicationRecord
   PRIVILEGES.each do |action, subject, method_name|
     method_name = "#{action}_#{subject.pluralize}" unless method_name
     define_method("can_#{method_name}?") do
-      privileges.where(action: action, subject: subject).count > 0
+      privilege = privileges.where(action: action, subject: subject).first
+      if privilege
+        privilege.parsed_scope
+      else
+        nil
+      end
     end
+
+    define_method("scope_for_#{method_name}") do
+      privileges.where(action: action, subject: subject).first.parsed_scope
+    end
+
     define_method(method_name) do
       privileges.where(action: action, subject: subject).first
     end

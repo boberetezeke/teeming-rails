@@ -38,6 +38,26 @@ class ApplicationPolicy
     Pundit.policy_scope!(user, record.class)
   end
 
+  def can_for_scope?(scope, context_params=nil)
+    if scope.nil?
+      false
+    else
+      if scope['chapter_id']
+        if context_params
+          context_params[:chapter_id].to_i == scope["chapter_id"]
+        else
+          @record.chapter_id == scope['chapter_id']
+        end
+      else
+        true
+      end
+    end
+  end
+
+  def context_params
+    @user.authorize_args ? @user.authorize_args.first : nil
+  end
+
   class Scope
     attr_reader :user, :scope
 
@@ -65,8 +85,9 @@ class ApplicationPolicy
       if scope.nil?
         Chapter.all
       else
-        Chapter.where(name: scope)
+        Chapter.where(id: scope['chapter_id'])
       end
     end
+
   end
 end
