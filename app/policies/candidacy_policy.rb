@@ -17,7 +17,7 @@ class CandidacyPolicy < ApplicationPolicy
     if @record.race.election.external?
       true
     else
-      @user.can_manage_internal_candidacies?
+      @user.can_manage_internal_elections?
     end
   end
 

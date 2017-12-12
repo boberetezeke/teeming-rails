@@ -197,7 +197,7 @@ class CandidaciesController < ApplicationController
     elsif @race
       [@race.complete_name, race_path(@race, @context_params)]
     elsif @candidacy
-      [@candidacy.race.complete_name, include_link ? race_path(@candidacy.race, @context_params) : nil]
+      [@candidacy.racdeletion_completione.complete_name, include_link ? race_path(@candidacy.race, @context_params) : nil]
     else
       ["Home", root_path]
     end

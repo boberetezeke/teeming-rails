@@ -1,6 +1,6 @@
 %h2 Candidacy for #{@race.complete_name}
 
-- if @race.election.internal?
+- if @race.election.internal? && @race.notes
   = Kramdown::Document.new(@race.notes).to_html.html_safe
 
 = semantic_form_for @candidacy do |f|

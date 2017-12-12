@@ -19,7 +19,7 @@
       = link_to("Edit", edit_race_path(@race, @context_params), class: 'btn btn-sm btn-primary')
       = link_to("Delete", race_path(@race, @context_params), method: :delete, data: {confirm: 'Are you sure you want to delete this race?'}, class: 'btn btn-sm btn-danger')
 
-  - if (@race.election.external? && current_user.can_manage_external_candidacies?) || (@race.election.internal? && current_user.can_manage_interal_candidacies?)
+  - if (@race.election.external? && current_user.can_manage_external_candidacies?) || (@race.election.internal? && current_user.can_manage_internal_elections?)
     |
     - if @race.questionnaire
       = link_to("Edit questionnaire", questionnaire_path(@race.questionnaire, @context_params), class: 'btn btn-sm btn-info')

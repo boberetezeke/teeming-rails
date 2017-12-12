@@ -6,10 +6,12 @@
   - if Time.zone.now < race.election.vote_start_time
     = render partial: 'races/show_dates', locals: { race: race }
     = render partial: 'races/show_candidacies', locals: { race: race }
+    = render partial: 'races/candidacy_action',  locals: { race: race }
+    - if can?(current_user, :edit, race)
+      = link_to("Edit", edit_race_path(race), class: 'btn btn-sm btn-primary')
 
   - elsif Time.zone.now < race.election.vote_end_time
     = render partial: 'races/show_candidacies', locals: { race: race }
-    = render partial: 'races/candidacy_action',  locals: { race: race }
 - else
   - if show_race_link
     %h5
