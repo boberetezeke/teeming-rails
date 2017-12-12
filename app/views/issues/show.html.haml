@@ -1,6 +1,6 @@
 = render partial: 'issues/show', locals: { issue: @issue }
 
 - if @issue.questionnaire
-  = link_to("Edit questionnaire", questionnaire_path(@issue.questionnaire))
+  = link_to("Edit questionnaire", questionnaire_path(@issue.questionnaire, issue_id: @issue.id), class: 'btn btn-sm btn-primary')
 - else
-  = link_to("Create questionnaire", create_questionnaire_issue_path(@issue), method: :put)
+  = link_to("Create questionnaire", create_questionnaire_issue_path(@issue), method: :put, class: 'btn btn-sm btn-succes')

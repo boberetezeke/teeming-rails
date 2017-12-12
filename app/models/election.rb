@@ -42,6 +42,10 @@ class Election < ApplicationRecord
     is_frozen
   end
 
+  def voters
+    member_group.all_members(chapter)
+  end
+
   def tally_votes
     if races.present?
       races.first.tally_votes

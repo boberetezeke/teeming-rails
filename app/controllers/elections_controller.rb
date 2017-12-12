@@ -54,10 +54,11 @@ class ElectionsController < ApplicationController
 
   def freeze
     @election.update(is_frozen: true)
-    @election.member_group.members.each do |member|
+
+    @election.voters.each do |member|
       user = member.user
       if user
-        VoteCompletion.create(election: @election, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINla)
+        VoteCompletion.create(election: @election, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
       end
     end
     redirect_to @election

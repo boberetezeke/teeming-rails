@@ -39,7 +39,7 @@ class ApplicationPolicy
   end
 
   def can_for_scope?(scope, context_params=nil)
-    if scope.nil?
+    if scope.nil? || scope == false
       false
     else
       if scope['chapter_id']

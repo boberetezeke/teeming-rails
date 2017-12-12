@@ -61,7 +61,7 @@ class IssuesController < ApplicationController
     questionnaire = Questionnaire.create(questionnairable: issue, name: issue.name)
     QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
 
-    redirect_to questionnaire
+    redirect_to questionnaire_path(issue_id: issue.id)
   end
 
   private

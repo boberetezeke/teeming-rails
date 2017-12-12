@@ -20,6 +20,9 @@ class QuestionnairesController < ApplicationController
     if questionnaireable.is_a?(Race)
       race = questionnaireable
       breadcrumbs [race.complete_name, race_path(questionnaireable, @context_params)], @questionnaire.name ? @questionnaire.name : "Questionnaire"
+    elsif questionnaireable.is_a?(Issue)
+      issue = questionnaireable
+      breadcrumbs [issue.name, issue_path(questionnaireable, @context_params)], "Questionnaire"
     else
       breadcrumbs questionnaires_breadcrumbs, @questionnaire.name ? @questionnaire.name : "Questionnaire"
     end
@@ -69,10 +72,14 @@ class QuestionnairesController < ApplicationController
 
   def set_context
     @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
+    @issue = Issue.find(params[:issue_id]) if params[:issue_id]
   end
 
   def set_context_params
-    @context_params = @chapter ? { chapter_id: @chapter.id } : {}
+    @context_params = {}
+
+    @context_params[:chapter_id] = @chapter.id  if @chapter
+    @context_params[:issue_id] =   @issue.id    if @issue
   end
 
   def questionnaire_params

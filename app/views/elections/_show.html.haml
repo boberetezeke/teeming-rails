@@ -10,7 +10,7 @@
       - elsif Time.zone.now < election.vote_start_time
       - elsif Time.now >= election.vote_end_time
         = render partial: 'elections/vote_results', locals: { election: election }
-
+  %div This election will be by voted on by #{pluralize(election.voters.count, "voter")}
   - election.races.each do |race|
     = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: false, show_all: false }
   - election.issues.each do |issue|
