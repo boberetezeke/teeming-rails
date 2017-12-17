@@ -2,6 +2,7 @@
 
 = semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
   = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: @candidacy.questionnaire_submitted? }
+  %hr
   - if @candidacy.questionnaire_submitted?
     = f.submit "Request unlock", class: 'btn btn-sm btn-primary btn-with-padding'
     - if @candidacy.unlock_requested?

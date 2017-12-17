@@ -69,6 +69,22 @@ form.formtastic {
     font-weight: bold;
 }
 
+.read_only_label {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+ul.read_only_check_boxes {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+ul.read_only_check_boxes li span {
+    float: left;
+    width: 20px;
+    font-weight: bold;
+}
+
 form.formtastic p.bylaws_link {
     padding: 15px;
     background-color: lightblue;
