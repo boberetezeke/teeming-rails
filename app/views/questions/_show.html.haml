@@ -25,7 +25,7 @@
             - else
               %span.check_box &nbsp;
           .check_box_title
-            = choice.title * 100
+            = choice.title
     - else
       = f.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}], input_html: { disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
