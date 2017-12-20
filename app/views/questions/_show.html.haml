@@ -17,15 +17,15 @@
   - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
     - if read_only
       .read_only_label= question.text
-      %ul.read_only_check_boxes
-        - question.choices.each do |choice|
-          %li
-            %span
-              - if f.object.text_checkboxes.include?(choice.value)
-                x
-              - else
-                &nbsp;
-            = choice.title
+      - question.choices.each do |choice|
+        .read_only_check_boxes
+          .check_box_content
+            - if f.object.text_checkboxes.include?(choice.value)
+              %span.check_box x
+            - else
+              %span.check_box &nbsp;
+          .check_box_title
+            = choice.title * 100
     - else
       = f.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}], input_html: { disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
