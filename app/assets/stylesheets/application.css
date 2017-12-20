@@ -132,6 +132,20 @@ form.formtastic li.in-formtastic {
     list-style-type: disc;
 }
 
+.race-dates {
+    margin-left: 20px;
+}
+.race-candidacies {
+    margin-left: 20px;
+}
+.race-actions {
+    margin-left: 20px;
+}
+
+.issue-actions {
+  margin-left: 20px;
+}
+
 .answers {
     list-style: circle;
 }

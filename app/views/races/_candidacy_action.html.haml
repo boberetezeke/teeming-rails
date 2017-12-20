@@ -1,10 +1,13 @@
-- candidacy = current_user.candidacies.where(race: race).first
-%p
-- if candidacy
-  = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
-  = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
-- else
-  - if race.before_filing_deadline?(Time.now.utc)
-    = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
+.race-actions
+  - candidacy = current_user.candidacies.where(race: race).first
+  %p
+  - if candidacy
+    = link_to("Edit candidate form", edit_candidacy_path(candidacy), class: 'btn btn-sm btn-primary')
+    = link_to 'Delete candidacy', candidacy_path(candidacy), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
   - else
-    The filing deadline for this race has past.
+    - if race.before_filing_deadline?(Time.now.utc)
+      = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
+    - else
+      The filing deadline for this race has past.
+  - if can?(current_user, :edit, race)
+    = link_to("Edit", edit_race_path(race), class: 'btn btn-sm btn-primary')

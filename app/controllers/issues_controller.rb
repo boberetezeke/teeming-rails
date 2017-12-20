@@ -10,13 +10,14 @@ class IssuesController < ApplicationController
   def show
     @issue = Issue.find(params[:id])
     authorize @issue
-    if Pundit.policy(current_user, @issue.election).show? &&
-      !Pundit.policy(current_user, @issue.election).edit?
-      redirect_to @issue.questionnaire
-    else
+    #if Pundit.policy(current_user, @issue.election).show? &&
+    #  !Pundit.policy(current_user, @issue.election).edit?
+    #  redirect_to @issue.questionnaire
+    #else
       breadcrumbs issues_breadcrumbs(@issue.election), @issue.name
+      @issue.answers = @issue.questionnaire.new_answers
       render 'show'
-    end
+    #end
   end
 
   def new

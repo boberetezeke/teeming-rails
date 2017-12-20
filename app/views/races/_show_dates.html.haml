@@ -1,9 +1,11 @@
-- if race.filing_deadline_date
-  %p
-    Filing date:
-    %strong #{race.filing_deadline_date.utc.to_date}
-    - unless race.before_filing_deadline?(Time.now.utc)
-      (Closed)
-- if race.candidates_announcement_date
-  Candidates announced on:
-  %strong #{race.candidates_announcement_date}
+.race-dates
+  - if race.filing_deadline_date
+    %p
+      Filing date:
+      %strong #{race.filing_deadline_date.utc.to_date}
+      - unless race.before_filing_deadline?(Time.now.utc)
+        (Closed)
+  - if race.candidates_announcement_date
+    %p
+      Candidates announced on:
+      %strong #{race.candidates_announcement_date}

@@ -1,1 +1,14 @@
-%h2= link_to(issue.name, issue)
+%h5 Issue: #{link_to(issue.name, issue)}
+- if show_all
+  - if can?(current_user, :edit, @issue.questionnaire)
+    - if @issue.questionnaire
+      = link_to("Edit questionnaire", questionnaire_path(@issue.questionnaire, issue_id: @issue.id), class: 'btn btn-sm btn-primary')
+    - else
+      = link_to("Create questionnaire", create_questionnaire_issue_path(@issue), method: :put, class: 'btn btn-sm btn-succes')
+  %hr
+  = semantic_form_for @issue do |f|
+    = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
+- else
+  .issue-actions
+    = link_to("View Questionnaire", issue, class: 'btn btn-sm btn-primary')
+

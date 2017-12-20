@@ -4,6 +4,7 @@
     = f.input :name
     = f.input :filing_deadline_date_str, label: 'Filing Deadline Date'
     = f.input :candidates_announcement_date_str, label: 'Candidates Announcment Date'
+    = f.input :notes, as: :text, label: 'Description', html_input: { rows: 4, cols: 80 }
     = f.input :chapter_id, as: :hidden
   - else
     = f.input :chapter_id, as: :select, collection: Chapter.all, include_blank: false

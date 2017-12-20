@@ -1,7 +1,8 @@
-- if policy(race).show_candidacies?
-  %p
-  Candidates: #{race.candidacies.map{|c| link_to(c.name, c) }.join(', ').html_safe }
-- else
-  - if race.candidacies.count > 0
+.race-candidacies
+  - if policy(race).show_candidacies?
     %p
-      #{race.candidacies.count} #{"candidate".pluralize(race.candidacies.count)} signed up
+    Candidates: #{race.candidacies.map{|c| link_to(c.name, c) }.join(', ').html_safe }
+  - else
+    - if race.candidacies.count > 0
+      %p
+        #{race.candidacies.count} #{"candidate".pluralize(race.candidacies.count)} signed up
