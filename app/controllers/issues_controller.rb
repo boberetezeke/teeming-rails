@@ -15,7 +15,9 @@ class IssuesController < ApplicationController
     #  redirect_to @issue.questionnaire
     #else
       breadcrumbs issues_breadcrumbs(@issue.election), @issue.name
-      @issue.answers = @issue.questionnaire.new_answers
+      if @issue.questionnaire
+        @issue.answers = @issue.questionnaire.new_answers
+      end
       render 'show'
     #end
   end
@@ -54,7 +56,7 @@ class IssuesController < ApplicationController
     @election = @issue.election
     @issue.destroy
 
-    redirect_to election_issues_path(@election)
+    redirect_to election_path(@election)
   end
 
   def create_questionnaire
@@ -62,7 +64,7 @@ class IssuesController < ApplicationController
     questionnaire = Questionnaire.create(questionnairable: issue, name: issue.name)
     QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
 
-    redirect_to questionnaire_path(issue_id: issue.id)
+    redirect_to questionnaire_path(questionnaire, issue_id: issue.id)
   end
 
   private

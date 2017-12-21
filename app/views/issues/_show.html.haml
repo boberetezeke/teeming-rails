@@ -1,13 +1,17 @@
 %h5 Issue: #{link_to(issue.name, issue)}
 - if show_all
-  - if can?(current_user, :edit, @issue.questionnaire)
+  - if can?(current_user, :edit, @issue.election)
+    = link_to("Edit", edit_issue_path(@issue), class: 'btn btn-sm btn-primary')
+    = link_to("Delete", issue_path(@issue), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-sm btn-danger')
+    |
     - if @issue.questionnaire
       = link_to("Edit questionnaire", questionnaire_path(@issue.questionnaire, issue_id: @issue.id), class: 'btn btn-sm btn-primary')
     - else
-      = link_to("Create questionnaire", create_questionnaire_issue_path(@issue), method: :put, class: 'btn btn-sm btn-succes')
-  %hr
-  = semantic_form_for @issue do |f|
-    = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
+      = link_to("Create questionnaire", create_questionnaire_issue_path(@issue), method: :put, class: 'btn btn-sm btn-success')
+  - if issue.questionnaire
+    %hr
+    = semantic_form_for @issue do |f|
+      = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
 - else
   .issue-actions
     = link_to("View Questionnaire", issue, class: 'btn btn-sm btn-primary')

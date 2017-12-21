@@ -9,5 +9,3 @@
       = link_to("Run for this race", new_candidacy_path(race_id: race.id), class: 'btn btn-sm btn-primary')
     - else
       The filing deadline for this race has past.
-  - if can?(current_user, :edit, race)
-    = link_to("Edit", edit_race_path(race), class: 'btn btn-sm btn-primary')
