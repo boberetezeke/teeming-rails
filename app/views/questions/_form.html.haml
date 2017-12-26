@@ -25,7 +25,7 @@
       var question_type =  $("#question_question_type").val();
       var question_id = #{question.persisted? && question.has_choices? ? question.id : 'null'};
 
-      if ((question_type == 'checkboxes' || question_type == 'multiple_choice') && question_id) {
+      if ((question_type == 'checkboxes' || question_type == 'multiple_choice' || question_type == 'ranked_choice') && question_id) {
         $("#choices").removeClass('hidden')
       }
       else {

@@ -132,6 +132,11 @@ form.formtastic li.in-formtastic {
     list-style-type: disc;
 }
 
+form.formtastic select.form-control.narrow {
+    width: 50px;
+    display: inline;
+}
+
 .race-dates {
     margin-left: 20px;
 }

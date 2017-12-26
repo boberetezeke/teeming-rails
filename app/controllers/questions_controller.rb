@@ -17,8 +17,7 @@ class QuestionsController < ApplicationController
     end
 
     if @question.save
-      if @question.question_type == Question::QUESTION_TYPE_CHECKBOXES ||
-         @question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+      if @question.has_choices?
         redirect_to edit_question_path(@question)
       else
         redirect_to @questionnaire

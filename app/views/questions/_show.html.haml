@@ -10,6 +10,15 @@
     = f.input :text_checkboxes, label: question.text, as: :check_boxes, collection: Hash[question.choices.map{|c| [c.title, c.value]}], input_html: { disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
     = f.input :text, label: question.text, as: :radio, collection: Hash[question.choices.map{|c| [c.title, c.value]}], input_html: { disabled: disabled }
+  - elsif question.question_type == Question::QUESTION_TYPE_RANKED_CHOICE
+    %div.input.optional.form-group
+      %div.form-label
+        %label.control-label= question.text
+    - question.choices.each_with_index do |choice, index|
+      %div.radio
+        = select_tag "#{f.object_name}][text_ranked_choices][]", options_for_select(question.choices.map.with_index{|c, index| [index, index]}, f.object.text_ranked_choices[index]), class: 'form-control narrow', disabled: disabled
+        &nbsp;
+        = choice.title
   - else
     %p Question: #{question.id}, #{question.text}, type: #{question.question_type}
 - if edit_tools

@@ -108,7 +108,10 @@ class CandidaciesController < ApplicationController
     if params['candidacy']['answers_attributes']
       params['candidacy']['answers_attributes'].values.each do |answer_params|
         if answer_params['text_checkboxes'].is_a?(Array)
-          answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+          answer_params['text'] = answer_params['text_checkboxes'].join(':::')
+        end
+        if answer_params['text_ranked_choices'].is_a?(Array)
+          answer_params['text'] = answer_params['text_ranked_choices'].join(':::')
         end
       end
     end
@@ -162,12 +165,16 @@ class CandidaciesController < ApplicationController
 
   def setup_answer_checkboxes
     @candidacy.answers.each do |answer|
+      if answer && answer.text
+        answer_entries = answer.text.split(/:::/).reject{|a| a.blank?}
+      else
+        answer_entries = []
+      end
+
       if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-        if answer && answer.text
-          answer.text_checkboxes = answer.text.split(/:::/).reject{|a| a.blank?}
-        else
-          answer.text_checkboxes = ''
-        end
+        answer.text_checkboxes = answer_entries
+      elsif answer.question.question_type == Question::QUESTION_TYPE_RANKED_CHOICE
+        answer.text_ranked_choices = answer_entries
       end
     end
   end

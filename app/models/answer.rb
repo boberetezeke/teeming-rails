@@ -4,7 +4,7 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :answerable, polymorphic: true
 
-  attr_accessor :text_checkboxes
+  attr_accessor :text_checkboxes, :text_ranked_choices
 
   default_scope ->{ order('order_index asc') }
 

@@ -11,12 +11,14 @@ class Question < ApplicationRecord
   QUESTION_TYPE_LONG_TEXT =       'long_text'
   QUESTION_TYPE_MULTIPLE_CHOICE = 'multiple_choice'
   QUESTION_TYPE_CHECKBOXES =      'checkboxes'
+  QUESTION_TYPE_RANKED_CHOICE =   'ranked_choice'
 
   QUESTION_TYPES = {
     "Short text" => QUESTION_TYPE_SHORT_TEXT,
     "Long text" => QUESTION_TYPE_LONG_TEXT,
     "Single choice" => QUESTION_TYPE_MULTIPLE_CHOICE,
-    "Multiple choices" => QUESTION_TYPE_CHECKBOXES
+    "Multiple choices" => QUESTION_TYPE_CHECKBOXES,
+    "Ranked choices" => QUESTION_TYPE_RANKED_CHOICE
   }
 
   default_scope ->{ order('order_index asc') }
@@ -26,7 +28,9 @@ class Question < ApplicationRecord
   end
 
   def has_choices?
-    question_type == QUESTION_TYPE_CHECKBOXES || question_type == QUESTION_TYPE_MULTIPLE_CHOICE
+    question_type == QUESTION_TYPE_CHECKBOXES ||
+    question_type == QUESTION_TYPE_MULTIPLE_CHOICE ||
+    question_type == QUESTION_TYPE_RANKED_CHOICE
   end
 
   def answer_totals
