@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171124203025) do
+ActiveRecord::Schema.define(version: 20171228015602) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 20171124203025) do
     t.datetime "vote_end_time"
     t.boolean  "show_vote_tallies"
     t.boolean  "is_frozen"
+    t.string   "election_method"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id", using: :btree
   end
 
@@ -300,6 +301,7 @@ ActiveRecord::Schema.define(version: 20171124203025) do
     t.string  "vote_type"
     t.string  "disqualification_message"
     t.integer "election_id"
+    t.string  "ballot_identifier"
     t.index ["election_id"], name: "index_vote_completions_on_election_id", using: :btree
     t.index ["race_id"], name: "index_vote_completions_on_race_id", using: :btree
     t.index ["token"], name: "index_vote_completions_on_token", using: :btree

@@ -11,8 +11,20 @@ class Election < ApplicationRecord
   has_many :vote_completions, dependent: :destroy
   # has_many :vote_tallies, dependent: :destroy
 
+  has_one :questionnaire, as: :questionnairable
+
   ELECTION_TYPE_INTERNAL = 'internal'
   ELECTION_TYPE_EXTERNAL = 'external'
+
+  ELECTION_METHOD_ONLINE_ONLY =         'online_only'
+  ELECTION_METHOD_ONLINE_AND_OFFLINE =  'online_and_offline'
+  ELECTION_METHOD_OFFLINE_ONLY =        'offline_only'
+
+  ELECTION_METHODS = {
+      "Online only" =>                  ELECTION_METHOD_ONLINE_ONLY,
+      "Online and Offline" =>           ELECTION_METHOD_ONLINE_AND_OFFLINE,
+      "Offline only (secret ballot)" => ELECTION_METHOD_OFFLINE_ONLY
+  }
 
   scope :internal, ->{ where(election_type: ELECTION_TYPE_INTERNAL) }
   scope :external, ->{ where(election_type: ELECTION_TYPE_EXTERNAL) }
@@ -36,6 +48,22 @@ class Election < ApplicationRecord
 
   def internal?
     election_type == ELECTION_TYPE_INTERNAL
+  end
+
+  def online_only?
+    election_method == ELECTION_METHOD_ONLINE_ONLY
+  end
+
+  def online?
+    election_method == ELECTION_METHOD_ONLINE_AND_OFFLINE || election_method == ELECTION_METHOD_ONLINE_ONLY
+  end
+
+  def offline_only?
+    election_method == ELECTION_METHOD_OFFLINE_ONLY
+  end
+
+  def offline?
+    election_method == ELECTION_METHOD_ONLINE_AND_OFFLINE || election_method == ELECTION_METHOD_OFFLINE_ONLY
   end
 
   def is_frozen?

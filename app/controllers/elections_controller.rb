@@ -21,7 +21,7 @@ class ElectionsController < ApplicationController
   end
 
   def new
-    @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL)
+    @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL, online_offline_type: Election::ONLINE_AND_OFFLINE)
     authorize_with_args @election, @context_params
 
     @chapters = authorized_associated_objects(@election, :chapters)
@@ -61,12 +61,19 @@ class ElectionsController < ApplicationController
         VoteCompletion.create(election: @election, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
       end
     end
+
+    @election.questionnaire = Questionnaire.new
+    @election.issues.each do |issue|
+      @election.questionnaire.append_questionnaire_sections(issue.questionnaire)
+    end
+
     redirect_to @election
   end
 
   def unfreeze
     @election.update(is_frozen: false)
     @election.vote_completions.destroy_all
+    @election.questionnaire.destroy
     redirect_to @election
   end
 
@@ -91,7 +98,7 @@ class ElectionsController < ApplicationController
   end
 
   def election_params
-    params.require(:election).permit(:name, :chapter_id, :election_type, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
+    params.require(:election).permit(:name, :chapter_id, :election_type, :election_method, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
   end
 
   def elections_breadcrumbs(include_link: true)

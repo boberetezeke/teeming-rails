@@ -5,6 +5,7 @@
   .actions
     - if @election.is_frozen?
       = link_to("Unfreeze", unfreeze_election_path(@election), method: :put, class: 'btn btn-sm btn-warning')
+      = link_to("View Questionnaire", questionnaire_path(@election.questionnaire), class: 'btn btn-sm btn-info')
     - else
       = link_to("Edit", edit_election_path(@election), class: 'btn btn-sm btn-primary')
       = link_to("Add Race", new_election_race_path(@election, @context_params), class: 'btn btn-sm btn-success')

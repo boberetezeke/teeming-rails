@@ -32,7 +32,7 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     authorize @candidacy
 
-    setup_answer_checkboxes
+    Answer.translate_text_choices(@candidacy.answers)
 
     breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
@@ -59,13 +59,7 @@ class CandidaciesController < ApplicationController
   end
 
   def create
-    if params['candidacy']['answers_attributes']
-      params['candidacy']['answers_attributes'].values.each do |answer_params|
-        if answer_params['text_checkboxes'].is_a?(Array)
-          answer_params['text'] = answer_params['text_checkboxes'].join(' ')
-        end
-      end
-    end
+    Answer.translate_choice_params(params['candidacy']['answers_attributes'])
 
     @race = Race.find(params[:candidacy][:race_id])
     if @race.election.internal? && !@race.before_filing_deadline?(Time.now.utc)
@@ -96,7 +90,7 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     @race = @candidacy.race
 
-    setup_answer_checkboxes
+    Answer.translate_text_choices(@candidacy.answers)
 
     breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
@@ -105,16 +99,7 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     @candidacy.updated_by_user = current_user
 
-    if params['candidacy']['answers_attributes']
-      params['candidacy']['answers_attributes'].values.each do |answer_params|
-        if answer_params['text_checkboxes'].is_a?(Array)
-          answer_params['text'] = answer_params['text_checkboxes'].join(':::')
-        end
-        if answer_params['text_ranked_choices'].is_a?(Array)
-          answer_params['text'] = answer_params['text_ranked_choices'].join(':::')
-        end
-      end
-    end
+    Answer.translate_choice_params(params['candidacy']['answers_attributes'])
 
     if @candidacy.update(candidacy_params(params))
       if @candidacy.race.election.internal?
@@ -164,19 +149,7 @@ class CandidaciesController < ApplicationController
   private
 
   def setup_answer_checkboxes
-    @candidacy.answers.each do |answer|
-      if answer && answer.text
-        answer_entries = answer.text.split(/:::/).reject{|a| a.blank?}
-      else
-        answer_entries = []
-      end
-
-      if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-        answer.text_checkboxes = answer_entries
-      elsif answer.question.question_type == Question::QUESTION_TYPE_RANKED_CHOICE
-        answer.text_ranked_choices = answer_entries
-      end
-    end
+    Answer.translate_text_choices(answers)
   end
 
   def set_context

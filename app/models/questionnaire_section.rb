@@ -6,8 +6,9 @@ class QuestionnaireSection < ApplicationRecord
 
   default_scope ->{ order('order_index asc') }
 
-  def copy
+  def copy(order_index: nil)
     new_questionnaire_section = self.dup
+    new_questionnaire_section.order_index = order_index if order_index
     new_questionnaire_section.save
     self.questions.each do |question|
       new_questionnaire_section.questions << question.copy

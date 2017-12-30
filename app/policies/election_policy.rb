@@ -65,13 +65,7 @@ class ElectionPolicy < ApplicationPolicy
   end
 
   def vote?
-    now = Time.now.utc
-    #@user.can_enter_votes? ||
-        (@record.internal? &&
-            (@record.vote_start_time && @record.vote_end_time) &&
-            (@record.vote_start_time <= now && now < @record.vote_end_time) &&
-            @user.can_vote_in_election?(@record) &&
-            !@user.voted_in_election?(@record))
+    @record.internal? && @user.can_vote_in_election?(@record)
   end
 
   def view_vote?

@@ -7,7 +7,8 @@ class Questionnaire < ApplicationRecord
   scope :with_race, ->{ where(questionnairable_type: 'Race') }
 
   def new_answers(user: nil)
-    questionnaire_sections.map{|qs| qs.questions.to_a}.flatten.map.with_index{|q, index| q.new_answer(index: index, user: user)}
+    answers = questionnaire_sections.map{|qs| qs.questions.to_a}.flatten.map.with_index{|q, index| q.new_answer(index: index, user: user)}
+    Answer.translate_choice_text(answers)
   end
 
   def name
@@ -36,5 +37,22 @@ class Questionnaire < ApplicationRecord
     end
 
     new_questionnaire
+  end
+
+  def max_order_index
+    last_section = questionnaire_sections.last
+    if last_section
+      last_section.order_index
+    else
+      0
+    end
+  end
+
+  def append_questionnaire_sections(questionnaire)
+    order_index = max_order_index + 1
+    questionnaire.questionnaire_sections.each do |questionnaire_section|
+      self.questionnaire_sections << questionnaire_section.copy(order_index: order_index)
+      order_index += 1
+    end
   end
 end

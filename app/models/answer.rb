@@ -10,9 +10,45 @@ class Answer < ApplicationRecord
 
   # before_save :translate_text_checkboxes
 
-  def translate_text_checkboxes
-    if question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-      self.text = self.text_checkboxes.join(" ")
+  validate :text_ranked_choices_are_valid
+
+  def text_ranked_choices_are_valid
+    if question.ranked_choice? && text.present?
+      text_ranked_choices = text.split(/:::/)
+      if text_ranked_choices.uniq.size != text_ranked_choices.size
+        errors.add(:base, "all ranked choices must be unique")
+      end
+    end
+  end
+
+  def self.translate_choice_text(answers)
+    answers.each do |answer|
+      if answer && answer.text
+        answer_entries = answer.text.split(/:::/).reject{|a| a.blank?}
+      else
+        answer_entries = []
+      end
+
+      if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+        answer.text_checkboxes = answer_entries
+      elsif answer.question.question_type == Question::QUESTION_TYPE_RANKED_CHOICE
+        answer.text_ranked_choices = answer_entries
+      end
+    end
+
+    answers
+  end
+
+  def self.translate_choice_params(params)
+    if params
+      params.values.each do |answer_params|
+        if answer_params['text_checkboxes'].is_a?(Array)
+          answer_params['text'] = answer_params['text_checkboxes'].join(':::')
+        end
+        if answer_params['text_ranked_choices'].is_a?(Array)
+          answer_params['text'] = answer_params['text_ranked_choices'].join(':::')
+        end
+      end
     end
   end
 

@@ -1,3 +1,16 @@
-%h2 Enter Vote for #{@race.name}
+%h2 Enter Vote for #{@election.name}
 
-= render partial: 'vote', locals: { enter_vote: true }
+/= render partial: 'vote', locals: { enter_vote: true }
+= semantic_form_for @vote_completion, url: election_votes_path(@election), method: :post do |f|
+  - if @election.offline_only?
+    = label_tag "Ballot Identifier: "
+    = text_field_tag "ballot_identifier", @ballot_identifier
+    - if @ballot_identifier_error
+      %p.error= @ballot_identifier_error
+  - else
+    = label_tag "Voter Email: "
+    = text_field_tag "voter_email", @voter_email
+    - if @voter_email_error
+      %p.error= @voter_email_error
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: false }
+  = f.submit "Vote", class: 'btn btn-sm btn-info btn-with-padding'

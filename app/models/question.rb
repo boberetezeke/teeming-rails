@@ -27,6 +27,10 @@ class Question < ApplicationRecord
     Answer.new(candidacy: candidacy, question: self, order_index: index, user: user)
   end
 
+  def ranked_choice?
+    question_type == QUESTION_TYPE_RANKED_CHOICE
+  end
+
   def has_choices?
     question_type == QUESTION_TYPE_CHECKBOXES ||
     question_type == QUESTION_TYPE_MULTIPLE_CHOICE ||
