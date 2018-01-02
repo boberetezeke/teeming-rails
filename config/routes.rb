@@ -39,6 +39,9 @@ Rails.application.routes.draw do
   resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :events do
     resources :event_sign_ins, shallow: true
+    member do
+      put :email
+    end
   end
   resources :member_groups do
     resources :members
@@ -55,6 +58,7 @@ Rails.application.routes.draw do
     member do
       put :freeze
       put :unfreeze
+      put :email
     end
     resources :votes, shallow: true, only: [:index, :create] do
       collection do

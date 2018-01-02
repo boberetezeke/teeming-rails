@@ -20,7 +20,7 @@ module ApplicationHelper
     candidacies.map{|c| "#{c.name}<#{c.email}>"}.join(", ")
   end
 
-  def member_names_and_emails(members)
+  def members_names_and_emails(members)
     members.map{|m| "#{m.name}<#{m.email}>"}.join(", ")
   end
 

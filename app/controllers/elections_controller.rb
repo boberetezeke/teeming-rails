@@ -1,7 +1,7 @@
 class ElectionsController < ApplicationController
   before_filter :authenticate_user!
 
-  before_action :set_election, only: [:show, :edit, :update, :destroy, :unfreeze, :freeze]
+  before_action :set_election, only: [:show, :edit, :update, :destroy, :unfreeze, :freeze, :email]
   before_action :set_chapter
   before_action :set_context_params
 
@@ -75,6 +75,10 @@ class ElectionsController < ApplicationController
     @election.vote_completions.destroy_all
     @election.questionnaire.destroy
     redirect_to @election
+  end
+
+  def email
+    redirect_to new_chapter_message_path(@context_params.merge(election_id: @election.id, chapter_id: @election.chapter.id))
   end
 
   def destroy

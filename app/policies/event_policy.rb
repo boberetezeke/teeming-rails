@@ -25,6 +25,10 @@ class EventPolicy < ApplicationPolicy
     can_write_events?
   end
 
+  def email?
+    can_write_events?
+  end
+
   def update?
     can_write_events?
   end

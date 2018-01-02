@@ -16,6 +16,7 @@
   - election.issues.each do |issue|
     = render partial: 'issues/show', locals: { issue: issue, show_all: false }
 
-  .vote-actions
-    = render partial: 'elections/vote_actions', locals: { election: election }
+  - if show_actions
+    .vote-actions
+      = render partial: 'elections/vote_actions', locals: { election: election }
 

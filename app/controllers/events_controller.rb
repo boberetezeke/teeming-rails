@@ -3,7 +3,7 @@ class EventsController < ApplicationController
 
   before_action :set_chapter
   before_action :set_context_params
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :email, :destroy]
 
   def index
     @chapter = Chapter.find(params[:chapter_id])
@@ -20,6 +20,7 @@ class EventsController < ApplicationController
   def new
     @event = Event.new(chapter_id: params[:chapter_id])
     authorize_with_args @event, @context_params
+    @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
 
     breadcrumbs event_breadcrumbs, "New Event"
   end
@@ -38,6 +39,7 @@ class EventsController < ApplicationController
   def edit
     @event.set_accessors
     @event = Event.find(params[:id])
+    @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
 
     breadcrumbs event_breadcrumbs, @event.name
   end
@@ -48,6 +50,10 @@ class EventsController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def email
+    redirect_to new_chapter_message_path(@context_params.merge(event_id: @event.id, chapter_id: @event.chapter.id))
   end
 
   def destroy
@@ -71,7 +77,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id)
+    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id, :member_group_id)
   end
 
   def event_breadcrumbs(include_link: true)

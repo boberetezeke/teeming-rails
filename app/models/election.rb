@@ -12,6 +12,7 @@ class Election < ApplicationRecord
   # has_many :vote_tallies, dependent: :destroy
 
   has_one :questionnaire, as: :questionnairable
+  has_many :messages, dependent: :destroy
 
   ELECTION_TYPE_INTERNAL = 'internal'
   ELECTION_TYPE_EXTERNAL = 'external'

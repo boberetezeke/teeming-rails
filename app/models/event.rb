@@ -1,6 +1,9 @@
 class Event < ApplicationRecord
-  has_many :event_rsvps
+  has_many :event_rsvps, dependent: :destroy
+  has_many :messages, dependent: :destroy
+
   belongs_to :chapter
+  belongs_to :member_group
 
   attr_accessor :occurs_at_date_str, :occurs_at_time_str
 

@@ -2,6 +2,7 @@
   = f.semantic_errors
   = f.input :name
   = f.input :description, as: :text, input_html: { rows: 4, cols: 80 }
+  = f.input :member_group_id, as: :select, collection: member_groups, include_blank: false, label: 'Members invited'
   = f.input :occurs_at_date_str, label: "Date"
   = f.input :occurs_at_time_str, label: "Time"
   = f.input :location

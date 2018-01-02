@@ -7,8 +7,13 @@
     #{candidacies_names_and_emails(@race.candidacies)}
     = f.input :race_id, as: :hidden
   -elsif @election
-    %h4 #{@election.name} Candidacies: #{members_names_and_emails(@election.member_group.all_members(@chapter))}
+    %h4 #{@election.name}, voters: #{members_names_and_emails(@election.member_group.all_members(@chapter))}
     = f.input :election_id, as: :hidden
+    = f.input :chapter_id, as: :hidden
+  -elsif @event
+    %h4 #{@event.name}, invitees: #{members_names_and_emails(@event.member_group.all_members(@chapter))}
+    = f.input :event_id, as: :hidden
+    = f.input :chapter_id, as: :hidden
   - else
     = f.input :chapter, as: :select, collection: @chapters, include_blank: false
     = f.input :member_group_id, label: 'Subset', as: :select, collection: member_groups, include_blank: false
@@ -26,7 +31,12 @@
     %ul.in-formtastic
       %li.in-formtastic %logo% - will be replaced with the OurRevolution Logo
       %li.in-formtastic %recipient_name% - will be replaced by the email recipient's name
-      %li.in-formtastic %candidate_questionnaire_link% - will be replaced by the link to the candidate's questionnaire
+      - if @race
+        %li.in-formtastic %candidate_questionnaire_link% - will be replaced by the link to the candidate's questionnaire
+      - elsif @election
+        %li.in-formtastic %election_ballot_link% - will be replaced by the link to the election's ballot
+      - elsif @event
+        %li.in-formtastic %event_link% - will be replaced by the link to the event
   = f.input :body, as: :text, input_html: { rows: 5, cols: 100 }
   = f.submit "Save Draft", class: 'btn btn-sm btn-info btn-with-padding'
   = f.submit "Send", class: 'btn btn-sm btn-primary btn-with-padding'

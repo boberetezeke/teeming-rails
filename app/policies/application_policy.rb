@@ -46,7 +46,11 @@ class ApplicationPolicy
         if context_params
           context_params[:chapter_id].to_i == scope["chapter_id"]
         else
-          @record.chapter_id == scope['chapter_id']
+          if @record.respond_to?(:chapter_id)
+            @record.chapter_id == scope['chapter_id']
+          else
+            false
+          end
         end
       else
         true

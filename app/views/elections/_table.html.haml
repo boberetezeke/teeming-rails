@@ -9,7 +9,8 @@
     %h4
       - if election.internal?
         - if can?(current_user, :show, election)
-          = render partial: 'elections/show', locals: { election: election }
+          %div{ style: 'padding-top: 10px;'}
+            = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
       - else
         =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
         (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})

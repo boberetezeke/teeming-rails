@@ -1,11 +1,18 @@
-= render partial: 'elections/show', locals: { election: @election }
+%h3 Election
+= render partial: 'elections/show', locals: { election: @election, show_actions: false }
+%h3 Messages
+- if @election.messages
+  = render partial: 'messages/table', locals: { messages: @election.messages }
 
 - if Pundit.policy(current_user, @election).edit?
   %hr
   .actions
+    = render partial: 'elections/vote_actions', locals: { election: @election }
+    |
     - if @election.is_frozen?
       = link_to("Unfreeze", unfreeze_election_path(@election), method: :put, class: 'btn btn-sm btn-warning')
       = link_to("View Questionnaire", questionnaire_path(@election.questionnaire), class: 'btn btn-sm btn-info')
+      = link_to("Email Participants", email_election_path(@election), method: :put, class: 'btn btn-sm btn-warning')
     - else
       = link_to("Edit", edit_election_path(@election), class: 'btn btn-sm btn-primary')
       = link_to("Add Race", new_election_race_path(@election, @context_params), class: 'btn btn-sm btn-success')

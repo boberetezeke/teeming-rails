@@ -56,6 +56,10 @@ class ElectionPolicy < ApplicationPolicy
     can_manage_internal_elections?
   end
 
+  def email?
+    can_manage_internal_elections?
+  end
+
   def update?
     can_manage_internal_elections?
   end

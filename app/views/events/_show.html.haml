@@ -26,6 +26,7 @@
 
 - if can?(current_user, :edit, event)
   = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
+  = link_to "Email Event", email_event_path(event, chapter_id: event.chapter.id, event_id: event.id), method: :put, class: 'btn btn-sm btn-warning'
 - if can?(current_user, :destroy, event)
   = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger'
 

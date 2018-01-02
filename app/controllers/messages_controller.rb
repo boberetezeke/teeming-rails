@@ -30,15 +30,18 @@ class MessagesController < ApplicationController
   def new
     authorize_with_args Message, @context_params
 
-    @race = Race.find(params[:race_id]) if params[:race_id]
-    if !@race
+    if @race
+      @chapter = @race.chapter
+    elsif @election
+      @chapter = @election.chapter
+    elsif @event
+      @chapter = @event.chapter
+    else
       @chapters = Chapter.all
       @member_groups = MemberGroup.all
       @chapter = Chapter.find(params[:chapter_id])
-    else
-      @chapter = @race.chapter
     end
-    @message = Message.new(chapter: @chapter, race: @race)
+    @message = Message.new(chapter: @chapter, race: @race, election: @election, event: @event)
     breadcrumbs messages_breadcrumbs, "New Message"
   end
 
@@ -112,6 +115,8 @@ class MessagesController < ApplicationController
   def set_context
     @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id].present?
     @race = Race.find(params[:race_id]) if params[:race_id].present?
+    @election = Election.find(params[:election_id]) if params[:election_id].present?
+    @event = Event.find(params[:event_id]) if params[:event_id].present?
   end
 
   def set_context_params
@@ -119,16 +124,21 @@ class MessagesController < ApplicationController
     @context_params = {}
     @context_params.merge!(@chapter ? { chapter_id: @chapter.id } : {})
     @context_params.merge!(@race ? { race_id: @race.id } : {})
+    @context_params.merge!(@election ? { election_id: @election.id } : {})
+    @context_params.merge!(@event ? { event_id: @event.id } : {})
   end
 
-
   def message_params
-    params.require(:message).permit(:subject, :body, :member_group_id, :chapter_id, :race_id, :election_id)
+    params.require(:message).permit(:subject, :body, :member_group_id, :chapter_id, :race_id, :election_id, :event_id)
   end
 
   def messages_breadcrumbs(include_link: true)
     if @race
       [@race.complete_name, race_path(@race, @context_params)]
+    elsif @election
+      [@election.name, election_path(@election, @context_params)]
+    elsif @event
+      [@event.name, event_path(@event, @context_params)]
     else
       ["Messages", include_link ? chapter_messages_path(@chapter) : nil]
     end
