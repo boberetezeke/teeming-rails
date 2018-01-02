@@ -72,9 +72,13 @@ class VotesController < ApplicationController
           end
         else
           @ballot_identifier = params[:ballot_identifier]
-          ballot = @election.vote_completions.where(ballot_identifier: @ballot_identifier).first
-          @ballot_identifier_error = "ballot already entered" if ballot
-          new_vote_completion_args[:ballot_identifier] = @ballot_identifier
+          if @ballot_identifier.blank?
+            @ballot_identifier_error = "ballot identifier cannot be blank"
+          else
+            ballot = @election.vote_completions.where(ballot_identifier: @ballot_identifier).first
+            @ballot_identifier_error = "ballot already entered" if ballot
+            new_vote_completion_args[:ballot_identifier] = @ballot_identifier
+          end
         end
 
         @vote_completion = VoteCompletion.new(new_vote_completion_args)
