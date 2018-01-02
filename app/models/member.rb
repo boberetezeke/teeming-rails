@@ -27,7 +27,7 @@ class Member < ApplicationRecord
   scope :executive_committee_members, ->(chapter) { where('(true)') }
 
   scope :interested_in_volunteering,        ->(chapter) {
-    joins(:users).where(User.arel_table[:interested_in_volunteering].eq(true))
+    joins(:user).where(User.arel_table[:interested_in_volunteering].eq(true))
   }
 
   scope :potential_chapter_members, ->(chapter) {

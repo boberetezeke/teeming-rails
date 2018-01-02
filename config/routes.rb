@@ -59,13 +59,13 @@ Rails.application.routes.draw do
     resources :votes, shallow: true, only: [:index, :create] do
       collection do
         get :tallies
+        put :generate_tallies
         get :view
         get :wait
         get :missed
         get :disqualified
         get :enter
         get :download_votes
-        get :generate_tallies
         put :delete_votes
       end
     end

@@ -76,7 +76,8 @@ class Election < ApplicationRecord
 
   class AnswerTallyer
     attr_reader :choice_tallies, :round
-    def initialize(last_answer_tallyer)
+    def initialize(last_answer_tallyer, questionnaire: nil)
+      @questionnaire = questionnaire
       if last_answer_tallyer
         initialize_from_last_answer_tallyer(last_answer_tallyer)
       else
@@ -95,7 +96,7 @@ class Election < ApplicationRecord
 
         [new_ct.value.to_i, new_ct]
       end]
-      @exhausted_choice_tally = ChoiceTally.new(round: @round, value: nil)
+      @exhausted_choice_tally = ChoiceTally.new(round: @round, value: nil, questionnaire: @questionnaire)
 
       redistribute_choice_tally(sorted_choice_tallies.first)
       puts "got here"
@@ -132,7 +133,7 @@ class Election < ApplicationRecord
         choice_tally.count += 1
         choice_tally.save
       else
-        choice_tally = ChoiceTally.create(count: 1, value: value, question: answer.question, round: @round)
+        choice_tally = ChoiceTally.create(count: 1, value: value, question: answer.question, round: @round, questionnaire: @questionnaire)
         @choice_tallies[value] = choice_tally
       end
       ChoiceTallyAnswer.create(choice_tally: choice_tally, answer: answer)
@@ -142,17 +143,17 @@ class Election < ApplicationRecord
   def tally_answers
     questionnaire.questionnaire_sections.each do |questionnaire_section|
       questionnaire_section.questions.each do |question|
-        tally_question_answers_all_rounds(question)
+        tally_question_answers_all_rounds(question, questionnaire)
       end
     end
   end
 
-  def tally_question_answers_all_rounds(question)
+  def tally_question_answers_all_rounds(question, questionnaire)
     if question.ranked_choice?
       round = 1
       answer_tallyer = nil
       loop do
-        answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer)
+        answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer, questionnaire: questionnaire)
         break if answer_tallyer.above_threshold(0.5)
       end
     else
@@ -160,8 +161,8 @@ class Election < ApplicationRecord
     end
   end
 
-  def tally_question_answers(question, last_round_answer_tallyer: nil)
-    answer_tallyer = AnswerTallyer.new(last_round_answer_tallyer)
+  def tally_question_answers(question, last_round_answer_tallyer: nil, questionnaire: nil)
+    answer_tallyer = AnswerTallyer.new(last_round_answer_tallyer, questionnaire: questionnaire)
     if answer_tallyer.round == 1
       question.answers.each do |answer|
         if question.ranked_choice?

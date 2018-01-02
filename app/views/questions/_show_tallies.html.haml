@@ -1,0 +1,25 @@
+- section = question.questionnaire_section
+- questionnaire = section.questionnaire
+%div
+  - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
+    No tallies for short text questions
+  - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
+    No tallies for long text questions
+  - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+    .multiple-choice-results
+      - question.choice_tallies.by_count.each do |choice_tally|
+        .multiple-choice-tally #{choice_tally.choice.title} - #{choice_tally.count}
+  - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+    .single-choice-results
+      - question.choice_tallies.by_count.each do |choice_tally|
+        .multiple-choice-tally #{choice_tally.choice.title} - #{choice_tally.count}
+  - elsif question.question_type == Question::QUESTION_TYPE_RANKED_CHOICE
+    .ranked-choice-results
+      - question.num_rounds.times.each do |round_index|
+        .ranked-choice-round
+          - round = round_index + 1
+          .round Round #{round}
+          - question.choice_tallies.for_round(round).by_count.each do |choice_tally|
+            .ranked-choice-tally #{choice_tally.choice.title} - #{choice_tally.count}
+  - else
+    %p Question: #{question.id}, #{question.text}, type: #{question.question_type}

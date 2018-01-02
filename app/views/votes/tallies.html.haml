@@ -16,13 +16,16 @@
   -#-if policy(@election).delete_votes?
   -#  = link_to "Delete Votes (#{@election.votes.count})", delete_votes_election_votes_path(@election), method: :put, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you absolutely sure?' }
 - elsif @election.vote_completions.present?
-  - @election.issues.each do |issue|
-    - issue.questionnaire.questionnaire_sections.each do |questionnaire_section|
-      %h3= questionnaire_section.title
-      - questionnaire_section.questions.each do |question|
-        %h4= question.text
-        - question.answer_totals.each do |answer_text, count|
-          %div #{answer_text} - #{count}
+  - @election.questionnaire.questionnaire_sections.each do |questionnaire_section|
+    %h3= questionnaire_section.title
+    - questionnaire_section.questions.each do |question|
+      %h4= question.text
+      - if question.choice_tallies.present?
+        = render partial: 'questions/show_tallies', locals: { question: question }
+      - else
+        No tallies calculated
+  %hr
+  = link_to "Recalculate Tallies", generate_tallies_election_votes_path(@election), method: :put, class: 'btn btn-sm btn-primary'
 - else
   No votes yet
 

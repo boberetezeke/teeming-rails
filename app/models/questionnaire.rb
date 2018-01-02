@@ -2,6 +2,7 @@ class Questionnaire < ApplicationRecord
   # belongs_to :race
   belongs_to :questionnairable, polymorphic: true
   has_many :questionnaire_sections, dependent: :destroy
+  has_many :choice_tallies
 
   scope :with_name, ->{ where(arel_table[:name].not_eq(nil)) }
   scope :with_race, ->{ where(questionnairable_type: 'Race') }
@@ -9,6 +10,14 @@ class Questionnaire < ApplicationRecord
   def new_answers(user: nil)
     answers = questionnaire_sections.map{|qs| qs.questions.to_a}.flatten.map.with_index{|q, index| q.new_answer(index: index, user: user)}
     Answer.translate_choice_text(answers)
+  end
+
+  def tally_choices
+    questionnaire_sections.each do |questionnaire_section|
+      questionnaire_section.questions.each do |question|
+        question.tally_choices
+      end
+    end
   end
 
   def name

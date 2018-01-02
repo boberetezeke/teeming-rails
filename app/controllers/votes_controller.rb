@@ -182,7 +182,10 @@ class VotesController < ApplicationController
     @election = Election.find(params[:election_id])
     authorize @election, :tallies?
 
-    @tallies = @election.tally_votes
+    # @tallies = @election.tally_votes
+    if @election.questionnaire.choice_tallies.empty?
+      @election.tally_answers
+    end
 
     breadcrumbs votes_breadcrumbs, "Vote"
   end
@@ -211,8 +214,11 @@ class VotesController < ApplicationController
     @election = Election.find(params[:election_id])
     authorize @election, :generate_tallies?
 
-    @election.vote_tallies.destroy_all
-    @election.write_tallies
+    @election.questionnaire.choice_tallies.destroy_all
+    @election.tally_answers
+
+    # @election.vote_tallies.destroy_all
+    # @election.write_tallies
 
     redirect_to tallies_election_votes_path(@election)
   end

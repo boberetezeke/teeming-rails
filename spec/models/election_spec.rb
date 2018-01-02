@@ -34,9 +34,9 @@ describe Election do
         it "counts the choices correctly" do
           election.tally_answers
 
-          expect(ChoiceTally.count).to eq(2)
-          expect(ChoiceTally.where(value: "1", round: 1).first.count).to eq(2)
-          expect(ChoiceTally.where(value: "2", round: 1).first.count).to eq(1)
+          expect(questionnaire.choice_tallies.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "1", round: 1).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "2", round: 1).first.count).to eq(1)
 
           expect(ranked_choice_question.num_rounds).to eq(1)
           expect(ranked_choice_question.winner).to eq(ranked_choice_1)
@@ -52,14 +52,14 @@ describe Election do
         it "counts the choices correctly" do
           election.tally_answers
 
-          expect(ChoiceTally.where(round: 1).count).to eq(3)
-          expect(ChoiceTally.where(value: "1", round: 1).first.count).to eq(2)
-          expect(ChoiceTally.where(value: "2", round: 1).first.count).to eq(2)
-          expect(ChoiceTally.where(value: "3", round: 1).first.count).to eq(1)
+          expect(questionnaire.choice_tallies.where(round: 1).count).to eq(3)
+          expect(questionnaire.choice_tallies.where(value: "1", round: 1).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "2", round: 1).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "3", round: 1).first.count).to eq(1)
 
-          expect(ChoiceTally.where(round: 2).count).to eq(2)
-          expect(ChoiceTally.where(value: "1", round: 2).first.count).to eq(2)
-          expect(ChoiceTally.where(value: "2", round: 2).first.count).to eq(3)
+          expect(questionnaire.choice_tallies.where(round: 2).count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "1", round: 2).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "2", round: 2).first.count).to eq(3)
 
           expect(ranked_choice_question.num_rounds).to eq(2)
           expect(ranked_choice_question.winner).to eq(ranked_choice_2)

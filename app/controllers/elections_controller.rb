@@ -21,7 +21,7 @@ class ElectionsController < ApplicationController
   end
 
   def new
-    @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL, online_offline_type: Election::ONLINE_AND_OFFLINE)
+    @election = Election.new(election_type: Election::ELECTION_TYPE_INTERNAL, election_method: Election::ELECTION_METHOD_ONLINE_AND_OFFLINE)
     authorize_with_args @election, @context_params
 
     @chapters = authorized_associated_objects(@election, :chapters)

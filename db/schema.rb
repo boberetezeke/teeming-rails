@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171230192226) do
+ActiveRecord::Schema.define(version: 20180102032751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,7 +68,9 @@ ActiveRecord::Schema.define(version: 20171230192226) do
     t.string  "value"
     t.integer "count"
     t.integer "round"
+    t.integer "questionnaire_id"
     t.index ["question_id"], name: "index_choice_tallies_on_question_id", using: :btree
+    t.index ["questionnaire_id"], name: "index_choice_tallies_on_questionnaire_id", using: :btree
   end
 
   create_table "choice_tally_answers", force: :cascade do |t|
