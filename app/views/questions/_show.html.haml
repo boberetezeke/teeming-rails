@@ -18,7 +18,7 @@
       .error= f.object.errors.full_messages.join
     - question.choices.each_with_index do |choice, index|
       %div.radio
-        = select_tag "#{f.object_name}][text_ranked_choices][]", options_for_select(question.choices.map.with_index{|c, index| [index, index]}, f.object.text_ranked_choices[index]), class: 'form-control narrow', disabled: disabled
+        = select_tag "#{f.object_name}][text_ranked_choices][]", options_for_select(question.choices.map.with_index{|c, index| [index+1, index]}, f.object.text_ranked_choices[index]), class: 'form-control narrow', disabled: disabled
         &nbsp;
         = choice.title
   - else
