@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171228015602) do
+ActiveRecord::Schema.define(version: 20171230192226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,21 @@ ActiveRecord::Schema.define(version: 20171228015602) do
     t.boolean "is_state_wide"
     t.string  "name"
     t.text    "description"
+  end
+
+  create_table "choice_tallies", force: :cascade do |t|
+    t.integer "question_id"
+    t.string  "value"
+    t.integer "count"
+    t.integer "round"
+    t.index ["question_id"], name: "index_choice_tallies_on_question_id", using: :btree
+  end
+
+  create_table "choice_tally_answers", force: :cascade do |t|
+    t.integer "choice_tally_id"
+    t.integer "answer_id"
+    t.index ["answer_id"], name: "index_choice_tally_answers_on_answer_id", using: :btree
+    t.index ["choice_tally_id"], name: "index_choice_tally_answers_on_choice_tally_id", using: :btree
   end
 
   create_table "choices", force: :cascade do |t|

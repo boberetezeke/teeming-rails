@@ -2,6 +2,7 @@ class Question < ApplicationRecord
   belongs_to :questionnaire_section
   has_many   :choices, dependent: :destroy
   has_many   :answers, dependent: :destroy
+  has_many   :choice_tallies, dependent: :destroy
 
   accepts_nested_attributes_for :choices
 
@@ -44,6 +45,16 @@ class Question < ApplicationRecord
       totals[answer.text] += 1
     end
     totals
+  end
+
+  def num_rounds
+    choice_tallies.order('round desc').first.round
+  end
+
+  def winner
+    winning_index = choice_tallies.where(question: self, round: num_rounds).order('count desc').first.value.to_i
+
+    choices.order("order_index asc")[winning_index-1]
   end
 
   def copy

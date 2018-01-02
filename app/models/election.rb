@@ -74,6 +74,112 @@ class Election < ApplicationRecord
     member_group.all_members(chapter)
   end
 
+  class AnswerTallyer
+    attr_reader :choice_tallies, :round
+    def initialize(last_answer_tallyer)
+      if last_answer_tallyer
+        initialize_from_last_answer_tallyer(last_answer_tallyer)
+      else
+        @choice_tallies = {}
+        @round = 1
+      end
+    end
+
+    def initialize_from_last_answer_tallyer(last_answer_tallyer)
+      @round = last_answer_tallyer.round + 1
+      sorted_choice_tallies = last_answer_tallyer.choice_tallies.values.sort_by{ |choice_tally| choice_tally.count }
+      @choice_tallies = Hash[sorted_choice_tallies[1..-1].map do |ct|
+        new_ct = ct.dup
+        new_ct.round = @round
+        new_ct.save
+
+        [new_ct.value.to_i, new_ct]
+      end]
+      @exhausted_choice_tally = ChoiceTally.new(round: @round, value: nil)
+
+      redistribute_choice_tally(sorted_choice_tallies.first)
+      puts "got here"
+    end
+
+    def redistribute_choice_tally(choice_tally)
+      choice_tally.choice_tally_answers.each do |cta|
+        choice_number = 2
+        choices = cta.answer.text.split(/:::/)
+        found = false
+
+        while choice_number < choices.size
+          value = choices.index(choice_number.to_s) + 1
+          if new_choice_tally = @choice_tallies[value]
+            cta.update(choice_tally: new_choice_tally)
+            new_choice_tally.update(count: new_choice_tally.count + 1)
+            found = true
+            break
+          end
+          choice_number += 1
+        end
+        cta.update(choice_tally: @exhausted_choice_tally) unless found
+      end
+    end
+
+    def above_threshold(threshold_value)
+      counts = @choice_tallies.values.map { |choice_tally| choice_tally.count }.sort.reverse
+      (counts.first.to_f  / counts.sum.to_f) >= threshold_value
+    end
+
+    def count_value(value, answer)
+      choice_tally = @choice_tallies[value]
+      if choice_tally
+        choice_tally.count += 1
+        choice_tally.save
+      else
+        choice_tally = ChoiceTally.create(count: 1, value: value, question: answer.question, round: @round)
+        @choice_tallies[value] = choice_tally
+      end
+      ChoiceTallyAnswer.create(choice_tally: choice_tally, answer: answer)
+    end
+  end
+
+  def tally_answers
+    questionnaire.questionnaire_sections.each do |questionnaire_section|
+      questionnaire_section.questions.each do |question|
+        tally_question_answers_all_rounds(question)
+      end
+    end
+  end
+
+  def tally_question_answers_all_rounds(question)
+    if question.ranked_choice?
+      round = 1
+      answer_tallyer = nil
+      loop do
+        answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer)
+        break if answer_tallyer.above_threshold(0.5)
+      end
+    else
+      tally_question_answers(question)
+    end
+  end
+
+  def tally_question_answers(question, last_round_answer_tallyer: nil)
+    answer_tallyer = AnswerTallyer.new(last_round_answer_tallyer)
+    if answer_tallyer.round == 1
+      question.answers.each do |answer|
+        if question.ranked_choice?
+          value = answer.text.split(/:::/).index("1") + 1
+          answer_tallyer.count_value(value, answer)
+        elsif question.multiple_choice?
+          answer.text.split(/:::/).each do |choice|
+            answer_tallyer.count_value(choice, answer)
+          end
+        else
+          answer_tallyer.count_value(answer.text, answer)
+        end
+      end
+    end
+
+    answer_tallyer
+  end
+
   def tally_votes
     if races.present?
       races.first.tally_votes
