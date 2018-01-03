@@ -32,6 +32,10 @@ class Question < ApplicationRecord
     question_type == QUESTION_TYPE_RANKED_CHOICE
   end
 
+  def multiple_choice?
+    question_type == QUESTION_TYPE_CHECKBOXES
+  end
+
   def has_choices?
     question_type == QUESTION_TYPE_CHECKBOXES ||
     question_type == QUESTION_TYPE_MULTIPLE_CHOICE ||

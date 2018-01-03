@@ -36,6 +36,7 @@ class VotesController < ApplicationController
       authorize @election, :view_vote?
 
       @vote_completion = current_user.vote_completions.for_election(@election).first
+      Answer.translate_choice_text(@vote_completion.answers)
       breadcrumbs votes_breadcrumbs, "View Votes"
     end
   end
@@ -108,6 +109,7 @@ class VotesController < ApplicationController
                 @vote_completion.update(has_voted: true)
                 redirect_to view_election_votes_path(@election)
               else
+                Answer.translate_choice_text(@vote_completion.answers)
                 render :index
               end
             else

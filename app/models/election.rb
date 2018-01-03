@@ -153,12 +153,14 @@ class Election < ApplicationRecord
     if question.ranked_choice?
       round = 1
       answer_tallyer = nil
-      loop do
-        answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer, questionnaire: questionnaire)
-        break if answer_tallyer.above_threshold(0.5)
+      if question.answers.present?
+        loop do
+          answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer, questionnaire: questionnaire)
+          break if answer_tallyer.above_threshold(0.5)
+        end
       end
     else
-      tally_question_answers(question)
+      tally_question_answers(question, questionnaire: questionnaire)
     end
   end
 
@@ -171,7 +173,7 @@ class Election < ApplicationRecord
           answer_tallyer.count_value(value, answer)
         elsif question.multiple_choice?
           answer.text.split(/:::/).each do |choice|
-            answer_tallyer.count_value(choice, answer)
+            answer_tallyer.count_value(choice, answer) if choice.present?
           end
         else
           answer_tallyer.count_value(answer.text, answer)
