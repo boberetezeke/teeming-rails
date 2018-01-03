@@ -38,7 +38,7 @@ class Message < ApplicationRecord
 
   def body_is_valid?
     render_errors = []
-    rendered_body(message_recipients.first, errors: render_errors)
+    rendered_body(nil, errors: render_errors)
     if render_errors.present?
       errors.add(:body, render_errors.map{|directive, error| "directive '#{directive}' #{error}"}.join(", "))
     end
@@ -52,7 +52,11 @@ class Message < ApplicationRecord
         when /logo/
           "<div style=\"text-align: center;\"><a href=\"https://ourrevolutionmn.com\"><img width=\"250px\" height=\"250px\" src=\"https://ourrevolutionmn.herokuapp.com/images/logo-450.jpg\"></a></div>"
         when /recipient_name/
-          message_recipient.name
+          if message_recipient
+            message_recipient.name
+          else
+            ""
+          end
         when /election_ballot_link/
           if election
             if election.offline_only?
@@ -64,6 +68,7 @@ class Message < ApplicationRecord
             end
           else
             errors.push(['election_link', "has no election associated with this message"])
+            ""
           end
         when /event_link/
           if event
@@ -71,13 +76,19 @@ class Message < ApplicationRecord
             "<a href=\"#{host}#{url}\">#{event.name}</a>"
           else
             errors.push(['event_link', "has no event associated with this message"])
+            ""
           end
         when /candidate_questionnaire_link/
-          if message_recipient.candidacy
-            url = Rails.application.routes.url_helpers.edit_candidate_questionnaire_path(message_recipient.candidacy.token)
-            "<a href=\"#{host}#{url}\">candidate questionnaire</a>"
+          if message_recipient
+            if message_recipient.candidacy
+              url = Rails.application.routes.url_helpers.edit_candidate_questionnaire_path(message_recipient.candidacy.token)
+              "<a href=\"#{host}#{url}\">candidate questionnaire</a>"
+            else
+              errors.push([candidate_questionnaire_link, "there is no candidacy associated with this message recipient"])
+              ""
+            end
           else
-            errors.push([candidate_questionnaire_link, "there is no candidacy associated with this message recipient"])
+            ""
           end
         else
           errors.push([directive, "is unknown"])
