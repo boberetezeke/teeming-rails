@@ -7,8 +7,13 @@ describe MessagesController do
   let(:user)                  { FactoryGirl.create(:user) }
   let(:message_sender_user)   { FactoryGirl.create(:user, role: messages_sender_role) }
   let(:chapter)               { FactoryGirl.create(:chapter) }
-  let(:chapter_member_group)  { FactoryGirl.create(:member_group, :chapter, members: []) }
+  # let(:chapter_member_group)  { FactoryGirl.create(:member_group, :chapter, members: []) }
   let(:message)               { FactoryGirl.create(:message) }
+
+  before do
+    MemberGroup.write_member_groups
+    message.update(member_group_id: MemberGroup.first.id)
+  end
 
   context "when users is not signed in" do
     describe "index" do
@@ -27,7 +32,7 @@ describe MessagesController do
     describe "index" do
       it "redirects to root path when accessing this endpoint" do
         get :index, params: { chapter_id: chapter.id }
-        expect(response).to redirect_to(root_path)
+        expect(response).to be_ok
       end
     end
 
@@ -47,7 +52,7 @@ describe MessagesController do
 
     describe "create" do
       it "redirects to root path when accessing this endpoint" do
-        put :create, params: { message: { subject: 'subject', body: 'body', member_group_id: chapter_member_group.id }  }
+        put :create, params: { message: { subject: 'subject', body: 'body', member_group_id: MemberGroup.first.id }  }
         expect(response).to redirect_to(root_path)
       end
     end
@@ -81,21 +86,21 @@ describe MessagesController do
 
     describe "show" do
       it "shows the message" do
-        get :show, params: { id: message.id }
+        get :show, params: { id: message.id, chapter_id: chapter.id }
         expect(response).to be_ok
       end
     end
 
     describe "new" do
       it "shows new page" do
-        get :new
+        get :new, params: { chapter_id: chapter.id }
         expect(response).to be_ok
       end
     end
 
     describe "create" do
       it "redirects to the message show view" do
-        put :create, params: { message: { subject: 'created subject', body: 'body', member_group_id: chapter_member_group.id }  }
+        put :create, params: { message: { subject: 'created subject', body: 'body', member_group_id: MemberGroup.first.id }  }
         message = Message.find_by_subject('created subject')
         expect(response).to redirect_to(message)
       end
@@ -103,7 +108,7 @@ describe MessagesController do
 
     describe "edit" do
       it "shows the edit form" do
-        get :edit, params: { id: message.id }
+        get :edit, params: { id: message.id, chapter_id: chapter.id }
         expect(response).to be_ok
       end
     end

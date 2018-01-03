@@ -20,6 +20,8 @@ class MessagesController < ApplicationController
     authorize @message
 
     @race = @message.race
+    @election = @message.election
+    @event = @message.event
 
     @message.create_message_recipients if @message.message_recipients.blank?
     @message_recipient = @message.message_recipients.first

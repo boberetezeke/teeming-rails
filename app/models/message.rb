@@ -83,7 +83,6 @@ class Message < ApplicationRecord
           errors.push([directive, "is unknown"])
       end
     end
-    puts "modified_body = #{modified_body}"
     Kramdown::Document.new(modified_body).to_html.html_safe
   end
 end

@@ -10,7 +10,7 @@ describe Election do
   let!(:ranked_choice_3)            { FactoryGirl.create(:choice, question: ranked_choice_question, title: 'ranked choice 2', order_index: 3) }
   let!(:ranked_choice_4)            { FactoryGirl.create(:choice, question: ranked_choice_question, title: 'ranked choice 2', order_index: 4) }
 
-  let!(:multiple_choice_question)   { FactoryGirl.create(:question, questionnaire_section: questionnaire_section_1, question_type: Question::QUESTION_TYPE_MULTIPLE_CHOICE, order_index: 2) }
+  let!(:multiple_choice_question)   { FactoryGirl.create(:question, questionnaire_section: questionnaire_section_1, question_type: Question::QUESTION_TYPE_CHECKBOXES, order_index: 2) }
   let!(:multiple_choice_1)          { FactoryGirl.create(:choice, question: multiple_choice_question, title: 'checkbox choice 1', order_index: 1) }
   let!(:multiple_choice_2)          { FactoryGirl.create(:choice, question: multiple_choice_question, title: 'checkbox choice 2', order_index: 2) }
 

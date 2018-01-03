@@ -9,7 +9,7 @@ describe CandidacyPolicy do
     let!(:internal_candidacy)             { create(:candidacy, race: internal_race)}
     let!(:external_candidacy)             { create(:candidacy, race: external_race)}
 
-    let(:can_see_internal_candidates_privilege)   { create(:privilege, action: 'manage_internal', subject: 'candidacy') }
+    let(:can_see_internal_candidates_privilege)   { create(:privilege, action: 'manage_internal', subject: 'election') }
     let(:privileged_role)                         { create(:role, privileges: [can_see_internal_candidates_privilege]) }
     let(:user)                                    { create(:user) }
     let(:privileged_user)                         { create(:user, role: privileged_role)}

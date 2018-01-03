@@ -7,7 +7,7 @@ describe RacePolicy do
     let(:external_race)                   { create(:race, election: external_election)}
     let(:internal_race)                   { create(:race, election: internal_election, candidates_announcement_date:  Date.new(2017,9,9))}
 
-    let(:can_see_internal_candidates_privilege)   { create(:privilege, action: 'manage_internal', subject: 'candidacy') }
+    let(:can_see_internal_candidates_privilege)   { create(:privilege, action: 'manage_internal', subject: 'election') }
     let(:privileged_role)                         { create(:role, privileges: [can_see_internal_candidates_privilege]) }
     let(:user)                                    { create(:user) }
     let(:privileged_user)                         { create(:user, role: privileged_role)}
