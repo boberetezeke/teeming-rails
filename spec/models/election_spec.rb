@@ -14,19 +14,19 @@ describe Election do
   let!(:multiple_choice_1)          { FactoryGirl.create(:choice, question: multiple_choice_question, title: 'checkbox choice 1', order_index: 1) }
   let!(:multiple_choice_2)          { FactoryGirl.create(:choice, question: multiple_choice_question, title: 'checkbox choice 2', order_index: 2) }
 
-  let(:ranked_choice_answer_1)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '1:::2:::3:::4', order_index: 1) }
-  let(:ranked_choice_answer_2)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '1:::2:::4:::3', order_index: 2) }
-  let(:ranked_choice_answer_3)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '2:::1:::3:::4', order_index: 3) }
+  let(:ranked_choice_answer_1)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '0:::1:::2:::3', order_index: 1) }
+  let(:ranked_choice_answer_2)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '0:::1:::3:::2', order_index: 2) }
+  let(:ranked_choice_answer_3)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '1:::0:::2:::3', order_index: 3) }
 
   # adding in these two requires a second round where 3's vote gives the election to 2 (because of the 2nd place vote for 2)
-  let(:ranked_choice_answer_4)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '2:::1:::3:::4', order_index: 4) }
-  let(:ranked_choice_answer_5)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::2:::1:::4', order_index: 5) }
+  let(:ranked_choice_answer_4)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '1:::0:::2:::3', order_index: 4) }
+  let(:ranked_choice_answer_5)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '2:::1:::0:::3', order_index: 5) }
 
   # adding in these two requires a third round where 3's vote gives the election to 2 (because of the 2nd place vote for 2)
-  let(:ranked_choice_answer_6)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '4:::2:::3:::1', order_index: 6) }
-  let(:ranked_choice_answer_7)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '2:::3:::1:::4', order_index: 7) }
-  let(:ranked_choice_answer_8)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '4:::2:::1:::3', order_index: 8) }
-  let(:ranked_choice_answer_9)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '4:::2:::1:::3', order_index: 8) }
+  let(:ranked_choice_answer_6)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::1:::2:::0', order_index: 6) }
+  let(:ranked_choice_answer_7)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '1:::2:::0:::3', order_index: 7) }
+  let(:ranked_choice_answer_8)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::1:::0:::2', order_index: 8) }
+  let(:ranked_choice_answer_9)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::1:::0:::2', order_index: 8) }
 
   let(:multiple_choice_answer_1)    { FactoryGirl.create(:answer, question: multiple_choice_question, text: 'checkbox choice 1') }
   let(:multiple_choice_answer_2)    { FactoryGirl.create(:answer, question: multiple_choice_question, text: 'checkbox choice 2') }

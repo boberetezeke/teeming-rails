@@ -5,6 +5,7 @@ class AnswerTallyer
     if last_answer_tallyer
       initialize_from_last_answer_tallyer(last_answer_tallyer)
     else
+      # File.open("tally-debug.txt", "w") { }
       @choice_tallies = {}
       @round = 1
       debug "-------- round: #{@round} -------------"
@@ -32,18 +33,24 @@ class AnswerTallyer
 
   def redistribute_choice_tally(choice_tally)
     choice_tally.choice_tally_answers.each do |cta|
-      choice_number = 2
+      choice_number = 1
       choices = cta.answer.text.split(/:::/)
+      # debug("choices to redistribute: #{choices}")
       found = false
 
       while choice_number < choices.size
+        # find the position of the nth choice. that is the value
         value = choices.index(choice_number.to_s) + 1
+        # debug("For choice_number: #{choice_number}, value = #{value}")
         if new_choice_tally = @choice_tallies[value]
-          cta.update(choice_tally: new_choice_tally)
+          new_choice_tally.choice_tally_answers << cta.dup
+          # cta.update(choice_tally: new_choice_tally)
           new_choice_tally.update(count: new_choice_tally.count + 1)
           debug("redistribute from (#{choice_tally.value}) to: (#{value}): #{@choice_tallies.values.map{|ct| [ct.value, ct.count]}}")
           found = true
           break
+        else
+          debug("ignoring value (#{value}) because candidate not found")
         end
         choice_number += 1
       end
@@ -69,12 +76,14 @@ class AnswerTallyer
       choice_tally = ChoiceTally.create(count: 1, value: value, question: answer.question, round: @round, questionnaire: @questionnaire)
       @choice_tallies[value] = choice_tally
     end
+    # debug "answer: #{answer.text}"
     debug "choice_tallies(#{value}): #{@choice_tallies.values.map{|ct| [ct.value, ct.count]}}"
     ChoiceTallyAnswer.create(choice_tally: choice_tally, answer: answer)
   end
 
   def debug(str)
-    puts str
+    # File.open("tally-debug.txt", "a") { |f| f.puts str }
+    # puts str
     Rails.logger.debug "AnswerTallyer: #{str}"
   end
 end

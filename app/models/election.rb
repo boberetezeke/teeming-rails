@@ -103,7 +103,7 @@ class Election < ApplicationRecord
     if answer_tallyer.round == 1
       question.answers.each do |answer|
         if question.ranked_choice?
-          value = answer.text.split(/:::/).index("1") + 1
+          value = answer.text.split(/:::/).index("0") + 1
           answer_tallyer.count_value(value, answer)
         elsif question.multiple_choice?
           answer.text.split(/:::/).each do |choice|

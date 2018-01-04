@@ -19,7 +19,8 @@
         .ranked-choice-round
           - round = round_index + 1
           .round Round #{round}
-          - question.choice_tallies.for_round(round).by_count.each do |choice_tally|
-            .ranked-choice-tally #{choice_tally.choice.title} - #{choice_tally.count}
+          .ranked-choice-tallies
+            - question.choice_tallies.for_round(round).by_count.each do |choice_tally|
+              .ranked-choice-tally #{choice_tally.choice.title} - #{choice_tally.count}
   - else
     %p Question: #{question.id}, #{question.text}, type: #{question.question_type}

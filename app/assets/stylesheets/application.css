@@ -244,3 +244,25 @@ form.formtastic select.form-control.narrow {
 .navbar-default .navbar-toggle .icon-bar{
   background-color: #fff;
 }
+
+.ranked-choice-results {
+    width: 100%;
+}
+
+.ranked-choice-round {
+    margin-left: 5px;
+    margin-right: 5px;
+    border: 1px solid gray;
+    float: left;
+}
+
+.round {
+    background-color: gray;
+    color: white;
+    padding: 5px;
+}
+
+.ranked-choice-tallies {
+    padding: 5px;
+}
+
