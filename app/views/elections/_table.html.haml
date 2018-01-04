@@ -6,13 +6,13 @@
     - if election.election_type != last_election_type
       %h3 #{election.election_type.capitalize} Elections
       - last_election_type = election.election_type
-    %h4
-      - if election.internal?
-        - if (chapter && election.chapter == chapter) || (!chapter && election.chapter.is_state_wide)
-          - if can?(current_user, :show, election)
-            %div{ style: 'padding-top: 10px;'}
-              = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
-      - else
+    - if election.internal?
+      - if (chapter && election.chapter == chapter) || (!chapter && election.chapter.is_state_wide)
+        - if can?(current_user, :show, election)
+          %div{ style: 'padding-top: 10px;'}
+            = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
+    - else
+      %h4
         =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
         (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})
 
