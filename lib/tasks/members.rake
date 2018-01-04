@@ -15,7 +15,7 @@ namespace :members  do
         user.member.answers.destroy_all
         user_answers.each do |answer|
           if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-            answer.text = answer.text.gsub(/ /, ":::")
+            answer.text = answer.text.gsub(/ /, ":::") if answer.text
             puts "  updating check box answer = #{answer.id}: #{answer.text}"
           else
             puts "  updating non check box answer: #{answer.id}"
