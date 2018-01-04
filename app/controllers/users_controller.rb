@@ -18,14 +18,12 @@ class UsersController < ApplicationController
       @user.member.with_user_input = true
 
       # for candidancies page
-      @race = Race.find_by_name('Initial Board Election Race')
-
+      #@race = Race.find_by_name('Initial Board Election Race')
       # HACK - delete existing candidacy to avoid save error - Couldn't find Answer with ID=346 for Candidacy with ID=
-      if @user.candidacies.present?
-        @user.candidacies.destroy_all
-      end
-
-      @user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
+      #if @user.candidacies.present?
+      #  @user.candidacies.destroy_all
+      #end
+      #@user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
 
       if @user.event_rsvps.present?
         @user.event_rsvps.destroy_all
@@ -100,8 +98,8 @@ class UsersController < ApplicationController
         end
       end
 
-      if params['user']['answers_attributes']
-        params['user']['answers_attributes'].values.each do |answer_params|
+      if params['user']['member_attributes'] && params['user']['member_attributes']['answers_attributes']
+        params['user']['member_attributes']['answers_attributes'].values.each do |answer_params|
           convert_answer_checkboxes_to_text(answer_params)
         end
       end
@@ -176,12 +174,13 @@ class UsersController < ApplicationController
   def user_params(params)
     params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board, :saw_introduction,
                                  :email, :password, :password_confirmation,
-                                 {answers_attributes: CandidaciesController.answers_atributes},
                                  {event_rsvps_attributes: [:rsvp_type, :event_id] },
                                  {member_attributes: [
+                                    :id,
                                     :email, :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
-                                    :with_user_input
+                                    :with_user_input,
+                                    {answers_attributes: CandidaciesController.answers_atributes},
                                  ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end
@@ -190,20 +189,22 @@ class UsersController < ApplicationController
 
   def convert_answer_checkboxes_to_text(answer_params)
     if answer_params['text_checkboxes'].is_a?(Array)
-      answer_params['text'] = answer_params['text_checkboxes'].join(' ')
+      answer_params['text'] = answer_params['text_checkboxes'].join(':::')
     end
   end
 
   def convert_answer_checkboxes_from_text
-    if @user.answers.empty?
-      @user.answers = Chapter.state_wide.skills_questionnaire.new_answers
-    else
-      @user.answers.each do |answer|
-        if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
-          if answer.text
-            answer.text_checkboxes = answer.text.split(/ /).reject{|a| a.blank?}
-          else
-            answer.text_checkboxes = []
+    if @user.member
+      if @user.member.answers.empty?
+        @user.member.answers = Chapter.state_wide.skills_questionnaire.new_answers(user: @user)
+      else
+        @user.member.answers.each do |answer|
+          if answer.question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+            if answer.text
+              answer.text_checkboxes = answer.text.split(/:::/).reject{|a| a.blank?}
+            else
+              answer.text_checkboxes = []
+            end
           end
         end
       end

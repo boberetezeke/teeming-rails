@@ -8,5 +8,5 @@
     .check_box_or_radio
       = f.input :interested_in_volunteering, input_html: { disabled: true}
 
-  - @user.answers.each do |answer|
+  - @user.member.answers.each do |answer|
     = render partial: 'answers/show', locals: { answer: answer }

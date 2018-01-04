@@ -7,6 +7,9 @@ class Member < ApplicationRecord
   has_many :member_group_memberships
   has_many :member_groups, through: :member_group_memberships
 
+  has_many :answers, as: :answerable
+  accepts_nested_attributes_for :answers
+
   attr_accessor :with_user_input
 
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }

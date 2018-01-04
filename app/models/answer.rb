@@ -56,7 +56,7 @@ class Answer < ApplicationRecord
     return [] unless text.present?
 
     choices_hash = Hash[question.choices.map{|c| [c.value, c.title]}]
-    text.split(/ /).reject{|c| c.blank? }.map do |choice_value|
+    text.split(/:::/).reject{|c| c.blank? }.map do |choice_value|
       choices_hash[choice_value]
     end
   end
