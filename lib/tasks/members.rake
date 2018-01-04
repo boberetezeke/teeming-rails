@@ -12,7 +12,7 @@ namespace :members  do
       user_answers = user.answers.where(answerable_type: nil)
       if user_answers.present?
         user.member.answers.destroy_all
-        users_answers.each do |answer|
+        user_answers.each do |answer|
           answer.update(answerable_type: "Member", answerable_id: user.member.id)
         end
       end
