@@ -74,7 +74,7 @@ class AnswerTallyer
   end
 
   def debug(str)
-    # puts str
+    puts str
     Rails.logger.debug "AnswerTallyer: #{str}"
   end
 end
