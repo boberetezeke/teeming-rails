@@ -32,7 +32,7 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     authorize @candidacy
 
-    Answer.translate_text_choices(@candidacy.answers)
+    Answer.translate_choice_text(@candidacy.answers)
 
     breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
@@ -90,7 +90,7 @@ class CandidaciesController < ApplicationController
     @candidacy = Candidacy.find(params[:id])
     @race = @candidacy.race
 
-    Answer.translate_text_choices(@candidacy.answers)
+    Answer.translate_choice_text(@candidacy.answers)
 
     breadcrumbs candidacies_breadcrumbs, @candidacy.name
   end
@@ -149,7 +149,7 @@ class CandidaciesController < ApplicationController
   private
 
   def setup_answer_checkboxes
-    Answer.translate_text_choices(answers)
+    Answer.translate_choice_text(answers)
   end
 
   def set_context
