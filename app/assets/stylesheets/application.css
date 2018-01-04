@@ -73,6 +73,34 @@ form.formtastic {
     margin-top: 10px;
 }
 
+.read_only_label {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.read_only_check_boxes {
+    width: 100%;
+}
+
+.check_box {
+    /* background-color: lightgrey;
+    border: solid lightgray 1px;
+    padding: 3px;
+    */
+}
+
+.check_box_content {
+    float: left;
+    width: 5%;
+    font-weight: bold;
+}
+
+.check_box_title {
+    float: left;
+    width: 95%;
+}
+
 form.formtastic p.bylaws_link {
     padding: 15px;
     background-color: lightblue;
