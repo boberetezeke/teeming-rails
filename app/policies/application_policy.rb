@@ -86,7 +86,7 @@ class ApplicationPolicy
     protected
 
     def chapters_for_scope(scope)
-      if scope.nil?
+      if scope == {}
         Chapter.all
       else
         Chapter.where(id: scope['chapter_id'])
