@@ -20,4 +20,8 @@ class VoteCompletion < ApplicationRecord
                                             }
   scope :completed,           ->            { where(has_voted: true) }
   scope :disqualifications,   ->            { where(vote_type: VOTE_COMPLETION_TYPE_DISQUALIFIED) }
+
+  def available_to_vote?
+    !has_voted
+  end
 end

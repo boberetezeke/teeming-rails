@@ -23,7 +23,12 @@ class VotesController < ApplicationController
           redirect_to missed_election_votes_path(election_id: @election)
         end
       else
-        @vote_completion.answers = @election.questionnaire.new_answers(user: current_user)
+        if @vote_completion.available_to_vote?
+          @vote_completion.answers = @election.questionnaire.new_answers(user: current_user)
+        else
+          flash[:alert] = "this user has already voted"
+          redirect_to root_path
+        end
       end
     end
   end
