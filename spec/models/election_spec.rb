@@ -22,6 +22,12 @@ describe Election do
   let(:ranked_choice_answer_4)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '2:::1:::3:::4', order_index: 4) }
   let(:ranked_choice_answer_5)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::2:::1:::4', order_index: 5) }
 
+  # adding in these two requires a third round where 3's vote gives the election to 2 (because of the 2nd place vote for 2)
+  let(:ranked_choice_answer_6)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '4:::2:::3:::1', order_index: 6) }
+  let(:ranked_choice_answer_7)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '2:::3:::1:::4', order_index: 7) }
+  let(:ranked_choice_answer_8)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '4:::2:::1:::3', order_index: 8) }
+  let(:ranked_choice_answer_9)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '4:::2:::1:::3', order_index: 8) }
+
   let(:multiple_choice_answer_1)    { FactoryGirl.create(:answer, question: multiple_choice_question, text: 'checkbox choice 1') }
   let(:multiple_choice_answer_2)    { FactoryGirl.create(:answer, question: multiple_choice_question, text: 'checkbox choice 2') }
   let(:multiple_choice_answer_3)    { FactoryGirl.create(:answer, question: multiple_choice_question, text: 'checkbox choice 2') }
@@ -67,6 +73,36 @@ describe Election do
           expect(questionnaire.choice_tallies.where(value: "2", round: 2).first.count).to eq(3)
 
           expect(ranked_choice_question.num_rounds).to eq(2)
+          expect(ranked_choice_question.winner).to eq(ranked_choice_2)
+        end
+      end
+
+      context "when it requires a 3nd round" do
+        before do
+          ranked_choice_answer_1; ranked_choice_answer_2; ranked_choice_answer_3
+          ranked_choice_answer_4; ranked_choice_answer_5
+          ranked_choice_answer_6; ranked_choice_answer_7; ranked_choice_answer_8; ranked_choice_answer_9
+        end
+
+        it "counts the choices correctly" do
+          election.tally_answers
+
+          expect(questionnaire.choice_tallies.where(round: 1).count).to eq(4)
+          expect(questionnaire.choice_tallies.where(value: "1", round: 1).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "2", round: 1).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "3", round: 1).first.count).to eq(4)
+          expect(questionnaire.choice_tallies.where(value: "4", round: 1).first.count).to eq(1)
+
+          expect(questionnaire.choice_tallies.where(round: 2).count).to eq(3)
+          expect(questionnaire.choice_tallies.where(value: "1", round: 1).first.count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "2", round: 2).first.count).to eq(3)
+          expect(questionnaire.choice_tallies.where(value: "3", round: 2).first.count).to eq(4)
+
+          expect(questionnaire.choice_tallies.where(round: 3).count).to eq(2)
+          expect(questionnaire.choice_tallies.where(value: "2", round: 3).first.count).to eq(5)
+          expect(questionnaire.choice_tallies.where(value: "3", round: 3).first.count).to eq(4)
+
+          expect(ranked_choice_question.num_rounds).to eq(3)
           expect(ranked_choice_question.winner).to eq(ranked_choice_2)
         end
       end
