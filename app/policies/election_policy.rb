@@ -33,7 +33,8 @@ class ElectionPolicy < ApplicationPolicy
   end
 
   def show?
-    can_manage_internal_elections? || @user.can_vote_in_election?(@record) || @user.voted_in_election?(@record)
+    can_manage_internal_elections? || @user.can_vote_in_election?(@record) || @user.voted_in_election?(@record) ||
+    (@record.chapter && @record.chapter.is_state_wide)
   end
 
   def new?
