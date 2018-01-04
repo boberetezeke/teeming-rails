@@ -8,12 +8,13 @@
       - last_election_type = election.election_type
     %h4
       - if election.internal?
-        - if can?(current_user, :show, election)
-          %div{ style: 'padding-top: 10px;'}
-            = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
-      - else
-        =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
-        (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})
+        - if election.chapter == chapter
+          - if can?(current_user, :show, election) &&
+            %div{ style: 'padding-top: 10px;'}
+              = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
+        - else
+          =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
+          (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})
 
     - if election.external?
       - if short_list_of_races
