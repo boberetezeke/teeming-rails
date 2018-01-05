@@ -15,9 +15,9 @@ class Answer < ApplicationRecord
 
   def text_ranked_choices_are_valid
     if question.ranked_choice? && text.present?
-      text_ranked_choices = text.split(/:::/)
-      if text_ranked_choices.uniq.size != text_ranked_choices.size
-        errors.add(:base, "all ranked choices must be unique")
+      text_ranked_choices = text.split(/:::/).reject{|choice| choice == "-"}
+      if text_ranked_choices.map(&:to_i).sort != (0..(text_ranked_choices.size - 1)).to_a
+        errors.add(:base, "ranked choices must be from 1 to the number of your choices")
       end
     end
   end
