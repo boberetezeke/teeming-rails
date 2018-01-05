@@ -6,7 +6,11 @@ class ChoiceTally < ApplicationRecord
   scope :by_count,  ->        { order("count desc") }
   scope :for_round, ->(round) { where(round: round) }
 
-  def choice
-    question.choices[value.to_i - 1]
+  def choice_title
+    if value.nil?
+      "Exhausted"
+    else
+      question.choices[value.to_i - 1].title
+    end
   end
 end

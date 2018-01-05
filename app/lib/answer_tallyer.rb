@@ -24,7 +24,7 @@ class AnswerTallyer
 
       [new_ct.value.to_i, new_ct]
     end]
-    @exhausted_choice_tally = ChoiceTally.new(round: @round, value: nil, questionnaire: @questionnaire)
+    @exhausted_choice_tally = ChoiceTally.new(round: @round, value: nil, count: 0, questionnaire: @questionnaire)
 
     tally_to_redistribute = sorted_choice_tallies.first
     debug "tally_to_redistribute: (#{tally_to_redistribute.value}), count: #{tally_to_redistribute.count}"
@@ -40,23 +40,31 @@ class AnswerTallyer
 
       while choice_number < choices.size
         # find the position of the nth choice. that is the value
-        value = choices.index(choice_number.to_s) + 1
-        # debug("For choice_number: #{choice_number}, value = #{value}")
-        if new_choice_tally = @choice_tallies[value]
-          new_choice_tally.choice_tally_answers << cta.dup
-          # cta.update(choice_tally: new_choice_tally)
-          new_choice_tally.update(count: new_choice_tally.count + 1)
-          debug("redistribute from (#{choice_tally.value}) to: (#{value}): #{@choice_tallies.values.map{|ct| [ct.value, ct.count]}}")
-          found = true
-          break
+        index_of_choice = choices.index(choice_number.to_s)
+        if index_of_choice
+          value = index_of_choice + 1
+          # debug("For choice_number: #{choice_number}, value = #{value}")
+          if new_choice_tally = @choice_tallies[value]
+            new_choice_tally.choice_tally_answers << cta.dup
+            # cta.update(choice_tally: new_choice_tally)
+            new_choice_tally.update(count: new_choice_tally.count + 1)
+            debug("redistribute from (#{choice_tally.value}) to: (#{value}): #{@choice_tallies.values.map{|ct| [ct.value, ct.count]}}")
+            found = true
+            break
+          else
+            debug("ignoring value (#{value}) because candidate not found")
+          end
+          choice_number += 1
         else
-          debug("ignoring value (#{value}) because candidate not found")
+          break
         end
-        choice_number += 1
       end
-      cta.update(choice_tally: @exhausted_choice_tally) unless found
-      if !found
-        debug("redistribute to exhausted: #{@exhausted_choice_tally}")
+
+      unless found
+        @exhausted_choice_tally.save unless @exhausted_choice_tally.persisted?
+        @exhausted_choice_tally.choice_tally_answers << cta.dup
+        @exhausted_choice_tally.update(count: @exhausted_choice_tally.count + 1, question: cta.answer.question)
+        debug("redistribute to exhausted: round: #{@exhausted_choice_tally.round} count: #{@exhausted_choice_tally.count}")
       end
     end
   end
