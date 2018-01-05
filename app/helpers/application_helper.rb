@@ -24,6 +24,14 @@ module ApplicationHelper
     members.map{|m| "#{m.name}<#{m.email}>"}.join(", ")
   end
 
+  def ranked_choice_with_link(text)
+    if m = /\[candidacy:(\d+)\]/.match(text)
+      text.gsub(/\[candidacy:(\d+)\]/, "<a href=\"/candidacies/#{$1}\" target=\"_blank\">candidate questionnaire</a>").html_safe
+    else
+      text
+    end
+  end
+
   def breadcrumbs(*args)
     @breadcrumbs = args.map do |name_and_link|
       if name_and_link.is_a?(Array)
