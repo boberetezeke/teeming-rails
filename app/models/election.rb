@@ -30,6 +30,7 @@ class Election < ApplicationRecord
   scope :internal, ->{ where(election_type: ELECTION_TYPE_INTERNAL) }
   scope :external, ->{ where(election_type: ELECTION_TYPE_EXTERNAL) }
   scope :by_election_type, ->{ order('election_type asc') }
+  scope :by_most_recent,   ->{ order("vote_date desc") }
 
   attr_accessor :vote_date_str
   attr_accessor :vote_start_time_str, :vote_end_time_str

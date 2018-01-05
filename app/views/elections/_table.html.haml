@@ -1,5 +1,5 @@
 - last_election_type = nil
-- elections.by_election_type.each_with_index do |election, index|
+- elections.by_election_type.by_most_recent.each_with_index do |election, index|
   - unless election.hide_on_dashboard
     - if index != 0
       %hr
