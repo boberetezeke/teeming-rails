@@ -88,7 +88,7 @@ class Election < ApplicationRecord
     if question.ranked_choice?
       round = 1
       answer_tallyer = nil
-      if question.answers.present?
+      if question.answers.filled_in.present?
         loop do
           answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer, questionnaire: questionnaire)
           break if answer_tallyer.above_threshold(0.5)
@@ -102,7 +102,7 @@ class Election < ApplicationRecord
   def tally_question_answers(question, last_round_answer_tallyer: nil, questionnaire: nil)
     answer_tallyer = AnswerTallyer.new(last_round_answer_tallyer, questionnaire: questionnaire)
     if answer_tallyer.round == 1
-      question.answers.each do |answer|
+      question.answers.filled_in.each do |answer|
         if question.ranked_choice?
           value = answer.text.split(/:::/).index("0") + 1
           answer_tallyer.count_value(value, answer)
