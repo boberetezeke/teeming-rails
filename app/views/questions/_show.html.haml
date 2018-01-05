@@ -11,7 +11,9 @@
   - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
     - if read_only
       .read_only_label= question.text
-      %p= Kramdown::Document.new(f.object.text).to_html.html_safe
+      %p
+        - if f.object.text
+          = Kramdown::Document.new(f.object.text).to_html.html_safe
     - else
       = f.input :text, label: question.text, input_html: {rows: 10, disabled: disabled }
   - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
