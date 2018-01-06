@@ -7,6 +7,7 @@ class Answer < ApplicationRecord
   attr_accessor :text_checkboxes, :text_ranked_choices
 
   scope :filled_in, ->{ where(Answer.arel_table[:text].not_eq(nil)) }
+  scope :by_user,   ->{ order("user_id asc") }
   default_scope ->{ order('order_index asc') }
 
   # before_save :translate_text_checkboxes
