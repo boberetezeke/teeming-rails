@@ -134,6 +134,8 @@ class VotesController < ApplicationController
         if vote_error
           flash[:alert] = "You are unable to vote, because #{vote_error}"
           redirect_to root_path
+        else
+          flash[:notice] = "You have successfully voted!"
         end
       end
     end
