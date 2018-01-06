@@ -19,7 +19,7 @@
         - question.choices.each_with_index do |choice, choice_index|
           %tr.row
             %td= choice.title
-            - question.answers.each do |answer|
+            - question.answers.filled_in.each do |answer|
               %td
                 - choice_value = answer.text.split(/:::/)[choice_index]
                 - if choice_value == "-"
