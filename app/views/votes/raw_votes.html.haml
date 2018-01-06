@@ -4,10 +4,6 @@
     %h3= questionnaire_section.title
     - questionnaire_section.questions.each do |question|
       %h4= question.text
-      - if question.choice_tallies.present?
-        = render partial: 'questions/show_raw_votes', locals: { question: question }
-        %div{style: 'clear:both'}
-      - else
-        No tallies calculated
+      = render partial: 'questions/show_raw_votes', locals: { question: question }
 - else
   No votes yet
