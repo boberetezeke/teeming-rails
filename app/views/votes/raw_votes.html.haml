@@ -3,7 +3,7 @@
   - @election.questionnaire.questionnaire_sections.each do |questionnaire_section|
     %h3= questionnaire_section.title
     - questionnaire_section.questions.each do |question|
-      %h4= question.text
+      %h4 #{question.text} - #{question.answers.filled_in.count} votes cast
       = render partial: 'questions/show_raw_votes', locals: { question: question }
 - else
   No votes yet
