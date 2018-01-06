@@ -1,0 +1,13 @@
+%h2 Raw Votes for #{@election.name}
+- if @election.vote_completions.present?
+  - @election.questionnaire.questionnaire_sections.each do |questionnaire_section|
+    %h3= questionnaire_section.title
+    - questionnaire_section.questions.each do |question|
+      %h4= question.text
+      - if question.choice_tallies.present?
+        = render partial: 'questions/show_raw_votes', locals: { question: question }
+        %div{style: 'clear:both'}
+      - else
+        No tallies calculated
+- else
+  No votes yet

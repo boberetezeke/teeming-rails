@@ -266,3 +266,7 @@ form.formtastic select.form-control.narrow {
     padding: 5px;
 }
 
+.raw-votes {
+    width: 100%;
+    overflow: auto;
+}

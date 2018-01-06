@@ -1,0 +1,30 @@
+- section = question.questionnaire_section
+- questionnaire = section.questionnaire
+%div
+  - if question.question_type == Question::QUESTION_TYPE_SHORT_TEXT
+    No raw votes displayed for short text questions
+  - elsif question.question_type == Question::QUESTION_TYPE_LONG_TEXT
+    No raw votes displayed for long text questions
+  - elsif question.question_type == Question::QUESTION_TYPE_CHECKBOXES
+    No raw votes displayed for checkbox questions
+  - elsif question.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE
+    No raw votes displayed for multiple choice questions
+  - elsif question.question_type == Question::QUESTION_TYPE_RANKED_CHOICE
+    .raw-votes
+      %table.table
+        %tr.row
+          %th Choice
+          - question.answers.each_with_index do |answer, index|
+            %th= index + 1
+        - question.choices.each_with_index do |choice, choice_index|
+          %tr.row
+            %td= choice.title
+            - question.answers.each do |answer|
+              %td
+                - choice_value = answer.text.split(/:::/)[choice_index]
+                - if choice_value == "-"
+                  = choice_value
+                - else
+                  = choice_value.to_i + 1
+  - else
+    %p Question: #{question.id}, #{question.text}, type: #{question.question_type}

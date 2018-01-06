@@ -63,6 +63,7 @@ Rails.application.routes.draw do
     resources :votes, shallow: true, only: [:index, :create] do
       collection do
         get :tallies
+        get :raw_votes
         put :generate_tallies
         get :view
         get :wait

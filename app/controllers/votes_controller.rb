@@ -201,6 +201,18 @@ class VotesController < ApplicationController
     breadcrumbs votes_breadcrumbs, "Vote"
   end
 
+  def raw_votes
+    @election = Election.find(params[:election_id])
+    authorize @election, :tallies?
+
+    # @tallies = @election.tally_votes
+    if @election.questionnaire.choice_tallies.empty?
+      @election.tally_answers
+    end
+
+    breadcrumbs votes_breadcrumbs, "Vote"
+  end
+
   def enter
     @election = Election.find(params[:election_id])
     authorize @election, :enter?
