@@ -52,13 +52,21 @@ class Question < ApplicationRecord
   end
 
   def num_rounds
-    choice_tallies.order('round desc').first.round
+    if choice_tallies.present?
+      choice_tallies.order('round desc').first.round
+    else
+      0
+    end
   end
 
   def winner
-    winning_index = choice_tallies.where(question: self, round: num_rounds).order('count desc').first.value.to_i
+    if choice_tallies.present?
+      winning_index = choice_tallies.where(question: self, round: num_rounds).order('count desc').first.value.to_i
 
-    choices.order("order_index asc")[winning_index-1]
+      choices.order("order_index asc")[winning_index-1]
+    else
+      nil
+    end
   end
 
   def copy

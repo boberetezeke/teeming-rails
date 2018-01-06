@@ -28,6 +28,8 @@ describe Election do
   let(:ranked_choice_answer_8)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::1:::0:::2', order_index: 8) }
   let(:ranked_choice_answer_9)      { FactoryGirl.create(:answer, question: ranked_choice_question, text: '3:::1:::0:::2', order_index: 8) }
 
+  let(:empty_ranked_choice_answer)  { FactoryGirl.create(:answer, question: ranked_choice_question, text: '-:::-:::-:::-', order_index: 1) }
+
   let(:incomplete_ranked_choice_answer_1) { FactoryGirl.create(:answer, question: ranked_choice_question, text: '0:::1:::-:::-', order_index: 1) }
   let(:incomplete_ranked_choice_answer_2) { FactoryGirl.create(:answer, question: ranked_choice_question, text: '0:::1:::-:::2', order_index: 2) }
   let(:incomplete_ranked_choice_answer_3) { FactoryGirl.create(:answer, question: ranked_choice_question, text: '1:::0:::2:::3', order_index: 3) }
@@ -120,9 +122,24 @@ describe Election do
     end
 
     context "when testing incomplete ranked choice votes" do
+      context "when there are no votes" do
+        before do
+          empty_ranked_choice_answer
+        end
+
+        it "counts the choices correctly" do
+          election.tally_answers
+
+          expect(questionnaire.choice_tallies.count).to eq(0)
+          expect(ranked_choice_question.num_rounds).to eq(0)
+          expect(ranked_choice_question.winner).to be_nil
+        end
+      end
+
       context "when the first place vote getting gets above the threshold" do
         before do
           incomplete_ranked_choice_answer_1; incomplete_ranked_choice_answer_2; incomplete_ranked_choice_answer_3
+          empty_ranked_choice_answer
         end
 
         it "counts the choices correctly" do

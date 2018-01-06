@@ -12,6 +12,10 @@ class AnswerTallyer
     end
   end
 
+  def empty?
+    @choice_tallies.empty?
+  end
+
   def initialize_from_last_answer_tallyer(last_answer_tallyer)
     @round = last_answer_tallyer.round + 1
     debug "-------- round: #{@round} -------------"

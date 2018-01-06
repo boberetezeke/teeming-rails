@@ -91,7 +91,7 @@ class Election < ApplicationRecord
       if question.answers.filled_in.present?
         loop do
           answer_tallyer = tally_question_answers(question, last_round_answer_tallyer: answer_tallyer, questionnaire: questionnaire)
-          break if answer_tallyer.above_threshold(0.5)
+          break if answer_tallyer.above_threshold(0.5) || answer_tallyer.empty?
         end
       end
     else
@@ -104,8 +104,11 @@ class Election < ApplicationRecord
     if answer_tallyer.round == 1
       question.answers.filled_in.each do |answer|
         if question.ranked_choice?
-          value = answer.text.split(/:::/).index("0") + 1
-          answer_tallyer.count_value(value, answer)
+          first_vote = answer.text.split(/:::/).index("0")
+          if first_vote
+            value = first_vote  + 1
+            answer_tallyer.count_value(value, answer)
+          end
         elsif question.multiple_choice?
           answer.text.split(/:::/).each do |choice|
             answer_tallyer.count_value(choice, answer) if choice.present?
