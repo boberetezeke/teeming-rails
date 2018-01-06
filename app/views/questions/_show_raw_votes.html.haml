@@ -14,7 +14,7 @@
       %table.table
         %tr.row
           %th Choice
-          - question.answers.each_with_index do |answer, index|
+          - question.answers.filled_in.each_with_index do |answer, index|
             %th= index + 1
         - question.choices.each_with_index do |choice, choice_index|
           %tr.row
