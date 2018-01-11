@@ -176,4 +176,43 @@ describe VotesController do
       expect(response).to redirect_to(disqualified_election_votes_path(election_id: election.id))
     end
   end
+
+  describe "download_votes" do
+    let!(:ranked_choice_question_2)  { FactoryGirl.create(:question, questionnaire_section: questionnaire_section_1, question_type: Question::QUESTION_TYPE_RANKED_CHOICE, order_index: 2) }
+    let!(:ranked_choice_2_1)         { FactoryGirl.create(:choice, question: ranked_choice_question_2, title: 'choice 2-1', order_index: 1) }
+    let!(:ranked_choice_2_2)         { FactoryGirl.create(:choice, question: ranked_choice_question_2, title: 'choice 2-2', order_index: 2) }
+
+    let!(:vote_user_1)               { FactoryGirl.create(:user, email: 'voter_1@user.com') }
+    let!(:vote_member_1)             { FactoryGirl.create(:member, user: vote_user_1, first_name: 'voter1', last_name: 'user1') }
+    let!(:vote_user_2)               { FactoryGirl.create(:user, email: 'voter_2@user.com') }
+    let!(:vote_member_2)             { FactoryGirl.create(:member, user: vote_user_2, first_name: 'voter2', last_name: 'user2') }
+    let!(:vote_user_3)               { FactoryGirl.create(:user, email: 'voter_3@user.com') }
+    let!(:vote_member_3)             { FactoryGirl.create(:member, user: vote_user_3, first_name: 'voter3', last_name: 'user3') }
+
+    let!(:vote_completion_1)         { FactoryGirl.create(:vote_completion, election: election, user: vote_user_1, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )}
+    let!(:vote_completion_2)         { FactoryGirl.create(:vote_completion, election: election, user: vote_user_2, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )}
+    let!(:vote_completion_3)         { FactoryGirl.create(:vote_completion, election: election, user: vote_user_3, has_voted: nil, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )}
+
+    let!(:answer_1_1)                 { FactoryGirl.create(:answer, question: ranked_choice_question,   text: "0:::1", user: vote_user_1, answerable: vote_completion_1) }
+    let!(:answer_1_2)                 { FactoryGirl.create(:answer, question: ranked_choice_question_2, text: "1:::0", user: vote_user_1, answerable: vote_completion_1) }
+
+    let!(:answer_2_1)                 { FactoryGirl.create(:answer, question: ranked_choice_question,   text: "1:::0", user: vote_user_2, answerable: vote_completion_2) }
+    let!(:answer_2_2)                 { FactoryGirl.create(:answer, question: ranked_choice_question_2, text: "1:::0", user: vote_user_2, answerable: vote_completion_2) }
+
+    before do
+      sign_in user
+      user.role.privileges << Privilege.create(subject: 'vote', action: 'download')
+    end
+
+    it "creates a CSV file with voter emails in the left column, answers in columns grouped by question to the right" do
+      get :download_votes, params: { election_id: election.id }
+
+      expect(response).to be_ok
+      rows = CSV.parse(response.body)
+      puts "body = #{response.body}"
+      expect(rows.size).to eq(3)
+      expect(rows[1].to_a).to eq(['voter1 user1', 'voter_1@user.com', '', '', '0', '1', '', '1', '0'])
+      expect(rows[2].to_a).to eq(['voter2 user2', 'voter_2@user.com', '', '', '1', '0', '', '1', '0'])
+    end
+  end
 end

@@ -102,6 +102,7 @@ class Election < ApplicationRecord
   def tally_question_answers(question, last_round_answer_tallyer: nil, questionnaire: nil)
     answer_tallyer = AnswerTallyer.new(last_round_answer_tallyer, questionnaire: questionnaire)
     if answer_tallyer.round == 1
+      # joins(:vote_completion).where(VoteCompletion.arel_table[:vote_type].in(['online', 'disqualified']))
       question.answers.filled_in.each do |answer|
         if question.ranked_choice?
           first_vote = answer.text.split(/:::/).index("0")

@@ -52,6 +52,10 @@ class User < ApplicationRecord
     end
   end
 
+  def name
+    member.name
+  end
+
   def in_race?(race)
     candidacies.map(&:race).include?(race)
   end
