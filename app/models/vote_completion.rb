@@ -18,8 +18,13 @@ class VoteCompletion < ApplicationRecord
                                                  VoteCompletion.arel_table[:has_voted].eq(nil)
                                               ))
                                             }
-  scope :completed,           ->            { where(has_voted: true) }
-  scope :disqualifications,   ->            { where(vote_type: VOTE_COMPLETION_TYPE_DISQUALIFIED) }
+  scope :completed,             ->          { where(has_voted: true) }
+  scope :disqualifications,     ->          { where(vote_type: VOTE_COMPLETION_TYPE_DISQUALIFIED) }
+  scope :not_disqualifications, ->          { where(VoteCompletion.arel_table[:vote_type].not_eq(VOTE_COMPLETION_TYPE_DISQUALIFIED)) }
+
+  def disqualified?
+    vote_type == VOTE_COMPLETION_TYPE_DISQUALIFIED
+  end
 
   def available_to_vote?
     !has_voted
