@@ -108,11 +108,11 @@ class UsersController < ApplicationController
         if @user.setup_state.present?
           @user.reload
           if @user.setup_state == 'step_setup_user_details'
-            now = Time.zone.now
-            elections = Election.all.select{|e| e.vote_start_time && e.vote_end_time && now >= e.vote_start_time && now < e.vote_end_time}
-            elections.each do |election|
-              election.vote_completions << VoteCompletion.create(election: election, user: @user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
-            end
+            # now = Time.zone.now
+            # elections = Election.all.select{|e| e.vote_start_time && e.vote_end_time && now >= e.vote_start_time && now < e.vote_end_time}
+            # elections.each do |election|
+            #   election.vote_completions << VoteCompletion.create(election: election, user: @user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
+            # end
           end
           @user.setup_state = next_state
           @user.save
