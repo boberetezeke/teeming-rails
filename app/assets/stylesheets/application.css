@@ -270,3 +270,7 @@ form.formtastic select.form-control.narrow {
     width: 100%;
     overflow: auto;
 }
+
+.disqualified {
+    text-color: red;
+}

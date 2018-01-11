@@ -15,12 +15,12 @@
         %tr.row
           %th Choice
           - question.answers.filled_in.by_user.each_with_index do |answer, index|
-            %th= index + 1
+            %th{class:answer.answerable.disqualified? ? 'disqualified' : '' }= index + 1
         - question.choices.each_with_index do |choice, choice_index|
           %tr.row
             %td= choice.title
             - question.answers.filled_in.by_user.each do |answer|
-              %td
+              %td{class:answer.answerable.disqualified? ? 'disqualified' : '' }
                 - choice_value = answer.text.split(/:::/)[choice_index]
                 - if choice_value == "-"
                   = choice_value
