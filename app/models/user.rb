@@ -49,6 +49,22 @@ class User < ApplicationRecord
     role == ROLE_TYPE_ADMIN
   end
 
+  def share_name_with?(user)
+    true
+  end
+
+  def share_email_with?(user)
+    true
+  end
+
+  def share_phone_with?(user)
+    true
+  end
+
+  def share_address_with?(user)
+    true
+  end
+
   def accepted_bylaws
     self.accepted_bylaws_at.present?
   end

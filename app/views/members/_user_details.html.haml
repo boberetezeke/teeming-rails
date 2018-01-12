@@ -1,19 +1,11 @@
-- if show_share_controls && is_current_user?(f.object, current_user)
-  .row
-    .col-md-12
-      = f.input :share_email, as: :boolean, hint: "Check this box to allow chapter officers to see your email address"
-.row
-  .col-md-6
-    = f.input :username, input_html: { disabled: disabled }
-  - if is_current_user?(f.object, current_user) || f.object.user.share_email_with?(current_user)
-    .col-md-6
-      = f.hidden_field :email
-      = f.input :email, input_html: { disabled: true }
+= f.hidden_field :email
+-#.row
+-#  .col-md-6
+-#  = f.input :username, input_html: { disabled: disabled }
+-#  - if is_current_user?(f.object, current_user) || f.object.user.share_email_with?(current_user)
+-#   .col-md-6
+-#     = f.input :email, input_html: { disabled: true }
 - if is_current_user?(f.object, current_user) || f.object.user.share_name_with?(current_user)
-  - if show_share_controls && is_current_user?(f.object, current_user)
-    .row
-      .col-md-12
-        = f.input :share_name, as: :boolean, hint: "Check this box to allow chapter officers to see your name"
   .row
     .col-md-5
       = f.input :first_name, input_html: { disabled: disabled }
@@ -22,10 +14,6 @@
     .col-md-5
       = f.input :last_name, input_html: { disabled: disabled }
 - if is_current_user?(f.object, current_user) || f.object.user.share_phone_with?(current_user)
-  - if show_share_controls && is_current_user?(f.object, current_user)
-    .row
-      .col-md-12
-        = f.input :share_phone, as: :boolean, hint: "Check this box to allow chapter officers to see your phone numbers"
   .row
     .col-md-4
       = f.input :mobile_phone, input_html: { disabled: disabled }
@@ -34,10 +22,6 @@
     .col-md-4
       = f.input :work_phone, input_html: { disabled: disabled }
 - if is_current_user?(f.object, current_user) || f.object.user.share_address_with?(current_user)
-  - if show_share_controls && is_current_user?(f.object, current_user)
-    .row
-      .col-md-12
-        = f.input :share_address, as: :boolean, hint: "Check this box to allow chapter officers to see your address"
   .row
     .col-md-12
       = f.input :address_1, input_html: { disabled: disabled }
@@ -51,6 +35,14 @@
       = f.input :state, input_html: { disabled: disabled }
     .col-md-4
       = f.input :zip, label: 'Zip Code', input_html: { disabled: disabled }
+
+-#- if show_share_controls && is_current_user?(f.object, current_user)
+-#  .row
+-#    .col-md-12
+-#      = f.input :share_email, as: :boolean, hint: "Check this box to allow chapter officers to see your email address"
+-#      = f.input :share_address, as: :boolean, hint: "Check this box to allow chapter officers to see your address"
+-#      = f.input :share_name, as: :boolean, hint: "Check this box to allow chapter officers to see your name"
+-#      = f.input :share_phone, as: :boolean, hint: "Check this box to allow chapter officers to see your phone numbers"
 .row
   .col-md-12
     = f.input :chapter, as: :select, collection: Chapter.all, include_blank: false, input_html: { disabled: disabled }
