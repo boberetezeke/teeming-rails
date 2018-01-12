@@ -150,7 +150,7 @@ class Election < ApplicationRecord
 
       column_indexes = {}
       questions = {}
-      column_index = 2
+      column_index = columns.size
       self.questionnaire.questionnaire_sections.each do |questionnaire_section|
         columns << questionnaire_section.title
         column_index += 1

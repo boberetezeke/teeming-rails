@@ -204,15 +204,26 @@ describe VotesController do
       user.role.privileges << Privilege.create(subject: 'vote', action: 'download')
     end
 
-    it "creates a CSV file with voter emails in the left column, answers in columns grouped by question to the right" do
+    it "creates a CSV file with disqualifications in the left column, answers in columns grouped by question to the right" do
       get :download_votes, params: { election_id: election.id }
 
       expect(response).to be_ok
       rows = CSV.parse(response.body)
       puts "body = #{response.body}"
       expect(rows.size).to eq(3)
-      expect(rows[1].to_a).to eq(['voter1 user1', 'voter_1@user.com', '', '', '0', '1', '', '1', '0'])
-      expect(rows[2].to_a).to eq(['voter2 user2', 'voter_2@user.com', '', '', '1', '0', '', '1', '0'])
+      expect(rows[1].to_a).to eq(['', '', '', '0', '1', '', '1', '0'])
+      expect(rows[2].to_a).to eq(['', '', '', '1', '0', '', '1', '0'])
     end
+
+    # it "creates a CSV file with voter emails in the left column, answers in columns grouped by question to the right" do
+    #   get :download_votes, params: { election_id: election.id }
+    #
+    #   expect(response).to be_ok
+    #   rows = CSV.parse(response.body)
+    #   puts "body = #{response.body}"
+    #   expect(rows.size).to eq(3)
+    #   expect(rows[1].to_a).to eq(['voter1 user1', 'voter_1@user.com', '', '', '0', '1', '', '1', '0'])
+    #   expect(rows[2].to_a).to eq(['voter2 user2', 'voter_2@user.com', '', '', '1', '0', '', '1', '0'])
+    # end
   end
 end

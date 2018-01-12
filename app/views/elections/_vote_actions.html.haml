@@ -20,5 +20,5 @@
     - if current_user.can_show_vote_tallies?
       = link_to("View Vote Tallies", tallies_election_votes_path(election), class: 'btn btn-sm btn-warning')
       = link_to("View Raw Votes", raw_votes_election_votes_path(election), class: 'btn btn-sm btn-warning')
-    /-if policy(@election).download_votes?
-    /  = link_to "Download Votes", download_votes_election_votes_path(election), class: 'btn btn-sm btn-primary'
+    -if policy(@election).download_votes?
+      = link_to "Download Votes", download_votes_election_votes_path(election), class: 'btn btn-sm btn-primary'

@@ -253,7 +253,7 @@ class VotesController < ApplicationController
     @election = Election.find(params[:election_id])
     authorize @election, :download_votes?
 
-    csv = @election.generate_votes_csv
+    csv = @election.generate_votes_csv(is_anonymous: true)
 
     send_data csv,
       :type => 'text/csv; charset=iso-8859-1; header=present',
