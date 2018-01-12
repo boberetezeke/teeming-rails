@@ -126,4 +126,8 @@ module ApplicationHelper
     end
     questions
   end
+
+  def is_current_user?(member, current_user)
+    member.user && member.user == current_user
+  end
 end

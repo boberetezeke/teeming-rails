@@ -28,9 +28,18 @@ class User < ApplicationRecord
 
   belongs_to :role
 
+  has_many :role_assignments
+  has_many :roles, through: :role_assignments
+
+  has_many :office_assignments
+  has_many :offices, through: :office_assignments
+
+  has_many :shares
+
   before_save :setup_wizard
 
   attr_accessor :authorize_args
+  attr_accessor :share_email, :share_name, :share_phone, :share_address
 
   def new_candidacy(race)
     Candidacy.new(user: self, race: race)

@@ -1,6 +1,8 @@
 class Member < ApplicationRecord
   # validates :databank_id, presence: true, uniqueness: true
   belongs_to :user
+  accepts_nested_attributes_for :user
+
   belongs_to :chapter
   belongs_to :potential_chapter, foreign_key: :potential_chapter_id, class_name: "Chapter"
 
