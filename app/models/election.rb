@@ -137,6 +137,68 @@ class Election < ApplicationRecord
     races.first.write_tallies if races.present?
   end
 
+  def generate_votes_csv(is_anonymous: false)
+    csv = CSV.generate do |csv_gen|
+      if is_anonymous
+        columns =  ["Disqualified"]
+      else
+        columns = [
+          "User Name",
+          "User Email",
+        ]
+      end
+
+      column_indexes = {}
+      questions = {}
+      column_index = 2
+      self.questionnaire.questionnaire_sections.each do |questionnaire_section|
+        columns << questionnaire_section.title
+        column_index += 1
+        questionnaire_section.questions.each do |question|
+          columns << question.text
+          column_index += 1
+          column_indexes[question.id] = column_index
+          questions[question.id] = question
+          if question.has_choices?
+            question.choices.each do |choice|
+              columns << choice.title
+              column_index += 1
+            end
+          end
+        end
+      end
+
+      csv_gen << columns
+      row_size = columns.size
+
+      self.vote_completions.completed.each do |vote_completion|
+        columns = Array.new(row_size) { "" }
+        if is_anonymous
+          columns[0] = vote_completion.disqualified? ? "X" : ""
+        else
+          columns[0] = vote_completion.user.name
+          columns[1] = vote_completion.user.email
+        end
+
+        vote_completion.answers.each do |answer|
+          column_index = column_indexes[answer.question_id]
+          question = questions[answer.question_id]
+          if question.has_choices?
+            answer.text.split(/:::/).each_with_index do |value, index|
+              columns[column_index + index] = value
+            end
+          else
+            columns[column_index] = answer.text
+          end
+        end
+
+        csv_gen << columns
+      end
+    end
+
+    csv
+  end
+
   def dates_and_times_are_valid
     valid_date = validate_date(:vote_date)
     valid_start_time = validate_time(:vote_start_time)

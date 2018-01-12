@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.text    "description"
   end
 
-  create_table "choice_tallies", id: :integer, force: :cascade do |t|
+  create_table "choice_tallies", force: :cascade do |t|
     t.integer "question_id"
     t.string  "value"
     t.integer "count"
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.index ["questionnaire_id"], name: "index_choice_tallies_on_questionnaire_id", using: :btree
   end
 
-  create_table "choice_tally_answers", id: :integer, force: :cascade do |t|
+  create_table "choice_tally_answers", force: :cascade do |t|
     t.integer "choice_tally_id"
     t.integer "answer_id"
     t.index ["answer_id"], name: "index_choice_tally_answers_on_answer_id", using: :btree

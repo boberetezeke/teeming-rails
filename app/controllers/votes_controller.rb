@@ -253,56 +253,7 @@ class VotesController < ApplicationController
     @election = Election.find(params[:election_id])
     authorize @election, :download_votes?
 
-    csv = CSV.generate do |csv_gen|
-      columns = [
-        "User Name",
-        "User Email",
-      ]
-
-      column_indexes = {}
-      questions = {}
-      column_index = 2
-      @election.questionnaire.questionnaire_sections.each do |questionnaire_section|
-        columns << questionnaire_section.title
-        column_index += 1
-        questionnaire_section.questions.each do |question|
-          columns << question.text
-          column_index += 1
-          column_indexes[question.id] = column_index
-          questions[question.id] = question
-          if question.has_choices?
-            question.choices.each do |choice|
-              columns << choice.title
-              column_index += 1
-            end
-          end
-        end
-      end
-
-
-      csv_gen << columns
-      row_size = columns.size
-
-      @election.vote_completions.completed.each do |vote_completion|
-        columns = Array.new(row_size) { "" }
-        columns[0] = vote_completion.user.name
-        columns[1] = vote_completion.user.email
-
-        vote_completion.answers.each do |answer|
-          column_index = column_indexes[answer.question_id]
-          question = questions[answer.question_id]
-          if question.has_choices?
-            answer.text.split(/:::/).each_with_index do |value, index|
-              columns[column_index + index] = value
-            end
-          else
-            columns[column_index] = answer.text
-          end
-        end
-
-        csv_gen << columns
-      end
-    end
+    csv = @election.generate_votes_csv
 
     send_data csv,
       :type => 'text/csv; charset=iso-8859-1; header=present',
