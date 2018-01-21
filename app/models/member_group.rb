@@ -17,11 +17,11 @@ class MemberGroup < ApplicationRecord
   def all_members(chapter)
     if group_type == GROUP_TYPE_SCOPE
       if chapter
-        if chapter.is_state_wide
-          scope = Member.all
-        else
+        # if chapter.is_state_wide
+        #   scope = Member.all
+        # else
           scope = chapter.members
-        end
+        # end
       else
         scope = Member.all
       end
