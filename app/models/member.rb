@@ -40,8 +40,8 @@ class Member < ApplicationRecord
       Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
     ))
   }
-  # scope :chapter_members,     ->(chapter) { where(chapter_id: chapter.id) }
-  scope :chapter_members, ->(chapter) { where(Member.arel_table[:chapter_id].not_eq(nil)) }
+  scope :chapter_members,     ->(chapter) { where(chapter_id: chapter.id) }
+  # scope :chapter_members, ->(chapter) { where(Member.arel_table[:chapter_id].not_eq(nil)) }
 
   scope :valid_email, -> {
     where(
