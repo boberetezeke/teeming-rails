@@ -35,6 +35,7 @@ class MembersController < ApplicationController
 
   def update
     if @member.update(member_params)
+    end
   end
 
   private
