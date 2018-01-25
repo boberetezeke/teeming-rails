@@ -4,6 +4,6 @@
       ff.input :role_assignments, as: :select, multiple: true, collection: Role.all
       ff.input :officer_assignments, as: :select, multiple: true, collection: Officer.all
     %hr
-    = render partial: :user_details, locals: { f: f, disabled: true }
+    = render partial: 'members/user_details', locals: { f: f, disabled: true, show_share_controls: true }
   - else
-    = render partial: :user_details, locals: { f: f, disabled: true }
+    = render partial: 'members/user_details', locals: { f: f, disabled: true, show_share_controls: true }

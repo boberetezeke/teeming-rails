@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180102171341) do
+ActiveRecord::Schema.define(version: 20180125021643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,8 +30,6 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.string  "answerable_type"
     t.integer "answerable_id"
     t.index ["answerable_id"], name: "index_answers_on_answerable_id", using: :btree
-    t.index ["candidacy_id"], name: "index_answers_on_candidacy_id", using: :btree
-    t.index ["question_id"], name: "index_answers_on_question_id", using: :btree
     t.index ["user_id"], name: "index_answers_on_user_id", using: :btree
   end
 
@@ -50,18 +48,13 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.datetime "questionnaire_submitted_at"
     t.datetime "unlock_requested_at"
     t.index ["created_by_user_id"], name: "index_candidacies_on_created_by_user_id", using: :btree
-    t.index ["race_id"], name: "index_candidacies_on_race_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_candidacies_on_updated_by_user_id", using: :btree
-    t.index ["user_id"], name: "index_candidacies_on_user_id", using: :btree
   end
 
   create_table "candidate_assignments", force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
     t.integer "answers_id"
-    t.index ["answers_id"], name: "index_candidate_assignments_on_answers_id", using: :btree
-    t.index ["role_id"], name: "index_candidate_assignments_on_role_id", using: :btree
-    t.index ["user_id"], name: "index_candidate_assignments_on_user_id", using: :btree
   end
 
   create_table "chapters", force: :cascade do |t|
@@ -108,7 +101,6 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.boolean  "show_vote_tallies"
     t.boolean  "is_frozen"
     t.string   "election_method"
-    t.index ["chapter_id"], name: "index_elections_on_chapter_id", using: :btree
     t.index ["member_group_id"], name: "index_elections_on_member_group_id", using: :btree
   end
 
@@ -254,7 +246,6 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.integer "race_id"
     t.string  "questionnairable_type"
     t.integer "questionnairable_id"
-    t.index ["race_id"], name: "index_questionnaires_on_race_id", using: :btree
   end
 
   create_table "questions", force: :cascade do |t|
@@ -263,7 +254,6 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.string  "question_type"
     t.integer "order_index"
     t.integer "questionnaire_section_id"
-    t.index ["questionnaire_id"], name: "index_questions_on_questionnaire_id", using: :btree
     t.index ["questionnaire_section_id"], name: "index_questions_on_questionnaire_section_id", using: :btree
   end
 
@@ -287,8 +277,6 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.boolean  "is_official"
     t.index ["chapter_id"], name: "index_races_on_chapter_id", using: :btree
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id", using: :btree
-    t.index ["election_id"], name: "index_races_on_election_id", using: :btree
-    t.index ["role_id"], name: "index_races_on_role_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id", using: :btree
   end
 
@@ -321,6 +309,11 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.boolean  "interested_in_volunteering"
     t.boolean  "saw_introduction"
     t.integer  "role_id"
+    t.boolean  "share_email"
+    t.boolean  "share_address"
+    t.boolean  "share_phone"
+    t.boolean  "share_name"
+    t.boolean  "use_username"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
     t.index ["role_id"], name: "index_users_on_role_id", using: :btree
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
@@ -358,14 +351,4 @@ ActiveRecord::Schema.define(version: 20180102171341) do
     t.index ["user_id"], name: "index_votes_on_user_id", using: :btree
   end
 
-  add_foreign_key "answers", "candidacies"
-  add_foreign_key "answers", "questions"
-  add_foreign_key "candidacies", "races"
-  add_foreign_key "candidacies", "users"
-  add_foreign_key "candidate_assignments", "answers", column: "answers_id"
-  add_foreign_key "candidate_assignments", "users"
-  add_foreign_key "elections", "chapters"
-  add_foreign_key "questionnaires", "races"
-  add_foreign_key "questions", "questionnaires"
-  add_foreign_key "races", "elections"
 end

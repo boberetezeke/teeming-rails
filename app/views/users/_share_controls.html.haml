@@ -1,0 +1,20 @@
+.row
+  .col-md-6
+    .check_box_or_radio
+      = f.input :share_name, as: :boolean, input_html: { disabled: disabled }, hint: "Check this box to allow chapter officers to see your name"
+  .col-md-6
+    .check_box_or_radio
+      = f.input :share_email, as: :boolean, input_html: { disabled: disabled }, hint: "Check this box to allow chapter officers to see your email address"
+.row
+  .col-md-6
+    .check_box_or_radio
+      = f.input :share_phone, as: :boolean, input_html: { disabled: disabled }, hint: "Check this box to allow chapter officers to see your phone numbers"
+  .col-md-6
+    .check_box_or_radio
+      = f.input :share_address, as: :boolean, input_html: { disabled: disabled }, hint: "Check this box to allow chapter officers to see your address"
+.row
+  .col-md-6
+    .check_box_or_radio
+      = f.input :use_username, as: :boolean, input_html: { disabled: disabled }, hint: "Use username instead of real name to identify you for crowdsourced data that you contribute to."
+  .col-md-6
+    = f.input :username, input_html: { disabled: disabled }, hint: "This is auto-generated and can be replaced by one of your choosing. It will be used to identify you on crowdsourced information you supply."

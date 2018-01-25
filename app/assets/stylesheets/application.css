@@ -101,6 +101,10 @@ form.formtastic {
     width: 95%;
 }
 
+form.formtastic p.subtitle {
+    margin-bottom: 20px;
+}
+
 form.formtastic p.bylaws_link {
     padding: 15px;
     background-color: lightblue;
@@ -118,6 +122,31 @@ form.formtastic .stringish input {
 form.formtastic .check_box_or_radio label {
     padding-left: 25px;
     font-weight: bold;
+}
+
+form.formtastic .check_box_or_radio #user_use_username {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_email {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_name {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_address {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_phone {
+    margin-left: -20px;
+    margin-top: 5px;
 }
 
 form.formtastic .check_box_or_radio #race_is_official {

@@ -3,11 +3,12 @@
 = render partial: 'shared/privacy_policy_notice'
 
 = semantic_form_for @user do |f|
-  = f.semantic_fields_for :member do |ff|
-    = render partial: 'members/user_details', locals: { f: ff, disabled: false }
+  = render partial: 'users/user_details', locals: { f: f, disabled: false, show_email: true, show_share_controls: true }
 
   %hr
-  %h2 Volunteering
+  %h3 Volunteering
+  %p.subtitle
+    We are a volunteer run orginization, your time and effort allows this organization to function.
   = f.inputs do
     .check_box_or_radio
       = f.input :interested_in_volunteering
