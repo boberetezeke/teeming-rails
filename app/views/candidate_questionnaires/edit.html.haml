@@ -1,4 +1,7 @@
 %h2 Candidate Questionnaire for #{@candidacy.name}
+- if @candidacy.questionnaire_submitted_at
+  %span.updated
+    Last Updated on #{date_and_time_str(@candidacy.questionnaire_submitted_at)}
 
 = semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
   = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: @candidacy.questionnaire_submitted? }
