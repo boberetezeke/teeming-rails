@@ -4,9 +4,10 @@
   = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: @candidacy.questionnaire_submitted? }
   %hr
   - if @candidacy.questionnaire_submitted?
-    = f.submit "Request unlock", class: 'btn btn-sm btn-primary btn-with-padding'
-    - if @candidacy.unlock_requested?
-      .note NOTE: An unlock request was last made at #{date_and_time_str(@candidacy.unlock_requested_at.utc)}
+    - unless @candidacy.race.endorsement_complete
+      = f.submit "Request unlock", class: 'btn btn-sm btn-primary btn-with-padding'
+      - if @candidacy.unlock_requested?
+        .note NOTE: An unlock request was last made at #{date_and_time_str(@candidacy.unlock_requested_at.utc)}
 
   - else
     = f.submit "Update",              class: 'btn btn-sm btn-info btn-with-padding'

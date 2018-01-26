@@ -13,6 +13,8 @@
     - if current_user.can_manage_external_candidacies?
       .check_box_or_radio
         = f.input :is_official, as: :boolean, hint: 'By checking this, only privileged users can modify this race'
+    .check_box_or_radio
+      = f.input :endorsement_complete, as: :boolean, hint: 'This makes removes candidate questionnaire controls (like request unlock)'
     = f.input :notes, hint: "Enter in general information about the race and perhaps strategy", html_input: { rows: 4, cols: 80 }
   = f.hidden_field :election_id
   = f.submit class: 'btn btn-sm btn-primary'
