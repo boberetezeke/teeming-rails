@@ -154,6 +154,11 @@ form.formtastic .check_box_or_radio #race_is_official {
     margin-top: 5px;
 }
 
+form.formtastic .check_box_or_radio #race_endorsement_complete {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 form.formtastic .check_box_or_radio #user_accepted_bylaws {
     margin-left: -20px;
     margin-top: 5px;

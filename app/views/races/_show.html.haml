@@ -20,7 +20,10 @@
       (#{race.candidacies.count} #{'candidate'.pluralize(race.candidacies.count)})
   - else
     %h2 #{race.type_and_locale}
-    %span.updated Updated #{time_ago_in_words(race.updated_at)} ago
+    %span.updated
+      Updated #{time_ago_in_words(race.updated_at)} ago
+      - if race.endorsement_complete
+        = "- (endorsement complete)"
   - if show_all && race.notes
     %p.strong Notes:
     %p= race.notes

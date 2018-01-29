@@ -117,7 +117,8 @@ class RacesController < ApplicationController
   end
 
   def race_params
-    params.require(:race).permit(:name, :election_id, :chapter_id, :level_of_government, :locale, :notes, :filing_deadline_date_str, :candidates_announcement_date_str, :is_official)
+    params.require(:race).permit(:name, :election_id, :chapter_id, :level_of_government, :locale, :notes, :filing_deadline_date_str,
+                                 :candidates_announcement_date_str, :is_official, :endorsement_complete)
   end
 
   def races_breadcrumbs(election, include_link: true)
