@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180126003839) do
+ActiveRecord::Schema.define(version: 20180129042510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -224,6 +224,16 @@ ActiveRecord::Schema.define(version: 20180126003839) do
     t.index ["member_group_id"], name: "index_messages_on_member_group_id", using: :btree
     t.index ["race_id"], name: "index_messages_on_race_id", using: :btree
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
+  end
+
+  create_table "officers", force: :cascade do |t|
+    t.string  "officer_type"
+    t.date    "start_date"
+    t.date    "end_date"
+    t.integer "member_id"
+    t.integer "chapter_id"
+    t.index ["chapter_id"], name: "index_officers_on_chapter_id", using: :btree
+    t.index ["member_id"], name: "index_officers_on_member_id", using: :btree
   end
 
   create_table "privileges", force: :cascade do |t|

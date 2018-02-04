@@ -1,0 +1,18 @@
+%table.table
+  %thead
+    %tr
+      %th Office
+      %th Occupant
+      - if show_actions
+        %th Actions
+  %tbody
+    - officers.each do |officer|
+      %tr
+        %td= officer.officer_type
+        %td= officer.user ? officer.user.name : ''
+        - if show_actions
+          %td
+            - if can?(current_user, :edit, officer)
+              = link_to "Edit", edit_officer_path(officer), class: 'btn btn-sm btn-success'
+            - if can?(current_user, :destroy, officer)
+              = link_to "Delete", officer_path(officer), method: :delete, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you sure?' }

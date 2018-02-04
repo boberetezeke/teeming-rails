@@ -1,20 +1,32 @@
 %h2 #{@chapter.name}
 
-.row
-  .col-md-6
-    = render partial: 'elections/table', locals: {elections: Election.all, short_list_of_races: true, chapter: @chapter}
-  .col-md-6
-    %h3= link_to("Upcoming Events", chapter_events_path(@chapter))
-    - if @chapter.events.future.blank?
-      There are no upcoming events scheduled at this time
-    - else
-      = render partial: 'events/table', locals: {events: @chapter.events.future, user: current_user, show_stats: true}
-    %h3= link_to("Messages", chapter_messages_path(@chapter))
-    = render partial: 'messages/table', locals: {messages: @chapter.messages}
-%hr
-- if can?(current_user, :new, Election)
-  = link_to("New Interal Election", new_election_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-success')
-- if can?(current_user, :index, Member)
-  = link_to("Members (#{Member.chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-primary')
-  - unless @chapter.is_state_wide
-    = link_to("Potential Members (#{Member.potential_chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id, show_potential_members: true), class: 'btn btn-sm btn-info')
+%ul.nav.nav-tabs
+  %li.presentation{tab_class(@tab, 'activity')}
+    = link_to "Activity", chapter_path(@chapter, tab: 'activity')
+  %li.presentation{tab_class(@tab, 'governance')}
+    = link_to "Governance", chapter_path(@chapter, tab: 'governance')
+
+- if @tab == 'activity'
+  .row
+    .col-md-6
+      = render partial: 'elections/table', locals: {elections: Election.all, short_list_of_races: true, chapter: @chapter}
+    .col-md-6
+      %h3= link_to("Upcoming Events", chapter_events_path(@chapter))
+      - if @chapter.events.future.blank?
+        There are no upcoming events scheduled at this time
+      - else
+        = render partial: 'events/table', locals: {events: @chapter.events.future, user: current_user, show_stats: true}
+      %h3= link_to("Messages", chapter_messages_path(@chapter))
+      = render partial: 'messages/table', locals: {messages: @chapter.messages}
+  %hr
+  - if can?(current_user, :new, Election)
+    = link_to("New Interal Election", new_election_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-success')
+  - if can?(current_user, :index, Member)
+    = link_to("Members (#{Member.chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-primary')
+    - unless @chapter.is_state_wide
+      = link_to("Potential Members (#{Member.potential_chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id, show_potential_members: true), class: 'btn btn-sm btn-info')
+- elsif @tab == 'governance'
+  .row
+    .col-md-6
+      %h3= link_to("Officers", chapter_officers_path(@chapter))
+      = render partial: 'officers/table', locals: {officers: @chapter.officers, show_actions: false}

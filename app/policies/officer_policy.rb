@@ -1,4 +1,4 @@
-class ChapterPolicy < ApplicationPolicy
+class OfficerPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       @scope.all
@@ -9,11 +9,11 @@ class ChapterPolicy < ApplicationPolicy
     true
   end
 
-  def show?
+  def new?
     true
   end
 
-  def new?
+  def create?
     true
   end
 
@@ -29,3 +29,4 @@ class ChapterPolicy < ApplicationPolicy
     true
   end
 end
+

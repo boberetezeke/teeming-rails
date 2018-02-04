@@ -3,6 +3,7 @@ class Chapter < ApplicationRecord
   has_many :members
   has_many :events
   has_many :messages
+  has_many :officers
 
   has_one :skills_questionnaire, as: :questionnairable, class_name: 'Questionnaire'
 

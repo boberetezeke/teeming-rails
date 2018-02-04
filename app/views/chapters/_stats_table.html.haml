@@ -3,11 +3,25 @@
     %tr.row
       %th Name
       %th Number of Members
+      %th Number of Officers
+      - if show_actions
+        %th Actions
   %tbody
     - chapters.each do |chapter|
       %tr.row
         %td= link_to(chapter.name, chapter)
         %td= chapter.members.count
+        %td= chapter.officers.count
+        - if show_actions
+          %td
+            - if can?(current_user, :edit, chapter)
+              = link_to "Edit", edit_chapter_path(chapter), class: 'btn btn-sm btn-primary'
+            - if can?(current_user, :destroy, chapter)
+              = link_to "Delete", chapter_path(chapter), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+
     %tr.row
       %td Totals
       %td= chapters.map{|c| c.members.count}.sum
+      %td
+      - if show_actions
+        %td

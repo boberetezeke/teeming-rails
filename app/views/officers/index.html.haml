@@ -1,0 +1,4 @@
+= render partial: 'officers/table', locals: { officers: @officers, show_actions: true }
+
+- if can?(current_user, :new, Officer)
+  = link_to "New Officer", new_chapter_officer_path(@chapter), class: 'btn btn-sm btn-success'

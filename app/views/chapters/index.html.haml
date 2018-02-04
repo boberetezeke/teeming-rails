@@ -1,1 +1,4 @@
-= render partial: 'stats_table', locals: { chapters: @chapters }
+= render partial: 'chapters/stats_table', locals: { chapters: @chapters, show_actions: true }
+
+- if can?(current_user, :new, Chapter)
+  = link_to "New Chapter", new_chapter_path, class: 'btn btn-sm btn-success'

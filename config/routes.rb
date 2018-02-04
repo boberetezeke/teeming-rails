@@ -48,10 +48,11 @@ Rails.application.routes.draw do
   end
   resources :candidate_questionnaires, only: [:edit, :update]
 
-  resources :chapters, only: [:index, :show] do
+  resources :chapters do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
-    resources :events, shallow: true
-    resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy], shallow: true
+    resources :events,   shallow: true
+    resources :messages, shallow: true
+    resources :officers, shallow: true
   end
 
   resources :elections do

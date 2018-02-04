@@ -90,6 +90,14 @@ module ApplicationHelper
   end
 
 
+  def tab_class(active_tab, tab_name)
+    if active_tab == tab_name
+      {class: 'active'}
+    else
+      {}
+    end
+  end
+
   def empty_after_sections_for_question(question)
     return if question.order_index < question.questionnaire_section.questions.count
 
