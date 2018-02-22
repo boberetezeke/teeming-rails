@@ -1,4 +1,6 @@
 = semantic_form_for [chapter, officer] do |f|
   = f.input :officer_type
+  = f.semantic_fields_for :officer_assignment do |ff|
+    = ff.input :user_id, as: :select, collection: officer.chapter.members.joins(:user).map(&:user)
 
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'

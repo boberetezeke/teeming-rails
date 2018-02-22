@@ -3,6 +3,18 @@
     = render partial: 'members/user_details', locals: { f: ff, disabled: true }
 
   %hr
+  - if @user.officers.present?
+    %div
+      %span.strong Offices:
+      - @user.officers.each do |officer|
+        #{link_to(officer.name, officer)}
+  - if @user.roles.present?
+    %div
+      %span.strong Roles:
+      - @user.roles.each do |role|
+        #{link_to(role.name, role)}
+
+  %hr
   %h2 Volunteering
   = f.inputs do
     .check_box_or_radio
@@ -10,3 +22,6 @@
 
   - @user.member.answers.each do |answer|
     = render partial: 'answers/show', locals: { answer: answer }
+
+= render partial: 'members/actions', locals: { member: @user.member }
+

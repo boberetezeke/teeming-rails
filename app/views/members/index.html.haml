@@ -17,7 +17,5 @@
         %td= member.user ? (member.user.interested_in_volunteering ? "Yes" : "No") : "No"
         %td= member.city
         %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : member.chapter.name
-        %td
-          = link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-success'
-          = link_to 'Delete', member_path(member), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+        %td= render partial: 'members/actions', locals: { member: member }
 = will_paginate @users, renderer: BootstrapPagination::Rails

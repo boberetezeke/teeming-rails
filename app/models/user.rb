@@ -31,8 +31,8 @@ class User < ApplicationRecord
   has_many :role_assignments
   has_many :roles, through: :role_assignments
 
-  has_many :office_assignments
-  has_many :offices, through: :office_assignments
+  has_many :officer_assignments
+  has_many :officers, through: :officer_assignments
 
   has_many :shares
 

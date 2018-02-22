@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :roles, only: [:show]
+
   resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   resources :candidacies do
     member do

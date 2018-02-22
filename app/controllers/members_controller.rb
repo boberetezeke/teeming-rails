@@ -34,11 +34,15 @@ class MembersController < ApplicationController
   end
 
   def update
-    if @member.update(member_params)
-    end
+    @member.update(member_params)
+    respond_with(@member)
   end
 
   private
+
+  def member_params
+    params.require(:member).permit(user_attributes: [:id, {role_ids: [], officer_ids: []}])
+  end
 
   def set_member
     @member = Member.find(params[:id])

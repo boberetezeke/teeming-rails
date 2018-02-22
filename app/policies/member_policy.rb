@@ -13,6 +13,14 @@ class MemberPolicy < ApplicationPolicy
     can_view_members?
   end
 
+  def edit?
+    true
+  end
+
+  def update?
+    true
+  end
+
   private
 
   def can_view_members?

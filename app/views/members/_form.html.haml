@@ -1,9 +1,16 @@
 = semantic_form_for member do |f|
+  = f.semantic_errors
+  = render partial: 'members/user_details', locals: { f: f, disabled: true, show_share_controls: true }
   - if f.object.user
-    = fields_for :user do |ff|
-      ff.input :role_assignments, as: :select, multiple: true, collection: Role.all
-      ff.input :officer_assignments, as: :select, multiple: true, collection: Officer.all
     %hr
-    = render partial: 'members/user_details', locals: { f: f, disabled: true, show_share_controls: true }
-  - else
-    = render partial: 'members/user_details', locals: { f: f, disabled: true, show_share_controls: true }
+    = f.fields_for :user do |ff|
+      = ff.input :id, as: :hidden
+      = ff.input :roles, as: :select, multiple: false, collection: Role.all
+      = ff.input :officers, as: :select, multiple: false, collection: member.chapter.officers
+
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+:javascript
+  $(function() {
+    $("#member_user_attributes_role_ids").select2({theme: "bootstrap"})
+    $("#member_user_attributes_officer_ids").select2({theme: "bootstrap"})
+  })

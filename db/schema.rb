@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129042510) do
+ActiveRecord::Schema.define(version: 20180205033103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -226,6 +226,13 @@ ActiveRecord::Schema.define(version: 20180129042510) do
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
   end
 
+  create_table "officer_assignments", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "officer_id"
+    t.index ["officer_id"], name: "index_officer_assignments_on_officer_id", using: :btree
+    t.index ["user_id"], name: "index_officer_assignments_on_user_id", using: :btree
+  end
+
   create_table "officers", force: :cascade do |t|
     t.string  "officer_type"
     t.date    "start_date"
@@ -289,6 +296,13 @@ ActiveRecord::Schema.define(version: 20180129042510) do
     t.index ["chapter_id"], name: "index_races_on_chapter_id", using: :btree
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id", using: :btree
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id", using: :btree
+  end
+
+  create_table "role_assignments", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+    t.index ["role_id"], name: "index_role_assignments_on_role_id", using: :btree
+    t.index ["user_id"], name: "index_role_assignments_on_user_id", using: :btree
   end
 
   create_table "roles", force: :cascade do |t|

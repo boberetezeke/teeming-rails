@@ -8,8 +8,17 @@
   %tbody
     - officers.each do |officer|
       %tr
-        %td= officer.officer_type
-        %td= officer.user ? officer.user.name : ''
+        %td
+          - if can?(current_user, :show, officer)
+            = link_to(officer.officer_type, officer)
+          - else
+            = officer.officer_type
+        %td
+          - if officer.user
+            - if can?(current_user, :show, officer.user.member)
+              = link_to(officer.user.name, officer.user.member)
+            - else
+              = officer.user.name
         - if show_actions
           %td
             - if can?(current_user, :edit, officer)
