@@ -10,7 +10,7 @@ class OfficerPolicy < ApplicationPolicy
   end
 
   def new?
-    can_write_officers?
+    can_write_officers?(context_params: context_params)
   end
 
   def create?
@@ -31,8 +31,8 @@ class OfficerPolicy < ApplicationPolicy
 
   private
 
-  def can_write_officers?
-    can_for_scope?(@user.can_write_officers?)
+  def can_write_officers?(context_params: nil)
+    can_for_scope?(@user.can_write_officers?, context_params)
   end
 end
 

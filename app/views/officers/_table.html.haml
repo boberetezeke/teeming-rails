@@ -26,7 +26,7 @@
             - officer.user.roles.each do |role|
               #{link_to(role.name, role)}
         %td
-          - if officer.user.role
+          - if officer.user&.role
             #{link_to(officer.user.role.name, officer.user.role)}
         - if show_actions
           %td
