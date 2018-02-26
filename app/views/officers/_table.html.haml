@@ -3,6 +3,8 @@
     %tr
       %th Office
       %th Occupant
+      %th Roles
+      %th Combined Role
       - if show_actions
         %th Actions
   %tbody
@@ -19,6 +21,13 @@
               = link_to(officer.user.name, officer.user.member)
             - else
               = officer.user.name
+        %td
+          - if officer.user&.roles
+            - officer.user.roles.each do |role|
+              #{link_to(role.name, role)}
+        %td
+          - if officer.user.role
+            #{link_to(officer.user.role.name, officer.user.role)}
         - if show_actions
           %td
             - if can?(current_user, :edit, officer)

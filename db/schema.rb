@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180205033103) do
+ActiveRecord::Schema.define(version: 20180224181910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,6 +229,8 @@ ActiveRecord::Schema.define(version: 20180205033103) do
   create_table "officer_assignments", force: :cascade do |t|
     t.integer "user_id"
     t.integer "officer_id"
+    t.date    "start_date"
+    t.date    "end_date"
     t.index ["officer_id"], name: "index_officer_assignments_on_officer_id", using: :btree
     t.index ["user_id"], name: "index_officer_assignments_on_user_id", using: :btree
   end
@@ -239,6 +241,7 @@ ActiveRecord::Schema.define(version: 20180205033103) do
     t.date    "end_date"
     t.integer "member_id"
     t.integer "chapter_id"
+    t.text    "responsibilities"
     t.index ["chapter_id"], name: "index_officers_on_chapter_id", using: :btree
     t.index ["member_id"], name: "index_officers_on_member_id", using: :btree
   end
@@ -306,7 +309,8 @@ ActiveRecord::Schema.define(version: 20180205033103) do
   end
 
   create_table "roles", force: :cascade do |t|
-    t.string "name"
+    t.string  "name"
+    t.boolean "combined"
   end
 
   create_table "users", force: :cascade do |t|

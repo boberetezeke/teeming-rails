@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :roles, only: [:show]
+  resources :roles, only: [:index, :show]
 
   resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   resources :candidacies do

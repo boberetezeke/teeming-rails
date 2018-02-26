@@ -14,18 +14,18 @@ class ChapterPolicy < ApplicationPolicy
   end
 
   def new?
-    true
+    @user.can_write_chapters?
   end
 
   def edit?
-    true
+    @user.can_write_chapters?
   end
 
   def update?
-    true
+    @user.can_write_chapters?
   end
 
   def destroy?
-    true
+    @user.can_write_chapters?
   end
 end

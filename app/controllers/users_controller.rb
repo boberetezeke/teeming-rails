@@ -181,6 +181,7 @@ class UsersController < ApplicationController
   def user_params(params)
     params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board, :saw_introduction,
                                  :email, :password, :password_confirmation,
+                                 :share_name, :share_email, :share_phone, :share_address, :use_username,
                                  {event_rsvps_attributes: [:rsvp_type, :event_id] },
                                  {member_attributes: [
                                     :id,

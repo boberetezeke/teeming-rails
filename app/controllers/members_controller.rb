@@ -35,6 +35,7 @@ class MembersController < ApplicationController
 
   def update
     @member.update(member_params)
+    @member.user.update_role_from_roles
     respond_with(@member)
   end
 

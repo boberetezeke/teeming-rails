@@ -39,7 +39,6 @@ class User < ApplicationRecord
   before_save :setup_wizard
 
   attr_accessor :authorize_args
-  attr_accessor :share_email, :share_name, :share_phone, :share_address
 
   def new_candidacy(race)
     Candidacy.new(user: self, race: race)
@@ -50,19 +49,19 @@ class User < ApplicationRecord
   end
 
   def share_name_with?(user)
-    true
+    share_name
   end
 
   def share_email_with?(user)
-    true
+    share_email
   end
 
   def share_phone_with?(user)
-    true
+    share_phone
   end
 
   def share_address_with?(user)
-    true
+    share_address
   end
 
   def accepted_bylaws
@@ -96,6 +95,33 @@ class User < ApplicationRecord
 
   def voted_in_election?(election)
     vote_completions.for_election(election).completed.first
+  end
+
+  def update_role_from_roles
+    privileges = []
+    roles.each do |role|
+      role.privileges.each do |privilege|
+        privileges.push(privilege.dup) unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
+      end
+    end
+    new_role = Role.new(combined: true, name: 'combined')
+
+    if self.role
+      if privileges.present?
+        if Set.new(self.role.privileges.map(&:to_hash)) != Set.new(privileges.map(&:to_hash))
+          self.role.privileges = privileges.to_a
+        end
+      else
+        self.role = nil
+        self.save
+      end
+    else
+      if privileges.present?
+        new_role.privileges = privileges
+        self.role = new_role
+        self.save
+      end
+    end
   end
 
   def method_missing(sym, *args, &block)

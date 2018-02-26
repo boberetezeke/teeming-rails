@@ -21,6 +21,14 @@ class MemberPolicy < ApplicationPolicy
     true
   end
 
+  def assign_role?
+    can_for_scope?(@user.can_assign_roles?)
+  end
+
+  def assign_officer?
+    can_for_scope?(@user.can_assign_officers?)
+  end
+
   private
 
   def can_view_members?

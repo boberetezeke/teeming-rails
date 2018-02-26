@@ -1,0 +1,5 @@
+#{privilege.action.gsub(/_/, " ")} #{privilege.subject.pluralize}
+- if privilege.parsed_scope['chapter_id']
+  for
+  %strong #{Chapter.find(privilege.parsed_scope['chapter_id']).name}
+  chapter

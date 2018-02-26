@@ -10,23 +10,29 @@ class OfficerPolicy < ApplicationPolicy
   end
 
   def new?
-    true
+    can_write_officers?
   end
 
   def create?
-    true
+    can_write_officers?
   end
 
   def edit?
-    true
+    can_write_officers?
   end
 
   def update?
-    true
+    can_write_officers?
   end
 
   def destroy?
-    true
+    can_write_officers?
+  end
+
+  private
+
+  def can_write_officers?
+    can_for_scope?(@user.can_write_officers?)
   end
 end
 

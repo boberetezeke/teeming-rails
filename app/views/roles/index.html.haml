@@ -1,0 +1,10 @@
+%h2 Roles
+
+%table.table
+  %tr
+    %th Name
+    %th Privileges
+  - @roles.each do |role|
+    %tr
+      %td= link_to(role.name, role)
+      %td= role.privileges.map{|p| "#{p.action.gsub(/_/, ' ')} #{p.subject.pluralize}"}.join(", ").truncate(150)

@@ -5,8 +5,10 @@
     %hr
     = f.fields_for :user do |ff|
       = ff.input :id, as: :hidden
-      = ff.input :roles, as: :select, multiple: false, collection: Role.all
-      = ff.input :officers, as: :select, multiple: false, collection: member.chapter.officers
+      - if can?(current_user, :assign_officer, f.object)
+        = ff.input :officers, as: :select, multiple: false, collection: member.chapter.officers
+      - if can?(current_user, :assign_role, f.object)
+        = ff.input :roles, as: :select, multiple: false, collection: Role.all
 
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
 :javascript

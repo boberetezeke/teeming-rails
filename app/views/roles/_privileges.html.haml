@@ -1,0 +1,6 @@
+%ul
+  - role.privileges.group_by{|p| p.subject}.each do |subject, privileges|
+    %li= subject.pluralize
+    %ul
+      - privileges.each do |privilege|
+        %li= render partial: 'privileges/show', locals: { privilege: privilege }
