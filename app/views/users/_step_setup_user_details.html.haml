@@ -3,7 +3,7 @@
 = render partial: 'shared/privacy_policy_notice'
 
 = semantic_form_for @user do |f|
-  = render partial: 'users/user_details', locals: { f: f, disabled: false }
+  = render partial: 'users/user_details', locals: { f: f, show_email: false, show_share_controls: false, disabled: false }
 
   .row
     .col-md-12

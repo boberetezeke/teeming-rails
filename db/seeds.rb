@@ -22,10 +22,10 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
     m.email = row['Email']
     m.save!
 
-    puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
+    # puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
   end
 
-  puts "There are now #{Member.count} members"
+  # puts "There are now #{Member.count} members"
 
 
   blocked_emails = []
@@ -80,19 +80,19 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
     member = Member.find_by_email(email)
     member.update(status: 'block') if member
   end
-  puts "There are #{blocked_emails.count} blocked emails"
+  # puts "There are #{blocked_emails.count} blocked emails"
 
   bounced_emails.each do |email|
     member = Member.find_by_email(email)
     member.update(status: 'bounce') if member
   end
-  puts "There are #{bounced_emails.count} bounced emails"
+  # puts "There are #{bounced_emails.count} bounced emails"
 
   unsubscribed_emails.each do |email|
     member = Member.find_by_email(email)
     member.update(status: 'unsubscribe') if member
   end
-  puts "There are #{unsubscribed_emails.count} unsubscribed emails"
+  # puts "There are #{unsubscribed_emails.count} unsubscribed emails"
 
   invalid_emails.each do |email|
     member = Member.find_by_email(email)
@@ -104,7 +104,7 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
       member.update!(status: 'invalid')
     end
   end
-  puts "There are #{invalid_emails.count} invalid emails"
+  # puts "There are #{invalid_emails.count} invalid emails"
 
 
   repeated_emails = Member.valid_email.group(:email)
@@ -121,14 +121,14 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
       end
     end
   end
-  puts "There are #{duplicate_emails.count} duplicate emails"
+  # puts "There are #{duplicate_emails.count} duplicate emails"
 
 
   Member.where("status IS NULL").each do |member|
     member.update!(status: "active")
   end
 
-  puts "There are #{Member.active.count} active members!"
+  # puts "There are #{Member.active.count} active members!"
 end
 
 #======================== setup MN State Init ==========================

@@ -1,18 +1,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 require 'capybara-screenshot/rspec'
-
-def sign_in(user)
-  visit user_session_path
-  fill_in "user_email", 		  with: user.email
-  fill_in "user_password",		with: user.password
-  click_button "Login"
-end
-
-def sign_out
-  visit root_path
-  click_link "Sign out"
-end
+require 'support/authentication'
 
 describe "Signup process" do
   def fill_in_member_info
