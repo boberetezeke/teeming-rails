@@ -12,6 +12,8 @@ class Member < ApplicationRecord
   has_many :answers, as: :answerable
   accepts_nested_attributes_for :answers
 
+  has_many :message_recipients, dependent: :destroy
+
   attr_accessor :with_user_input
 
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }
