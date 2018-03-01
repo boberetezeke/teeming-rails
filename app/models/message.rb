@@ -4,7 +4,7 @@ class Message < ApplicationRecord
   belongs_to :race
   belongs_to :election
   belongs_to :event
-  has_many :message_recipients
+  has_many :message_recipients, dependent: :destroy
   belongs_to :member_group
 
   scope :for_chapter, ->(chapter) { where(chapter_id: chapter.id) }

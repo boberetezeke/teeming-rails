@@ -4,6 +4,7 @@ class Candidacy < ApplicationRecord
   belongs_to :race, touch: true
   belongs_to  :created_by_user, class_name: 'User', foreign_key: 'created_by_user_id'
   belongs_to  :updated_by_user, class_name: 'User', foreign_key: 'updated_by_user_id'
+  has_many :message_recipients, dependent: :destroy
 
   before_create :generate_token
 
