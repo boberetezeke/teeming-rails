@@ -23,6 +23,52 @@ context "when testing with a normal user" do
     end
   end
 
+  describe "external elections display" do
+    let(:chapter) { Chapter.find_by_name("Duluth") }
+    let(:other_chapter) { Chapter.find_by_name("Alexandria") }
+
+    before do
+      Election.destroy_all
+    end
+
+    context "when using a normal user" do
+      let(:user) { FactoryGirl.create(:user) }
+
+      context "when there are not external elections" do
+        it "doesn't display the external elections section" do
+          visit chapter_path(chapter)
+          expect(page).to_not have_text "External Elections"
+        end
+      end
+
+      context "when there are external elections but no races in this chapter" do
+        let!(:election) { FactoryGirl.create(:election, :external, name: '2020 Elections') }
+
+        it "displays the external elections section" do
+          visit chapter_path(chapter)
+          expect(page).to have_text "External Elections"
+          expect(page).to have_text "2020 Elections"
+          expect(page).to have_selector "a[href='#{election_races_path(election, chapter_id: chapter.id)}']"
+        end
+      end
+
+      context "when there are external elections but and races in this chapter" do
+        let!(:election) { FactoryGirl.create(:election, :external, name: '2020 Elections') }
+        let!(:race)     { FactoryGirl.create(:race, election: election, name: 'Governor', chapter: chapter) }
+        let!(:other_chapter_race)     { FactoryGirl.create(:race, election: election, name: 'Governor', chapter: other_chapter) }
+
+        it "displays the race" do
+          visit chapter_path(chapter)
+          expect(page).to have_text "External Elections"
+          expect(page).to have_text "2020 Elections"
+          expect(page).to have_text "Governor"
+          expect(page).to have_selector "a[href='#{race_path(race, chapter_id: chapter.id)}']"
+          expect(page).to_not have_selector "a[href='#{race_path(other_chapter_race, chapter_id: other_chapter.id)}']"
+        end
+      end
+    end
+  end
+
   describe "show members button available when user has rights to view members" do
     let(:chapter) { Chapter.find_by_name("Duluth") }
 
