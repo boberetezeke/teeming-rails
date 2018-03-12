@@ -3,7 +3,8 @@ require 'rails_helper'
 describe User do
   describe "update_role_from_roles" do
     context "when the user has no role" do
-      let(:user) { FactoryGirl.create(:user, role: nil) }
+      let(:chapter) { FactoryGirl.create(:chapter) }
+      let(:user) { FactoryGirl.create(:user, role: nil, chapter: chapter) }
 
       it "creates a role with identical privileges to one entry in roles" do
         user.roles = [Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])]
@@ -31,6 +32,21 @@ describe User do
         user.update_role_from_roles
 
         expect(user.role).to be_nil
+      end
+
+      it "doesn't set role if there are no roles and the user had no role" do
+        user.update_role_from_roles
+        expect(user.role).to be_nil
+      end
+
+      it "applies a scope to all privileges if a scope is passed in" do
+        user.roles = [Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])]
+        user.save
+        user.update_role_from_roles
+
+        expect(user.role.privileges.count).to eq(1)
+        privilege = user.role.privileges.first
+        expect(JSON.parse(privilege.scope)).to eq({"chapter_id" => chapter.id})
       end
     end
 

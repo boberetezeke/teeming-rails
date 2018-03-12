@@ -4,6 +4,12 @@ class Role < ApplicationRecord
 
   scope :uncombined, ->{ where(Role.arel_table[:combined].eq(nil).or(Role.arel_table[:combined].eq(false))) }
 
+  has_one :user
+
+  def combined?
+    combined
+  end
+
   PRIVILEGES = [
       # action                  # subject       # method name
       ['manage_external',       'candidacy'                                   ],

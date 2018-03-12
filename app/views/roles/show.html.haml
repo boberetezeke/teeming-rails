@@ -1,3 +1,6 @@
-%h2 Role: #{@role.name}
+- if @role.combined
+  %h2 Combined role for #{@role.user.name}
+- else
+  %h2 Role: #{@role.name}
 
 = render partial: 'roles/privileges', locals: { role: @role }

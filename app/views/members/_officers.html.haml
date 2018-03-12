@@ -1,0 +1,5 @@
+- if user.officers.present?
+  %div
+    %span.strong Offices:
+    - user.officers.each do |officer|
+      #{link_to(officer.name, officer)}

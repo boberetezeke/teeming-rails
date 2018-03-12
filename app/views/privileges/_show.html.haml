@@ -3,3 +3,7 @@
   for
   %strong #{Chapter.find(privilege.parsed_scope['chapter_id']).name}
   chapter
+- else
+  - if privilege.role.combined
+    for
+    %strong All chapters

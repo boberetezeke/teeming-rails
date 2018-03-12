@@ -10,7 +10,7 @@
   -if current_user.can_manage_external_candidacies?
     %h3 Messages
     - if @race.messages
-      = render partial: 'messages/table', locals: { messages: @race.messages }
+      = render partial: 'messages/table', locals: { messages: @race.messages, show_actions: true }
 
 .actions
   - if @race.election.external?

@@ -2,7 +2,7 @@
 = render partial: 'elections/show', locals: { election: @election, show_actions: false }
 %h3 Messages
 - if @election.messages
-  = render partial: 'messages/table', locals: { messages: @election.messages }
+  = render partial: 'messages/table', locals: { messages: @election.messages, show_actions: false  }
 
 - if Pundit.policy(current_user, @election).edit?
   %hr

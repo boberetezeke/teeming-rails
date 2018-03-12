@@ -97,11 +97,17 @@ class User < ApplicationRecord
     vote_completions.for_election(election).completed.first
   end
 
-  def update_role_from_roles
+  def update_role_from_roles(apply_chapter_scope: true, chapter: nil)
     privileges = []
     roles.each do |role|
       role.privileges.each do |privilege|
-        privileges.push(privilege.dup) unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
+        unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
+          dup_privilege = privilege.dup
+          if apply_chapter_scope
+            dup_privilege.scope =  {chapter_id: chapter || member.chapter.id}.to_json
+          end
+          privileges.push(dup_privilege)
+        end
       end
     end
     new_role = Role.new(combined: true, name: 'combined')

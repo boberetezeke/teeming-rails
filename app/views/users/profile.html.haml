@@ -4,7 +4,14 @@
 
 = semantic_form_for @user do |f|
   = render partial: 'users/user_details', locals: { f: f, disabled: false, show_email: true, show_share_controls: true }
-
+  - if @user.officers.present?
+    %hr
+    %h3 Offices you occupy
+    = render partial: 'members/officers', locals: { user: @user }
+  - if @user.roles.present?
+    %hr
+    %h3 Roles you have
+    = render partial: 'members/roles', locals: { user: @user }
   %hr
   %h3 Volunteering
   %p.subtitle

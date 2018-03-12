@@ -2,4 +2,4 @@
 = render partial: 'events/show', locals: { event: @event, show_description: true, show_stats: true, show_rsvp: false, event_rsvp: @event_rsvp }
 %h3 Messages
 - if @event.messages
-  = render partial: 'messages/table', locals: { messages: @event.messages }
+  = render partial: 'messages/table', locals: { messages: @event.messages, show_actions: true  }

@@ -8,7 +8,15 @@ class RolesController < ApplicationController
   def show
     @role = Role.find(params[:id])
 
-    breadcrumbs ["Roles", roles_path], @role.name
+    if @role.combined?
+      if @role.user == current_user
+        breadcrumbs ["Profile", profile_users_path], "Combined role for #{@role.user.name}"
+      else
+        breadcrumbs [@role.user.name, @role.user.member], "Combined role for #{@role.user.name}"
+      end
+    else
+      breadcrumbs ["Roles", roles_path], @role.name
+    end
   end
 
   private
