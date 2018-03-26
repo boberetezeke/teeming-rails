@@ -1,1 +1,11 @@
-%div Officer Type: #{@officer.officer_type}
+%h3= @officer.officer_type
+%div
+  %strong Users
+  = render partial: 'users/list', locals: { users: @officer.users }
+%div
+  %strong Roles
+  = render partial: 'roles/list', locals: { roles: @officer.roles }
+
+%hr
+%div
+  = render partial: 'officers/actions', locals: { officer: @officer }

@@ -1,20 +1,26 @@
 - last_election_type = nil
-- elections.by_election_type.by_most_recent.each_with_index do |election, index|
+- election_index = 0
+- elections.by_election_type.by_most_recent.each do |election|
   - unless election.hide_on_dashboard
-    - if election.election_type != last_election_type
+    - show_internal = election.internal? && ((chapter && election.chapter == chapter) || (!chapter && election.chapter.is_state_wide)) && can?(current_user, :show, election)
+    - show_election = election.external? || show_internal
+
+    - if show_election && (election.election_type != last_election_type)
       %h3 #{election.election_type.capitalize} Elections
       - last_election_type = election.election_type
+      - election_index = 0
     - if election.internal?
-      - if (chapter && election.chapter == chapter) || (!chapter && election.chapter.is_state_wide)
-        - if can?(current_user, :show, election)
-          %div{ style: 'padding-top: 10px;'}
-            - if index != 0
-              %hr
-            = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
+      - if show_internal
+        %div{ style: 'padding-top: 10px;'}
+          - if election_index != 0
+            %hr
+          = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
+        - election_index += 1
     - else
       %h4
         =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
         (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})
+      - election_index += 1
 
     - if election.external?
       - if short_list_of_races

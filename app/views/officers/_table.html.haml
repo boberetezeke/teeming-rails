@@ -4,7 +4,6 @@
       %th Office
       %th Occupant
       %th Roles
-      %th Combined Role
       - if show_actions
         %th Actions
   %tbody
@@ -16,21 +15,11 @@
           - else
             = officer.officer_type
         %td
-          - if officer.user
-            - if can?(current_user, :show, officer.user.member)
-              = link_to(officer.user.name, officer.user.member)
-            - else
-              = officer.user.name
+          - if officer.users
+            = render partial: 'users/list', locals: { users: officer.users }
         %td
-          - if officer.user&.roles
-            - officer.user.roles.each do |role|
-              #{link_to(role.name, role)}
-        %td
-          - if officer.user&.role
-            #{link_to(officer.user.role.name, officer.user.role)}
+          - if officer.roles.present?
+            = render partial: 'roles/list', locals: { roles: officer.roles }
         - if show_actions
           %td
-            - if can?(current_user, :edit, officer)
-              = link_to "Edit", edit_officer_path(officer), class: 'btn btn-sm btn-success'
-            - if can?(current_user, :destroy, officer)
-              = link_to "Delete", officer_path(officer), method: :delete, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you sure?' }
+            = render partial: 'officers/actions', locals: { officer: officer }

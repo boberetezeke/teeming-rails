@@ -23,13 +23,18 @@ class OfficersController < ApplicationController
   def new
     @title = "New Officer"
     @officer = Officer.new(chapter: @chapter)
+
+    authorize @officer
     breadcrumbs officers_breadcrumbs, @title
   end
 
   def create
     @officer = Officer.new(officer_params)
     @officer.chapter_id = @chapter.id
+    authorize @officer
+
     @officer.save
+    update_users(@officer.users)
 
     respond_with(@officer)
   end
@@ -40,12 +45,16 @@ class OfficersController < ApplicationController
 
   def update
     @officer.update(officer_params)
+    update_users(@officer.users)
 
     respond_with(@officer)
   end
 
   def destroy
+    users = @officer.users
     @officer.destroy
+
+    update_users(users)
 
     redirect_to chapter_officers_path(@officer.chapter)
   end
@@ -57,6 +66,12 @@ class OfficersController < ApplicationController
     authorize @officer
   end
 
+  def update_users(users)
+    users.each do |user|
+      user.update_role_from_roles
+    end
+  end
+
   def set_chapter
     @chapter = Chapter.find(params[:chapter_id]) if params[:chapter_id]
   end
@@ -66,7 +81,7 @@ class OfficersController < ApplicationController
   end
 
   def officer_params
-    params.require(:officer).permit(:officer_type, {officer_assignment_attributes: [:user_id]})
+    params.require(:officer).permit(:officer_type, role_ids: [], user_ids: [])
   end
 
   def officers_breadcrumbs

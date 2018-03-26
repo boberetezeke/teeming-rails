@@ -1,6 +1,12 @@
 = semantic_form_for [chapter, officer] do |f|
   = f.input :officer_type
-  = f.semantic_fields_for :officer_assignment do |ff|
-    = ff.input :user_id, as: :select, collection: officer.chapter.members.joins(:user).map(&:user)
+  = f.input :users, as: :select, multiple: true, collection: officer.chapter.members.joins(:user).map(&:user)
+  = f.input :roles, as: :select, multiple: true, collection: Role.uncombined
 
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function() {
+    $("#officer_user_ids").select2({theme: "bootstrap"})
+    $("#officer_role_ids").select2({theme: "bootstrap"})
+  })

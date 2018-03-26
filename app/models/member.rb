@@ -9,6 +9,9 @@ class Member < ApplicationRecord
   has_many :member_group_memberships
   has_many :member_groups, through: :member_group_memberships
 
+  has_many :officer_assignments
+  has_many :officers, through: :officer_assignments
+
   has_many :answers, as: :answerable
   accepts_nested_attributes_for :answers
 

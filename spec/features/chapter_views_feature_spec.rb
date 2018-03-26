@@ -66,6 +66,24 @@ context "when testing with a normal user" do
           expect(page).to_not have_selector "a[href='#{race_path(other_chapter_race, chapter_id: other_chapter.id)}']"
         end
       end
+
+      context "when there is an internal election" do
+        let!(:election) { FactoryGirl.create(:election, :internal, chapter: chapter, name: 'Board Members', member_group: MemberGroup.find_by_scope_type('officers')) }
+
+        it "doesn't display the internal election when the user cannot vote in the election" do
+          visit chapter_path(chapter)
+          expect(page).to_not have_text "Internal Elections"
+          expect(page).to_not have_text "Board Members"
+        end
+
+        # it "displays the internal election if the user can vote in it" do
+        #   user.officers << create(:officer, chapter: chapter)
+        #   user.reload
+        #   visit chapter_path(chapter)
+        #   expect(page).to have_text "Internal Elections"
+        #   expect(page).to have_text "Board Members"
+        # end
+      end
     end
   end
 
