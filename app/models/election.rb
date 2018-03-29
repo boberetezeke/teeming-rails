@@ -72,6 +72,28 @@ class Election < ApplicationRecord
     is_frozen
   end
 
+  def freeze
+    update(is_frozen: true)
+
+    voters.each do |member|
+      user = member.user
+      if user
+        VoteCompletion.create(election: self, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
+      end
+    end
+
+    self.questionnaire = Questionnaire.new
+    self.issues.each do |issue|
+      self.questionnaire.append_questionnaire_sections(issue.questionnaire)
+    end
+  end
+
+  def unfreeze
+    update(is_frozen: false)
+    vote_completions.destroy_all
+    questionnaire.destroy
+  end
+
   def voters
     member_group.all_members(chapter)
   end

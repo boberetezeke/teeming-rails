@@ -53,27 +53,12 @@ class ElectionsController < ApplicationController
   end
 
   def freeze
-    @election.update(is_frozen: true)
-
-    @election.voters.each do |member|
-      user = member.user
-      if user
-        VoteCompletion.create(election: @election, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
-      end
-    end
-
-    @election.questionnaire = Questionnaire.new
-    @election.issues.each do |issue|
-      @election.questionnaire.append_questionnaire_sections(issue.questionnaire)
-    end
-
+    @election.freeze
     redirect_to @election
   end
 
   def unfreeze
-    @election.update(is_frozen: false)
-    @election.vote_completions.destroy_all
-    @election.questionnaire.destroy
+    @election.unfreeze
     redirect_to @election
   end
 
