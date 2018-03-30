@@ -54,13 +54,47 @@ context "when testing with a normal user" do
           expect(page).to have_selector "a[href='#{election_votes_path(election)}']"
           expect(page).to have_text "Wait to Vote"
           expect(page).to_not have_text "Edit"
-          expect(page).to_not have_text "Add Race"
+          # expect(page).to_not have_text "Add Race"
           expect(page).to_not have_text "Add Issue"
           expect(page).to_not have_text "Freeze"
           expect(page).to_not have_text "UnFreeze"
           expect(page).to_not have_text "View Questionnaire"
           expect(page).to_not have_text "Email Participants"
           expect(page).to_not have_text "Delete"
+
+          expect(page).to_not have_text "View Your Vote"
+        end
+
+        it "allows the user to vote when voting time active" do
+          FactoryGirl.create(:vote_completion, user: user, election: election, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
+          Timecop.freeze(2022,1,1,10,01)
+          visit election_path(election)
+          expect(page).to have_text "Vote"
+          expect(page).to have_selector "a[href='#{election_votes_path(election)}']"
+
+          expect(page).to_not have_text "View Vote Tallies"
+          expect(page).to_not have_text "View Raw Votes"
+          expect(page).to_not have_text "Download Votes"
+        end
+
+        it "doesn't allows the user to view their vote after voting is done and they haven't voted" do
+          FactoryGirl.create(:vote_completion, user: user, election: election, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
+          Timecop.freeze(2022,1,1,11,01)
+          visit election_path(election)
+          expect(page).to_not have_text "View Your Vote"
+          expect(page).to_not have_selector "a[href='#{view_election_votes_path(election)}']"
+
+          expect(page).to_not have_text "View Vote Tallies"
+          expect(page).to_not have_text "View Raw Votes"
+          expect(page).to_not have_text "Download Votes"
+        end
+
+        it "allows the user to view their vote after voting is done" do
+          FactoryGirl.create(:vote_completion, user: user, election: election, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
+          Timecop.freeze(2022,1,1,11,01)
+          visit election_path(election)
+          expect(page).to have_text "View Your Vote"
+          expect(page).to have_selector "a[href='#{view_election_votes_path(election)}']"
         end
       end
 
@@ -75,8 +109,8 @@ context "when testing with a normal user" do
 
           expect(page).to have_text "Edit"
           expect(page).to have_selector "a[href='#{edit_election_path(election)}']"
-          expect(page).to have_text "Add Race"
-          expect(page).to have_selector "a[href='#{new_election_race_path(election, chapter_id: chapter.id)}']"
+          # expect(page).to have_text "Add Race"
+          # expect(page).to have_selector "a[href='#{new_election_race_path(election, chapter_id: chapter.id)}']"
           expect(page).to have_text "Add Issue"
           expect(page).to have_selector "a[href='#{new_election_issue_path(election, chapter_id: chapter.id)}']"
           expect(page).to have_text "Freeze"

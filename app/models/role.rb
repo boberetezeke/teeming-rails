@@ -61,5 +61,22 @@ class Role < ApplicationRecord
     define_method(method_name) do
       privileges.where(action: action, subject: subject).first
     end
+
+    define_method("new_#{method_name}_privilege") do |scope: {}|
+      Privilege.new(subject: subject, action: action, scope: scope.to_json)
+    end
+
+    define_method("add_#{method_name}_privilege") do |scope: {}|
+      privilege = send("new_#{method_name}_privilege", scope: scope)
+      self.privileges << privilege unless send("find_#{method_name}_privilege", privilege)
+    end
+
+    define_method("remove_#{method_name}_privilege") do |privilege|
+      send("find_#{method_name}_privilege", privilege).destroy
+    end
+
+    define_method("find_#{method_name}_privilege") do |privilege|
+      self.privileges.where(action: privilege.action,  subject: privilege.subject, scope: privilege.scope).first
+    end
   end
 end

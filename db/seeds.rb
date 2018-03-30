@@ -1,6 +1,6 @@
 require 'csv'
 
-VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i unless defined?(VALID_EMAIL_REGEX)
 
 if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
   members_text = File.read(Rails.root.join('db', 'data', 'ormn_roster.csv'))
