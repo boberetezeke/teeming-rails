@@ -84,6 +84,10 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
+  def all_roles
+    officers.map{|officer| officer.roles}.flatten + self.roles
+  end
+
   def is_disqualified_to_vote_in_election?(election)
     vote_completions.for_election(election).disqualifications.first
   end

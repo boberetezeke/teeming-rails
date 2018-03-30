@@ -1,7 +1,7 @@
-- if user.roles.present?
+- if user.all_roles.present?
   %div
     %span.strong Roles:
-    - user.roles.each_with_index do |role, index|
+    - user.all_roles.each_with_index do |role, index|
       - if index != user.roles.size - 1
         #{link_to(role.name, role)},
       - else

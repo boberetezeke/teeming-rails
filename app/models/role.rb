@@ -2,6 +2,9 @@ class Role < ApplicationRecord
   has_many :users
   has_many :privileges
 
+  has_many :officer_assignments
+  has_many :officers, through: :officer_assignments
+
   scope :uncombined, ->{ where(Role.arel_table[:combined].eq(nil).or(Role.arel_table[:combined].eq(false))) }
 
   has_one :user
