@@ -12,7 +12,7 @@ context "when testing with a normal user" do
   end
 
   describe "shows dashboard" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     before do
       visit home_users_path
@@ -32,7 +32,7 @@ context "when testing with a normal user" do
     end
 
     context "when using a normal user" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
 
       context "when there are not external elections" do
         it "doesn't display the external elections section" do
@@ -42,7 +42,7 @@ context "when testing with a normal user" do
       end
 
       context "when there are external elections but no races in this chapter" do
-        let!(:election) { FactoryGirl.create(:election, :external, name: '2020 Elections') }
+        let!(:election) { FactoryBot.create(:election, :external, name: '2020 Elections') }
 
         it "displays the external elections section" do
           visit chapter_path(chapter)
@@ -53,9 +53,9 @@ context "when testing with a normal user" do
       end
 
       context "when there are external elections but and races in this chapter" do
-        let!(:election) { FactoryGirl.create(:election, :external, name: '2020 Elections') }
-        let!(:race)     { FactoryGirl.create(:race, election: election, name: 'Governor', chapter: chapter) }
-        let!(:other_chapter_race)     { FactoryGirl.create(:race, election: election, name: 'Governor', chapter: other_chapter) }
+        let!(:election) { FactoryBot.create(:election, :external, name: '2020 Elections') }
+        let!(:race)     { FactoryBot.create(:race, election: election, name: 'Governor', chapter: chapter) }
+        let!(:other_chapter_race)     { FactoryBot.create(:race, election: election, name: 'Governor', chapter: other_chapter) }
 
         it "displays the race" do
           visit chapter_path(chapter)
@@ -68,7 +68,7 @@ context "when testing with a normal user" do
       end
 
       context "when there is an internal election" do
-        let!(:election) { FactoryGirl.create(:election, :internal, chapter: chapter, name: 'Board Members', member_group: MemberGroup.find_by_scope_type('officers')) }
+        let!(:election) { FactoryBot.create(:election, :internal, chapter: chapter, name: 'Board Members', member_group: MemberGroup.find_by_scope_type('officers')) }
 
         it "doesn't display the internal election when the user cannot vote in the election" do
           visit chapter_path(chapter)
@@ -95,7 +95,7 @@ context "when testing with a normal user" do
     end
 
     context "when testing for chapter items for all users" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
 
       it "displays the Duluth chapter page" do
         expect(page).to have_text "Duluth"
@@ -105,7 +105,7 @@ context "when testing with a normal user" do
     end
 
     context "when the user is a normal user" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
 
       it "displays the view members button" do
         expect(page).to_not have_selector "a[href='#{chapter_members_path(chapter)}']"
@@ -116,7 +116,7 @@ context "when testing with a normal user" do
 
     context "when the user has member viewing privileges for this chapter" do
       let(:user) {
-        FactoryGirl.create(:user,
+        FactoryBot.create(:user,
           role: Role.new(privileges:
                   [Privilege.new(subject: 'member',
                                  action: 'view',
@@ -131,7 +131,7 @@ context "when testing with a normal user" do
 
     context "when the user has manage internal election privileges for this chapter" do
       let(:user) {
-        FactoryGirl.create(:user,
+        FactoryBot.create(:user,
                            role: Role.new(privileges:
                                               [Privilege.new(subject: 'election',
                                                              action: 'manage_internal',

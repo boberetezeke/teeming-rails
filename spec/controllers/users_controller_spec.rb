@@ -6,7 +6,7 @@ describe UsersController do
   describe "home" do
     before do
       Rails.application.load_seed # loading seeds
-      sign_in FactoryGirl.create(:user)
+      sign_in FactoryBot.create(:user)
     end
 
     it "should display the dashboard" do
@@ -16,11 +16,11 @@ describe UsersController do
   end
 
   describe "update" do
-    let(:event)                             { FactoryGirl.create(:event) }
+    let(:event)                             { FactoryBot.create(:event) }
     let(:event_rsvps_attributes_no_rsvp)    { { event_rsvps_attributes: { "0" => {event_id: 1} } } }
     let(:event_rsvps_attributes_in_person)  { { event_rsvps_attributes: { "0" => {event_id: 1, rsvp_type: "in-person"} } } }
 
-    let(:question)                { FactoryGirl.create(:question) }
+    let(:question)                { FactoryBot.create(:question) }
     let(:candidacy_attributes)    do
       {
         candidacies_attributes: {
@@ -37,11 +37,11 @@ describe UsersController do
         }
       }
     end
-    let(:user)   { FactoryGirl.create(:user) }
+    let(:user)   { FactoryBot.create(:user) }
 
     before do
       Rails.application.load_seed # loading seeds
-      sign_in FactoryGirl.create(:user)
+      sign_in FactoryBot.create(:user)
     end
 
     it "allows signup before the candidacy filing date is up" do

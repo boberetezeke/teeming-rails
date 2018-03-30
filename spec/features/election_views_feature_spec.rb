@@ -15,10 +15,10 @@ context "when testing with a normal user" do
   end
 
   context "when testing external elections" do
-    let(:user)       { FactoryGirl.create(:user) }
-    let(:election)   { FactoryGirl.create(:election, :external) }
-    let!(:race_1)     { FactoryGirl.create(:race, locale: 'Roseville', election: election) }
-    let!(:race_2)     { FactoryGirl.create(:race, locale: 'Edina', election: election) }
+    let(:user)       { FactoryBot.create(:user) }
+    let(:election)   { FactoryBot.create(:election, :external) }
+    let!(:race_1)     { FactoryBot.create(:race, locale: 'Roseville', election: election) }
+    let!(:race_2)     { FactoryBot.create(:race, locale: 'Edina', election: election) }
 
     describe "election show" do
       it "shows the races" do
@@ -30,8 +30,8 @@ context "when testing with a normal user" do
   end
 
   context "when testing internal elections" do
-    let(:user)          { FactoryGirl.create(:user) }
-    let(:election)      { FactoryGirl.create(:election, :internal, chapter: chapter,
+    let(:user)          { FactoryBot.create(:user) }
+    let(:election)      { FactoryBot.create(:election, :internal, chapter: chapter,
                                              member_group: MemberGroup.find_by_name('Officers'),
                                              vote_date: Date.new(2022,1,1),
                                              vote_start_time: Time.new(2022,1,1,10,00),
@@ -48,7 +48,7 @@ context "when testing with a normal user" do
 
       context "with a user who is part of the voting pool" do
         it "allows a visit to the show page" do
-          FactoryGirl.create(:vote_completion, user: user, election: election)
+          FactoryBot.create(:vote_completion, user: user, election: election)
           visit election_path(election)
           expect(page).to have_current_path(election_path(election))
           expect(page).to have_selector "a[href='#{election_votes_path(election)}']"
@@ -66,7 +66,7 @@ context "when testing with a normal user" do
         end
 
         it "allows the user to vote when voting time active" do
-          FactoryGirl.create(:vote_completion, user: user, election: election, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
+          FactoryBot.create(:vote_completion, user: user, election: election, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
           Timecop.freeze(2022,1,1,10,01)
           visit election_path(election)
           expect(page).to have_text "Vote"
@@ -78,7 +78,7 @@ context "when testing with a normal user" do
         end
 
         it "doesn't allows the user to view their vote after voting is done and they haven't voted" do
-          FactoryGirl.create(:vote_completion, user: user, election: election, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
+          FactoryBot.create(:vote_completion, user: user, election: election, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
           Timecop.freeze(2022,1,1,11,01)
           visit election_path(election)
           expect(page).to_not have_text "View Your Vote"
@@ -90,7 +90,7 @@ context "when testing with a normal user" do
         end
 
         it "allows the user to view their vote after voting is done" do
-          FactoryGirl.create(:vote_completion, user: user, election: election, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
+          FactoryBot.create(:vote_completion, user: user, election: election, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )
           Timecop.freeze(2022,1,1,11,01)
           visit election_path(election)
           expect(page).to have_text "View Your Vote"
@@ -100,7 +100,7 @@ context "when testing with a normal user" do
 
       context "with a user who can manage internal elections" do
         before do
-          user.update(role: FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'election', action: 'manage_internal')]))
+          user.update(role: FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'election', action: 'manage_internal')]))
         end
 
         it "allows a visit to the show page with an unfrozen election" do
@@ -120,7 +120,7 @@ context "when testing with a normal user" do
         end
 
         it "allows a visit to the show page with an frozen election" do
-          election.issues << FactoryGirl.create(:issue, election: election, chapter: chapter)
+          election.issues << FactoryBot.create(:issue, election: election, chapter: chapter)
           election.freeze_election
           visit election_path(election)
           expect(page).to have_current_path(election_path(election))

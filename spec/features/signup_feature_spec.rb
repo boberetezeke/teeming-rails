@@ -15,7 +15,7 @@ describe "Signup process" do
   end
 
   context "when going through signup" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     before do
       Rails.application.load_seed # loading seeds

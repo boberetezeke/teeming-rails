@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     sequence(:email) {|s| "a@b-#{s}.com" }
 
@@ -13,7 +13,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |user, evaluator|
-      user.member = FactoryGirl.create(:member, email: user.email, chapter: evaluator.chapter)
+      user.member = FactoryBot.create(:member, email: user.email, chapter: evaluator.chapter)
     end
   end
 end

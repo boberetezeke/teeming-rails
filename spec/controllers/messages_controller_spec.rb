@@ -3,12 +3,12 @@ require 'rails_helper'
 describe MessagesController do
   include Devise::Test::ControllerHelpers
 
-  let(:messages_sender_role)  { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'message', action: 'send')]) }
-  let(:user)                  { FactoryGirl.create(:user) }
-  let(:message_sender_user)   { FactoryGirl.create(:user, role: messages_sender_role) }
-  let(:chapter)               { FactoryGirl.create(:chapter) }
-  # let(:chapter_member_group)  { FactoryGirl.create(:member_group, :chapter, members: []) }
-  let(:message)               { FactoryGirl.create(:message) }
+  let(:messages_sender_role)  { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'message', action: 'send')]) }
+  let(:user)                  { FactoryBot.create(:user) }
+  let(:message_sender_user)   { FactoryBot.create(:user, role: messages_sender_role) }
+  let(:chapter)               { FactoryBot.create(:chapter) }
+  # let(:chapter_member_group)  { FactoryBot.create(:member_group, :chapter, members: []) }
+  let(:message)               { FactoryBot.create(:message) }
 
   before do
     MemberGroup.write_member_groups

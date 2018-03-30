@@ -52,14 +52,14 @@ gem 'dotenv-rails', groups: [:development, :test]
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
-group :production do
+group :development, :production do
   gem 'le'
 end
 
 group :test do
   gem 'rspec-rails'
   gem 'capybara'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'timecop'
   gem 'capybara-screenshot'
   gem 'capybara-webkit'

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :questionnaire_section do
     title "My Great Questionnaire Section"
 
@@ -7,7 +7,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |questionnaire_section, evaluator|
-      questionnaire_section.questions = [FactoryGirl.create(:question)] unless evaluator.skip_create_questions
+      questionnaire_section.questions = [FactoryBot.create(:question)] unless evaluator.skip_create_questions
     end
   end
 end

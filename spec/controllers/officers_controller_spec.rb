@@ -3,17 +3,17 @@ require 'rails_helper'
 describe OfficersController do
   include Devise::Test::ControllerHelpers
 
-  let(:assign_role_role)    { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'role', action: 'assign')])}
-  let(:user)                { FactoryGirl.create(:user, roles: [assign_role_role]) }
-  let(:chapter)             { FactoryGirl.create(:chapter) }
-  let(:other_chapter)       { FactoryGirl.create(:chapter) }
-  let(:officer)             { FactoryGirl.create(:officer, chapter: chapter)}
-  let(:role)                { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'message', action: 'send')]) }
-  let(:officer_writer_role)               { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'officer', action: 'write', scope: {chapter_id: chapter.id}.to_json)])}
-  let(:other_chapter_officer_writer_role) { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'officer', action: 'write', scope: {chapter_id: other_chapter.id}.to_json)])}
+  let(:assign_role_role)    { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'role', action: 'assign')])}
+  let(:user)                { FactoryBot.create(:user, roles: [assign_role_role]) }
+  let(:chapter)             { FactoryBot.create(:chapter) }
+  let(:other_chapter)       { FactoryBot.create(:chapter) }
+  let(:officer)             { FactoryBot.create(:officer, chapter: chapter)}
+  let(:role)                { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'message', action: 'send')]) }
+  let(:officer_writer_role)               { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'officer', action: 'write', scope: {chapter_id: chapter.id}.to_json)])}
+  let(:other_chapter_officer_writer_role) { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'officer', action: 'write', scope: {chapter_id: other_chapter.id}.to_json)])}
 
-  let(:chapter_officer_writer_user)       { FactoryGirl.create(:user, role: officer_writer_role, chapter: chapter) }
-  let(:other_chapter_officer_writer_user) { FactoryGirl.create(:user, role: other_chapter_officer_writer_role, chapter: other_chapter) }
+  let(:chapter_officer_writer_user)       { FactoryBot.create(:user, role: officer_writer_role, chapter: chapter) }
+  let(:other_chapter_officer_writer_user) { FactoryBot.create(:user, role: other_chapter_officer_writer_role, chapter: other_chapter) }
 
   context "when users is not signed in" do
     describe "index" do

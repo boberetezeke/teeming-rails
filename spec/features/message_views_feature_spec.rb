@@ -16,7 +16,7 @@ context "when testing with a normal user" do
 
   describe "messages index" do
     context "with an ordinary user" do
-      let(:user)    { FactoryGirl.create(:user) }
+      let(:user)    { FactoryBot.create(:user) }
 
       it "shows empty list if there are no messages" do
         visit chapter_messages_path(chapter)
@@ -24,7 +24,7 @@ context "when testing with a normal user" do
       end
 
       context "where there are messages for the chapter" do
-        let!(:message) { FactoryGirl.create(:message) }
+        let!(:message) { FactoryBot.create(:message) }
 
         before do
           chapter.messages << message
@@ -46,9 +46,9 @@ context "when testing with a normal user" do
     end
 
     context "with an messages user" do
-      let!(:message) { FactoryGirl.create(:message) }
+      let!(:message) { FactoryBot.create(:message) }
       let(:user) do
-        FactoryGirl.create(:user,
+        FactoryBot.create(:user,
                          role: Role.new(privileges:
                                         [Privilege.new(subject: 'message',
                                                        action: 'send',
@@ -75,9 +75,9 @@ context "when testing with a normal user" do
       end
 
       context "with an messages user for a different chapter" do
-        let!(:message) { FactoryGirl.create(:message) }
+        let!(:message) { FactoryBot.create(:message) }
         let(:user) do
-          FactoryGirl.create(:user,
+          FactoryBot.create(:user,
                              role: Role.new(privileges:
                                             [Privilege.new(subject: 'message',
                                                action: 'send',

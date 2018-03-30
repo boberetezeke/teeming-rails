@@ -3,10 +3,10 @@ require 'rails_helper'
 describe User do
   describe "update_role_from_roles" do
     context "when the user has no role" do
-      let(:chapter)       { FactoryGirl.create(:chapter) }
-      let(:user)          { FactoryGirl.create(:user, role: nil, chapter: chapter) }
-      let(:officer_role)  { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'officer_subject', action: 'officer_action')])}
-      let(:officer)       { FactoryGirl.create(:officer, chapter: chapter, users: [user], roles: [officer_role])}
+      let(:chapter)       { FactoryBot.create(:chapter) }
+      let(:user)          { FactoryBot.create(:user, role: nil, chapter: chapter) }
+      let(:officer_role)  { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'officer_subject', action: 'officer_action')])}
+      let(:officer)       { FactoryBot.create(:officer, chapter: chapter, users: [user], roles: [officer_role])}
 
       it "creates a role with identical privileges to one entry in roles" do
         user.roles = [Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])]
@@ -62,7 +62,7 @@ describe User do
     end
 
     context "when the user has a role" do
-      let(:user) { FactoryGirl.create(:user, role: Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])) }
+      let(:user) { FactoryBot.create(:user, role: Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])) }
 
       it "creates a role with identical privileges to one entry in roles" do
         user.roles = [Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])]

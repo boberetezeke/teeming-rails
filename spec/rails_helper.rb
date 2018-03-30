@@ -37,7 +37,7 @@ ActiveRecord::Migration.maintain_test_schema!
 
 module Helpers
   def create(*args)
-    FactoryGirl.create(*args)
+    FactoryBot.create(*args)
   end
 end
 

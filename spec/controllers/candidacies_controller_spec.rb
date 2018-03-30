@@ -3,10 +3,10 @@ require 'rails_helper'
 describe CandidaciesController do
   include Devise::Test::ControllerHelpers
 
-  let(:internal_election)   { FactoryGirl.create(:election, :internal) }
-  let(:race)                { FactoryGirl.create(:race, election: internal_election, filing_deadline_date: Date.new(2017,3,10) ) }
-  let(:user)                { FactoryGirl.create(:user) }
-  let!(:questionnaire)      { FactoryGirl.create(:questionnaire, questionnairable: race) }
+  let(:internal_election)   { FactoryBot.create(:election, :internal) }
+  let(:race)                { FactoryBot.create(:race, election: internal_election, filing_deadline_date: Date.new(2017,3,10) ) }
+  let(:user)                { FactoryBot.create(:user) }
+  let!(:questionnaire)      { FactoryBot.create(:questionnaire, questionnairable: race) }
 
   before do
     sign_in user
