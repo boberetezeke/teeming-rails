@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   STATES = ['step_setup_user_details', 'step_volunteer_or_donate']
 

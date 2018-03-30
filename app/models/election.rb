@@ -72,7 +72,7 @@ class Election < ApplicationRecord
     is_frozen
   end
 
-  def freeze
+  def freeze_election
     update(is_frozen: true)
 
     voters.each do |member|
@@ -88,7 +88,7 @@ class Election < ApplicationRecord
     end
   end
 
-  def unfreeze
+  def unfreeze_election
     update(is_frozen: false)
     vote_completions.destroy_all
     questionnaire.destroy

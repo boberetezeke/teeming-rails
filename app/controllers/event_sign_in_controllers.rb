@@ -1,5 +1,5 @@
 class EventSignInsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def new
     @event_sign_in = EventSignIn.new(event_id: params[:event_id])

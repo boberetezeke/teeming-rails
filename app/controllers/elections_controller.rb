@@ -1,5 +1,5 @@
 class ElectionsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   before_action :set_election, only: [:show, :edit, :update, :destroy, :unfreeze, :freeze, :email]
   before_action :set_chapter
@@ -53,12 +53,12 @@ class ElectionsController < ApplicationController
   end
 
   def freeze
-    @election.freeze
+    @election.freeze_election
     redirect_to @election
   end
 
   def unfreeze
-    @election.unfreeze
+    @election.unfreeze_election
     redirect_to @election
   end
 

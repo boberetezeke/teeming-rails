@@ -10,6 +10,9 @@ require 'capybara-screenshot/rspec'
 
 Capybara.asset_host = 'http://localhost:3000'
 Capybara.javascript_driver = :webkit
+Capybara::Webkit.configure do |config|
+  config.allow_url("https://www.google-analytics.com/analytics.js")
+end
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -46,7 +49,6 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = false
-
   RSpec.configure do |config|
     config.include(Helpers)
   end

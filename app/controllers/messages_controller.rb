@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
   include ActionView::Helpers::TextHelper
 
   before_action :set_context

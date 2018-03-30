@@ -1,5 +1,5 @@
 class VotesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def index
     @election = Election.find(params[:election_id])

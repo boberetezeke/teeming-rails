@@ -49,7 +49,7 @@ describe UsersController do
       user.update(setup_state: 'step_declare_candidacy')
       Timecop.freeze(Time.zone.local(2017,3,10,23,59,59))
 
-      put :update, id: user.id, user: { run_for_state_board: "1" }.merge(event_rsvps_attributes_in_person)
+      put :update, params: {id: user.id, user: { run_for_state_board: "1" }.merge(event_rsvps_attributes_in_person)}
 
       expect(user.reload.setup_state).to eq("")
       expect(flash[:alert]).to be_nil
@@ -60,7 +60,7 @@ describe UsersController do
       user.update(setup_state: 'step_declare_candidacy')
       Timecop.freeze(Time.zone.local(2017,3,11,00,00,00))
 
-      put :update, id: user.id, user: { run_for_state_board: "1" }.merge(event_rsvps_attributes_in_person)
+      put :update, params: {id: user.id, user: { run_for_state_board: "1" }.merge(event_rsvps_attributes_in_person)}
 
       expect(user.reload.setup_state).to eq('step_declare_candidacy')
       expect(flash[:alert]).to eq('the filing deadline is past')

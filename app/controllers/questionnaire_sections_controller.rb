@@ -1,5 +1,5 @@
 class QuestionnaireSectionsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def new
     @questionnaire = Questionnaire.find(params[:questionnaire_id])

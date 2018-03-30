@@ -121,7 +121,7 @@ context "when testing with a normal user" do
 
         it "allows a visit to the show page with an frozen election" do
           election.issues << FactoryGirl.create(:issue, election: election, chapter: chapter)
-          election.freeze
+          election.freeze_election
           visit election_path(election)
           expect(page).to have_current_path(election_path(election))
 

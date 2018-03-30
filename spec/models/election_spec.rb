@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe Election do
-  let!(:questionnaire)              { FactoryGirl.create(:questionnaire) }
-  let!(:questionnaire_section_1)    { FactoryGirl.create(:questionnaire_section, questionnaire: questionnaire, order_index: 1, title: 'Section 1') }
+  let!(:questionnaire)              { FactoryGirl.create(:questionnaire, skip_create_sections: true) }
+  let!(:questionnaire_section_1)    { FactoryGirl.create(:questionnaire_section, questionnaire: questionnaire, order_index: 1, title: 'Section 1', skip_create_questions: true) }
 
   let!(:ranked_choice_question)     { FactoryGirl.create(:question, questionnaire_section: questionnaire_section_1, question_type: Question::QUESTION_TYPE_RANKED_CHOICE, order_index: 1) }
   let!(:ranked_choice_1)            { FactoryGirl.create(:choice, question: ranked_choice_question, title: 'ranked choice 1', order_index: 1) }
