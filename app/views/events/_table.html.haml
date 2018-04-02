@@ -1,5 +1,5 @@
 - events.each do |event|
-  = render partial: 'events/show', locals: {event: event, show_description: false, show_rsvp: true, show_stats: show_stats, event_rsvp: user.event_rsvps.where(event: event).first}
+  = render partial: 'events/show', locals: {event: event, show_description: false, show_rsvp: true, show_actions: false, show_stats: show_stats, event_rsvp: user.event_rsvps.where(event: event).first}
 
 - if can?(current_user, :new, Event)
   = link_to "New Event", new_chapter_event_path(@chapter), class: 'btn btn-sm btn-success'

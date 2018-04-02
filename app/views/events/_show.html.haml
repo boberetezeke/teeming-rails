@@ -2,7 +2,10 @@
   .col-md-4
     %span.event-title What
     %br
-    %span.event-data= link_to(event.name, event)
+    %span.event-data
+      = link_to(event.name, event)
+      - if event.published? && can?(current_user, :edit, event)
+        = "- (Published)"
   .col-md-4
     %span.event-title Where
     %br
@@ -28,11 +31,16 @@
       .strong RSVP Stats:
       In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
 
-- if can?(current_user, :edit, event)
-  = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
-  = link_to "Email Event", email_event_path(event, chapter_id: event.chapter.id, event_id: event.id), method: :put, class: 'btn btn-sm btn-warning'
-- if can?(current_user, :destroy, event)
-  = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+- if show_actions
+  - if can?(current_user, :edit, event)
+    = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
+    - if event.published?
+      = link_to "Unpublish", unpublish_event_path(event), method: :put, class: 'btn btn-sm btn-info'
+    - else
+      = link_to "Publish", publish_event_path(event), method: :put, class: 'btn btn-sm btn-info'
+    = link_to "Email Event", email_event_path(event, chapter_id: event.chapter.id, event_id: event.id), method: :put, class: 'btn btn-sm btn-warning'
+  - if can?(current_user, :destroy, event)
+    = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
 
 - if show_rsvp && event_rsvp
   .row

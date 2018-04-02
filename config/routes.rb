@@ -43,6 +43,8 @@ Rails.application.routes.draw do
     resources :event_sign_ins, shallow: true
     member do
       put :email
+      put :publish
+      put :unpublish
     end
   end
   resources :member_groups do

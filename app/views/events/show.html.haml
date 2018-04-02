@@ -1,5 +1,4 @@
-%h3 Event
-= render partial: 'events/show', locals: { event: @event, show_description: true, show_stats: true, show_rsvp: true, event_rsvp: @event_rsvp }
+= render partial: 'events/show', locals: { event: @event, show_description: true, show_actions: true, show_stats: true, show_rsvp: true, event_rsvp: @event_rsvp }
 %h3 Messages
 - if @event.messages
   = render partial: 'messages/table', locals: { messages: @event.messages, show_actions: true  }

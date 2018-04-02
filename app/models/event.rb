@@ -8,6 +8,7 @@ class Event < ApplicationRecord
   attr_accessor :occurs_at_date_str, :occurs_at_time_str
 
   scope :future, ->{ where(Event.arel_table[:occurs_at].gt(Time.zone.now)) }
+  scope :published, ->{ where(Event.arel_table[:published_at].not_eq(nil)) }
 
   validates :name, presence: true
 
@@ -16,6 +17,18 @@ class Event < ApplicationRecord
   def set_accessors
     self.occurs_at_date_str = self.occurs_at.strftime("%m/%d/%Y")     if self.occurs_at
     self.occurs_at_time_str = self.occurs_at.strftime("%H:%M")        if self.occurs_at
+  end
+
+  def published?
+    self.published_at.present?
+  end
+
+  def publish
+    update(published_at: Time.now)
+  end
+
+  def unpublish
+    update(published_at: nil)
   end
 
   def occurs_at_date_and_time_is_valid

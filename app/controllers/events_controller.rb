@@ -3,11 +3,11 @@ class EventsController < ApplicationController
 
   before_action :set_chapter
   before_action :set_context_params
-  before_action :set_event, only: [:show, :edit, :update, :email, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :email, :publish, :unpublish, :destroy]
 
   def index
     @chapter = Chapter.find(params[:chapter_id])
-    @events = @chapter.events
+    @events = policy_scope_with_args(@chapter.events, @context_params)
     authorize_with_args Event, @context_params
 
     breadcrumbs [@chapter.name, @chapter], "Events"
@@ -54,6 +54,16 @@ class EventsController < ApplicationController
     end
   end
 
+  def publish
+    @event.publish
+    redirect_to @event
+  end
+
+  def unpublish
+    @event.unpublish
+    redirect_to @event
+  end
+
   def email
     redirect_to new_chapter_message_path(@context_params.merge(event_id: @event.id, chapter_id: @event.chapter.id))
   end
@@ -67,7 +77,7 @@ class EventsController < ApplicationController
 
   def set_event
     @event = Event.find(params[:id])
-    authorize @event
+    authorize_with_args @event, {chapter_id: @event.chapter.id}
   end
 
   def set_chapter

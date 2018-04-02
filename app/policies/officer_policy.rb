@@ -14,7 +14,7 @@ class OfficerPolicy < ApplicationPolicy
   end
 
   def create?
-    can_write_officers?
+    can_write_officers?(context_params: context_params)
   end
 
   def edit?
