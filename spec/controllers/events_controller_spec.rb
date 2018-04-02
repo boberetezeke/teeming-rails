@@ -70,5 +70,26 @@ describe EventsController do
       end
     end
   end
+
+  describe "publish" do
+    it "fails to publish when a regular user does it" do
+      sign_in user
+      put :publish, params: { id: event_1_unpublished.id }
+      expect(response).to redirect_to(root_path)
+    end
+
+    it "fails to publish if already published" do
+      sign_in edit_events_user
+      put :publish, params: { id: event_2_published.id }
+      expect(flash["alert"]).to eq("Event is already published")
+    end
+
+    it "fails to publish when no time is set" do
+      sign_in edit_events_user
+      event_1_unpublished.update(occurs_at: nil)
+      put :publish, params: { id: event_1_unpublished.id }
+      expect(flash["alert"]).to eq("Can't publish event without a time set")
+    end
+  end
 end
 

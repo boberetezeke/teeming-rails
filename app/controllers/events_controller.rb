@@ -55,7 +55,13 @@ class EventsController < ApplicationController
   end
 
   def publish
-    @event.publish
+    if @event.published?
+      flash[:alert] = "Event is already published"
+    elsif @event.occurs_at.nil?
+      flash[:alert] = "Can't publish event without a time set"
+    else
+      @event.publish
+    end
     redirect_to @event
   end
 
