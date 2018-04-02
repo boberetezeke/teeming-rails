@@ -119,20 +119,88 @@ context "when testing with a normal user" do
           expect(page).to have_selector "a[href='#{election_path(election, chapter_id: chapter.id)}']"
         end
 
-        it "allows a visit to the show page with an frozen election" do
-          election.issues << FactoryBot.create(:issue, election: election, chapter: chapter)
-          election.freeze_election
-          visit election_path(election)
-          expect(page).to have_current_path(election_path(election))
+        context "when the election is frozen" do
+          before do
+            election.issues << FactoryBot.create(:issue, election: election, chapter: chapter)
+            election.freeze_election
+          end
 
-          expect(page).to have_text "Unfreeze"
-          expect(page).to have_selector "a[href='#{unfreeze_election_path(election)}']"
-          expect(page).to have_text "View Questionnaire"
-          expect(page).to have_selector "a[href='#{questionnaire_path(election.questionnaire)}']"
-          expect(page).to have_text "Email Participants"
-          expect(page).to have_selector "a[href='#{email_election_path(election)}']"
-          expect(page).to have_text "Delete"
-          expect(page).to have_selector "a[href='#{election_path(election, chapter_id: chapter.id)}']"
+          it "allows a visit to the show page with an frozen election" do
+            visit election_path(election)
+            expect(page).to have_current_path(election_path(election))
+
+            expect(page).to have_text "Unfreeze"
+            expect(page).to have_selector "a[href='#{unfreeze_election_path(election)}']"
+            expect(page).to have_text "View Questionnaire"
+            expect(page).to have_selector "a[href='#{questionnaire_path(election.questionnaire)}']"
+            expect(page).to have_text "Email Participants"
+            expect(page).to have_selector "a[href='#{email_election_path(election)}']"
+            expect(page).to have_text "Delete"
+            expect(page).to have_selector "a[href='#{election_path(election, chapter_id: chapter.id)}']"
+          end
+
+          context "when during the election time" do
+            before do
+              Timecop.freeze(2022,1,1,10,01)
+            end
+
+            it "allows the user to enter paper ballots if the the election is offline" do
+              election.update(election_method: Election::ELECTION_METHOD_OFFLINE_ONLY)
+              user.role.add_enter_votes_privilege(scope: nil)
+              visit election_path(election)
+              expect(page).to have_text "Enter Paper Ballots"
+              expect(page).to have_selector "a[href='#{enter_election_votes_path(election)}']"
+            end
+
+            it "doesn't allow the user to enter paper ballots if the the election is online and offline" do
+              election.update(election_method: Election::ELECTION_METHOD_ONLINE_AND_OFFLINE)
+              user.role.add_enter_votes_privilege(scope: nil)
+              visit election_path(election)
+              expect(page).to_not have_text "Enter Paper Ballots"
+            end
+
+            it "allows the user to view tallies if they have the view tallies privilege" do
+              user.role.add_show_vote_tallies_privilege(scope: nil)
+              visit election_path(election)
+              expect(page).to have_text "View Vote Tallies"
+              expect(page).to have_selector "a[href='#{tallies_election_votes_path(election)}']"
+              expect(page).to have_text "View Raw Votes"
+              expect(page).to have_selector "a[href='#{raw_votes_election_votes_path(election)}']"
+              expect(page).to_not have_text "Enter Paper Ballots"
+            end
+          end
+
+          context "when the election time is past" do
+            before do
+              Timecop.freeze(2022,1,1,11,01)
+            end
+
+            it "allows the user to view tallies if they have the view tallies privilege" do
+              user.role.add_show_vote_tallies_privilege(scope: nil)
+              visit election_path(election)
+              expect(page).to have_text "View Vote Tallies"
+              expect(page).to have_selector "a[href='#{tallies_election_votes_path(election)}']"
+              expect(page).to have_text "View Raw Votes"
+              expect(page).to have_selector "a[href='#{raw_votes_election_votes_path(election)}']"
+              expect(page).to_not have_text "Enter Paper Ballots"
+            end
+
+            it "allows the user to enter paper ballots if the the election is offline" do
+              election.update(election_method: Election::ELECTION_METHOD_OFFLINE_ONLY)
+              user.role.add_enter_votes_privilege(scope: nil)
+              visit election_path(election)
+              expect(page).to have_text "Enter Paper Ballots"
+              expect(page).to have_selector "a[href='#{enter_election_votes_path(election)}']"
+            end
+
+            it "allows the user to enter paper ballots if the the election is online and offline" do
+              election.update(election_method: Election::ELECTION_METHOD_ONLINE_AND_OFFLINE)
+              user.role.add_enter_votes_privilege(scope: nil)
+              visit election_path(election)
+              expect(page).to have_text "Enter Paper Ballots"
+              expect(page).to have_selector "a[href='#{enter_election_votes_path(election)}']"
+            end
+          end
         end
       end
     end

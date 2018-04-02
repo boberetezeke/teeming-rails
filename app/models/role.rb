@@ -63,7 +63,7 @@ class Role < ApplicationRecord
     end
 
     define_method("new_#{method_name}_privilege") do |scope: {}|
-      Privilege.new(subject: subject, action: action, scope: scope.to_json)
+      Privilege.new(subject: subject, action: action, scope: scope ? scope.to_json : nil)
     end
 
     define_method("add_#{method_name}_privilege") do |scope: {}|
