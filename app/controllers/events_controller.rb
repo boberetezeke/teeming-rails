@@ -14,6 +14,7 @@ class EventsController < ApplicationController
   end
 
   def show
+    @event_rsvp = @event.event_rsvps.for_user(current_user).first
     breadcrumbs event_breadcrumbs, @event.name
   end
 
@@ -30,6 +31,7 @@ class EventsController < ApplicationController
     authorize @event
 
     if @event.save
+      create_rsvps
       redirect_to @event
     else
       render :new
@@ -37,8 +39,8 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @event.set_accessors
     @event = Event.find(params[:id])
+    @event.set_accessors
     @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
 
     breadcrumbs event_breadcrumbs, @event.name
@@ -58,7 +60,7 @@ class EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to events_path
+    redirect_to chapter_events_path(@event.chapter)
   end
 
   private
@@ -78,6 +80,12 @@ class EventsController < ApplicationController
 
   def event_params
     params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id, :member_group_id)
+  end
+
+  def create_rsvps
+    @event.member_group.all_members(@event.chapter).each do |member|
+      EventRsvp.create(user: member.user, event: @event, during_initialization: true)
+    end
   end
 
   def event_breadcrumbs(include_link: true)

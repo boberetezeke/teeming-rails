@@ -10,7 +10,11 @@
   .col-md-4
     %span.event-title When
     %br
-    %span.event-data= event_date_and_time_str(event.occurs_at)
+    %span.event-data
+      - if event.occurs_at
+        = event_date_and_time_str(event.occurs_at)
+      - else
+        No Date Specified
 - if show_description
   .row
     .col-md-12
@@ -36,8 +40,11 @@
       .event-title Your RSVP
   .row
     .col-md-12
-      = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
-      = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
+      - if event_rsvp.rsvp_type
+        = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
+        = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
+      - else
+        = link_to "Set Your RSVP", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
 %hr
 
 

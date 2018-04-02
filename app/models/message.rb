@@ -78,6 +78,23 @@ class Message < ApplicationRecord
             errors.push(['event_link', "has no event associated with this message"])
             ""
           end
+        when /event_rsvp_link/
+          if event
+            if message_recipient
+              user = message_recipient.member&.user
+              if user
+                url = Rails.application.routes.url_helpers.edit_event_rsvp_path(event.event_rsvps.for_user(user).first)
+                "<a href=\"#{host}#{url}\">RSVP for #{event.name}</a>"
+              else
+                "Create a user account on https://ourrevolutionmn.com/members to RSVP to this event."
+              end
+            else
+              ""
+            end
+          else
+            errors.push(['event_rsvp_link', "has no event associated with this message"])
+            ""
+          end
         when /candidate_questionnaire_link/
           if message_recipient
             if message_recipient.candidacy

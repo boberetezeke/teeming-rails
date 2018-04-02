@@ -2,7 +2,9 @@ class EventRsvp < ApplicationRecord
   belongs_to :user
   belongs_to :event
 
-  validates :rsvp_type, presence: true
+  validates :rsvp_type, presence: true, unless: :during_initialization
+
+  attr_accessor :during_initialization
 
   RSVP_TYPE_IN_PERSON = 'in-person'
   RSVP_TYPE_ONLINE =    'online'
@@ -20,6 +22,7 @@ class EventRsvp < ApplicationRecord
   }
   RSVP_TYPES_FOR_FORM = RSVP_TYPES.invert
 
+  scope :for_user,  ->(user) { where(user: user) }
   scope :in_person, ->{ where(rsvp_type: RSVP_TYPE_IN_PERSON) }
   scope :online,    ->{ where(rsvp_type: RSVP_TYPE_ONLINE) }
   scope :no,        ->{ where(rsvp_type: RSVP_TYPE_NO) }
