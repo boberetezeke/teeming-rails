@@ -24,7 +24,7 @@ context "when testing with a normal user" do
       end
 
       context "where there are messages for the chapter" do
-        let!(:message) { FactoryBot.create(:message) }
+        let!(:message) { FactoryBot.create(:message, :sent) }
 
         before do
           chapter.messages << message
@@ -65,17 +65,17 @@ context "when testing with a normal user" do
           expect(page).to have_text message.subject
         end
 
-        it "doesn't show edit draft button" do
+        it "shows edit draft button" do
           expect(page).to have_text "Edit Draft"
         end
 
-        it "doesn't show delete button" do
+        it "shows delete button" do
           expect(page).to have_text "Delete"
         end
       end
 
       context "with an messages user for a different chapter" do
-        let!(:message) { FactoryBot.create(:message) }
+        let!(:message) { FactoryBot.create(:message, :sent) }
         let(:user) do
           FactoryBot.create(:user,
                              role: Role.new(privileges:

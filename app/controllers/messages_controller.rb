@@ -9,8 +9,8 @@ class MessagesController < ApplicationController
     authorize_with_args Message, @context_params
     @chapter = Chapter.find(params[:chapter_id])
 
-    @messages = policy_scope(Message)
-    @messages = @messages.for_chapter(@chapter)
+    @messages = @chapter.messages
+    @messages = policy_scope_with_args(@messages, @context_params)
 
     breadcrumbs [@chapter.name, @chapter], "Messages"
   end

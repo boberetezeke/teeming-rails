@@ -14,7 +14,7 @@
       - if Event.future.blank?
         There are no upcoming events scheduled at this time
       - else
-        = render partial: 'events/table', locals: {events: Event.future, user: current_user, show_stats: true}
+        = render partial: 'events/table', locals: {events: @events, user: current_user, show_stats: true}
 - else
   = render partial: "#{@user.setup_state}"
 

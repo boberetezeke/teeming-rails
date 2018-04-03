@@ -8,6 +8,7 @@ class Message < ApplicationRecord
   belongs_to :member_group
 
   scope :for_chapter, ->(chapter) { where(chapter_id: chapter.id) }
+  scope :sent,        ->{ where(Message.arel_table[:sent_at].not_eq(nil)) }
 
   validate :body_is_valid?
 

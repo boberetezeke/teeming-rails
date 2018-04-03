@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   def home
     @user = current_user
     @title = "Our Revolution MN Membership"
+    @events = policy_scope(Event.future)
 
     @setup_state = @user.setup_state
     if @setup_state.present?

@@ -14,6 +14,8 @@ class ChaptersController < ApplicationController
 
     @title = "#{@chapter.name} Chapter"
     @tab = params[:tab] || 'activity'
+    @events = policy_scope_with_args(@chapter.events.future, @context_params)
+    @messages = policy_scope_with_args(@chapter.messages, @context_params)
     breadcrumbs chapters_breadcrumbs, @chapter.name
   end
 

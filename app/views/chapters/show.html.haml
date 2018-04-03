@@ -15,9 +15,9 @@
       - if @chapter.events.future.blank?
         There are no upcoming events scheduled at this time
       - else
-        = render partial: 'events/table', locals: {events: @chapter.events.future, user: current_user, show_stats: true}
+        = render partial: 'events/table', locals: {events: @events, user: current_user, show_stats: true}
       %h3= link_to("Messages", chapter_messages_path(@chapter))
-      = render partial: 'messages/table', locals: {messages: @chapter.messages, show_actions: false }
+      = render partial: 'messages/table', locals: {messages: @messages, show_actions: false }
   %hr
   - if can?(current_user, :new, Election)
     = link_to("New Interal Election", new_election_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-success')
