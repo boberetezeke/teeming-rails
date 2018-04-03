@@ -1,0 +1,19 @@
+%h2 Users with Roles
+
+%table.table
+  %tr
+    %th Name
+    %th Combined Role
+    %th Officer Roles
+    %th Non Officer Roles
+  - @users.each do |user|
+    %tr
+      %td= user.name
+      %td= link_to(user.role.name, user.role)
+      %td
+        - user.officers.each do |officer|
+          = link_to(officer.name, officer)
+          = "-"
+          = render partial: 'roles/list', locals: { roles: officer.roles }
+          %br
+      %td= render partial: 'roles/list', locals: { roles: user.roles }

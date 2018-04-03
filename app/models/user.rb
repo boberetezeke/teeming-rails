@@ -38,6 +38,8 @@ class User < ApplicationRecord
 
   before_save :setup_wizard
 
+  scope :with_roles, ->{ where(User.arel_table[:role_id].not_eq(nil)) }
+
   attr_accessor :authorize_args
 
   def new_candidacy(race)

@@ -156,6 +156,10 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 
+  def with_roles
+    @users = User.with_roles
+  end
+
   private
 
   def next_state

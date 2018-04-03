@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       get :bylaws
       get :code_of_conduct
       put :redo_initial_steps
+      get :with_roles
     end
   end
 
