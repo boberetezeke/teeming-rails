@@ -3,6 +3,8 @@ class MessageRecipient < ApplicationRecord
   belongs_to :member
   belongs_to :candidacy
 
+  before_create :create_token
+
   def name
     forward(:name)
   end
@@ -12,6 +14,10 @@ class MessageRecipient < ApplicationRecord
   end
 
   private
+
+  def create_token
+    self.token = SecureRandom.hex(10)
+  end
 
   def forward(sym)
     if candidacy

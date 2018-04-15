@@ -15,7 +15,12 @@ class UsersController < ApplicationController
 
       convert_answer_checkboxes_from_text
       # for user info page
-      @user.member = Member.new(email: @user.email) unless @user.member
+      @user.member = Member.new(email: @user.email, message_controls: [
+          MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL,
+                             control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
+          MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_TEXT,
+                             control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
+      ]) unless @user.member
       @user.member.with_user_input = true
 
       # for candidancies page
@@ -54,6 +59,12 @@ class UsersController < ApplicationController
     convert_answer_checkboxes_from_text
 
     breadcrumbs "My Profile"
+  end
+
+  def privacy
+    @user = current_user
+
+    breadcrumbs "My Privacy"
   end
 
   def account
@@ -194,6 +205,7 @@ class UsersController < ApplicationController
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
                                     :with_user_input,
                                     {answers_attributes: CandidaciesController.answers_atributes},
+                                    {message_controls_attributes: [:unsubscribe_type, :control_type, :id]}
                                  ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180402180814) do
+ActiveRecord::Schema.define(version: 20180411014933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -189,17 +189,20 @@ ActiveRecord::Schema.define(version: 20180402180814) do
 
   create_table "message_controls", id: :serial, force: :cascade do |t|
     t.integer "member_id"
-    t.integer "unsubscribed_from_message_id_id"
     t.datetime "unsubscribed_at"
     t.string "unsubscribe_reason"
+    t.integer "unsubscribed_from_message_id"
+    t.string "unsubscribe_type"
+    t.string "control_type"
     t.index ["member_id"], name: "index_message_controls_on_member_id"
-    t.index ["unsubscribed_from_message_id_id"], name: "index_message_controls_on_unsubscribed_from_message_id_id"
+    t.index ["unsubscribed_from_message_id"], name: "index_message_controls_on_unsubscribed_from_message_id"
   end
 
   create_table "message_recipients", id: :serial, force: :cascade do |t|
     t.integer "message_id"
     t.integer "member_id"
     t.integer "candidacy_id"
+    t.string "token"
     t.index ["candidacy_id"], name: "index_message_recipients_on_candidacy_id"
     t.index ["member_id"], name: "index_message_recipients_on_member_id"
     t.index ["message_id"], name: "index_message_recipients_on_message_id"

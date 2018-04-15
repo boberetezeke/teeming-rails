@@ -1,0 +1,3 @@
+= member_f.fields_for :message_controls do |member_ff|
+  = member_ff.input :unsubscribe_type, as: :hidden
+  = member_ff.input :control_type, label: "For " + member_ff.object.unsubscribe_type.pluralize.capitalize, as: :select, collection: MessageControl::CONTROL_TYPES

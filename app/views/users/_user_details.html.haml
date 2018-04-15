@@ -8,14 +8,7 @@
         = render partial: 'members/email', locals: { f: ff, disabled: disabled }
 = f.fields_for :member do |ff|
   = render partial: 'members/user_details', locals: { f: ff, disabled: disabled }
-%hr
-- if show_share_controls && is_current_user?(f.object.member, current_user)
-  %h3 Privacy Controls
-  %p.subtitle
-    We value your privacy and we believe in privacy for ordinary users and
-    transparancy for officials within the organization.
-  = render partial: 'users/share_controls', locals: { f: f, disabled: disabled }
-%hr
+
 %h3 Chapters
 %p.subtitle
   Our local chapters are our grassroots backbone. Please select one in your area or start one.

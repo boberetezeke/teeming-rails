@@ -27,4 +27,14 @@ namespace :members  do
       end
     end
   end
+
+  desc "add message controls for users and email"
+  task :add_message_controls_for_users => :environment do
+    User.find_each do |user|
+      if user.member.message_controls.empty?
+        puts "adding member controls for #{user.email}"
+        user.member.message_controls << MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, control_type: MessageControl::CONTROL_TYPE_NEUTRAL)
+      end
+    end
+  end
 end

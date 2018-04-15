@@ -1,9 +1,9 @@
 = render partial: 'step_title', locals: { step_title: 'Setup Your Member Details', step_sub_title: 'Setup your personal details' }
 
-= render partial: 'shared/privacy_policy_notice'
+= render partial: 'shared/privacy_policy_notice', locals: { on_privacy_controls_page: false }
 
 = semantic_form_for @user do |f|
-  = render partial: 'users/user_details', locals: { f: f, show_email: false, show_share_controls: false, disabled: false }
+  = render partial: 'users/user_details', locals: { f: f, show_email: false, show_share_controls: true, show_contact_controls: true, disabled: false }
 
   .row
     .col-md-12

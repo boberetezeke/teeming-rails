@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     collection do
       get :home
       get :profile
+      get :privacy
       get :account
       get :privacy_policy
       get :bylaws
@@ -52,6 +53,8 @@ Rails.application.routes.draw do
     resources :members
   end
   resources :candidate_questionnaires, only: [:edit, :update]
+
+  resources :message_controls, only: [:edit, :update, :show, :create]
 
   resources :chapters do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
@@ -132,6 +135,7 @@ Rails.application.routes.draw do
     devise_scope :user do
       root 'brochure#home', as: :unauthenticated_root
       resources :candidate_questionnaires, only: [:edit, :update]
+      resources :message_controls, only: [:edit, :update, :show, :create]
     end
   end
 

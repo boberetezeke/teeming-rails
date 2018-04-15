@@ -1,6 +1,6 @@
 = semantic_form_for member do |f|
   = f.semantic_errors
-  = render partial: 'members/user_details', locals: { f: f, disabled: true, show_share_controls: true }
+  = render partial: 'members/user_details', locals: { f: f, disabled: true }
   - if f.object.user
     %hr
     = f.fields_for :user do |ff|

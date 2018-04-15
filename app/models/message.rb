@@ -12,23 +12,36 @@ class Message < ApplicationRecord
 
   validate :body_is_valid?
 
+  MESSAGE_TYPE_EVENT =      'event'
+  MESSAGE_TYPE_GENERAL =    'general'
+  MESSAGE_TYPE_CANDIDACY =  'candidacy'
+  MESSAGE_TYPE_ELECTION =   'election'
+
   def create_message_recipients
     self.message_recipients = []
     if race
       race.candidacies.each do |candidacy|
-        self.message_recipients << MessageRecipient.new(candidacy: candidacy)
+        if member.can_receive_message_for?(MESSAGE_TYPE_CANDIDACY)
+          self.message_recipients << MessageRecipient.new(candidacy: candidacy)
+        end
       end
     elsif election
       election.member_group.all_members(election.chapter).find_each do |member|
-        self.message_recipients << MessageRecipient.new(member: member)
+        if member.can_receive_message_for?(MESSAGE_TYPE_ELECTION)
+          self.message_recipients << MessageRecipient.new(member: member)
+        end
       end
     elsif event
       event.member_group.all_members(event.chapter).find_each do |member|
-        self.message_recipients << MessageRecipient.new(member: member)
+        if member.can_receive_message_for?(MESSAGE_TYPE_EVENT)
+          self.message_recipients << MessageRecipient.new(member: member)
+        end
       end
     else
       member_group.all_members(chapter).find_each do |member|
-        self.message_recipients << MessageRecipient.new(member: member)
+        if member.can_receive_message_for?(MESSAGE_TYPE_GENERAL)
+          self.message_recipients << MessageRecipient.new(member: member)
+        end
       end
     end
   end
