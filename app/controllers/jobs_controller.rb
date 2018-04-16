@@ -3,6 +3,7 @@ class JobsController < ApplicationController
 
   def index
     @jobs = JobPolicy::Scope.new(current_user, Delayed::Job).resolve
+    @jobs = @jobs.paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def show
