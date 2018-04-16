@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   post 'api/login', to: 'sessions#login'
 
+  resources :jobs
   resources :users, except: [:index] do
     member do
       put :update_email

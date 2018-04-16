@@ -20,7 +20,6 @@ gem 'responders'
 gem 'kramdown'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
-gem 'sidekiq'
 gem 'select2-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -43,6 +42,10 @@ gem 'pry-rails'
 gem 'sendgrid-ruby'
 
 gem 'honeybadger'
+
+gem 'delayed_job_active_record'
+gem 'daemons'
+# gem 'sidekiq'
 
 gem 'dotenv-rails', groups: [:development, :test]
 

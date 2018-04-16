@@ -16,6 +16,17 @@ module ApplicationHelper
     end
   end
 
+  def job_headline(job)
+    MembersMailer; Message; MessageRecipient
+    job_info = YAML.load(job.handler)
+    if job_info.object.to_s =~ /Mailer/
+      email, from, to = job_info.args
+      "email: #{email.subject} to #{to.member.email}"
+    else
+      "Unknown Job"
+    end
+  end
+
   def candidacies_names_and_emails(candidacies)
     candidacies.map{|c| "#{c.name}<#{c.email}>"}.join(", ")
   end

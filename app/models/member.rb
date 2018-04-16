@@ -70,9 +70,10 @@ class Member < ApplicationRecord
     message_controls.where(unsubscribe_type: unsubscribe_type).first
   end
 
-  def can_recieve_message_for?(message_type)
+  def can_receive_message_for?(message_type)
     return true if message_type == Message::MESSAGE_TYPE_CANDIDACY || message_type == Message::MESSAGE_TYPE_ELECTION
 
-    message_control_for(unsubscribe_type).control_type != MessageControl::CONTROL_TYPE_UNSUBSCRIBE
+    message_control = message_control_for(message_type)
+    !message_control || message_control.control_type != MessageControl::CONTROL_TYPE_UNSUBSCRIBE
   end
 end

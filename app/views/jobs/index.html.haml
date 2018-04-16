@@ -1,0 +1,12 @@
+%h2 Jobs
+
+%table.table
+  %tr.row
+    %th Job
+    %th Actions
+  - @jobs.each do |job|
+    %tr.row
+      %td= job_headline(job)
+      %td
+        = link_to "Show", job_path(job), class: 'btn btn-sm btn-primary'
+        = link_to "Delete", job_path(job), method: :delete, class: 'btn btn-sm btn-danger'

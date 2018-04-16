@@ -5,8 +5,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
 
-  ROLE_TYPE_USER = :user
-  ROLE_TYPE_ADMIN = :admin
+  ROLE_TYPE_USER = 'user'
+  ROLE_TYPE_ADMIN = 'admin'
   ROLE_TYPES = [ROLE_TYPE_USER, ROLE_TYPE_ADMIN]
 
   has_many :event_rsvps
@@ -47,7 +47,7 @@ class User < ApplicationRecord
   end
 
   def admin?
-    role == ROLE_TYPE_ADMIN
+    fixed_role == ROLE_TYPE_ADMIN
   end
 
   def share_name_with?(user)

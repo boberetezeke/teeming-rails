@@ -105,9 +105,9 @@ class MessagesController < ApplicationController
     @message.create_message_recipients
     @message.reload.message_recipients.each do |message_recipient|
       if @message.race
-        MembersMailer.send_normal(@message, "endorsements@ourrevolutionmn.com", message_recipient).deliver # .deliver_later
+        MembersMailer.delay.send_normal(@message, "endorsements@ourrevolutionmn.com", message_recipient) # .deliver # .deliver_later
       else
-        MembersMailer.send_normal(@message, "communications@ourrevolutionmn.com", message_recipient).deliver # .deliver_later
+        MembersMailer.delay.send_normal(@message, "communications@ourrevolutionmn.com", message_recipient) #.deliver # .deliver_later
       end
     end
     @message.update(sent_at: Time.now)
