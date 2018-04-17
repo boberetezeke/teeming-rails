@@ -13,9 +13,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
-//= require turbolinks
+//= require turbograft
 //= require bootstrap-datepicker
 //= require select2
+//= require dynamic_table
 //= require_tree .
 
 function display_time(selector, secs_left)

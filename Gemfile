@@ -7,7 +7,7 @@ end
 
 # UI Gems
 gem 'jquery-rails'
-gem 'turbolinks', '~> 5'
+gem 'turbograft'
 gem 'devise'
 gem 'pundit'
 gem 'haml'
@@ -21,6 +21,7 @@ gem 'kramdown'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'select2-rails'
+gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.6'

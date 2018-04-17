@@ -8,6 +8,12 @@ GIT
       less-rails (~> 2.8, >= 2.8.0)
       railties (~> 5.0, >= 5.0.1)
 
+GIT
+  remote: https://github.com/boberetezeke/dynamic_table.git
+  revision: 03f5d5533cd309c8aec2e6b53b05be3a1e1b82ae
+  specs:
+    dynamic_table (0.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -301,9 +307,8 @@ GEM
     thread_safe (0.3.6)
     tilt (2.0.8)
     timecop (0.9.1)
-    turbolinks (5.1.0)
-      turbolinks-source (~> 5.1)
-    turbolinks-source (5.1.0)
+    turbograft (0.4.6)
+      coffee-rails
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     warden (1.2.7)
@@ -338,6 +343,7 @@ DEPENDENCIES
   delayed_job_active_record
   devise
   dotenv-rails
+  dynamic_table!
   factory_bot_rails
   formtastic (~> 3.0)
   formtastic-bootstrap
@@ -364,7 +370,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   timecop
-  turbolinks (~> 5)
+  turbograft
   twitter-bootstrap-rails!
   tzinfo-data
   web-console (>= 3.3.0)

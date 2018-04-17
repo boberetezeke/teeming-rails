@@ -36,6 +36,14 @@ class Member < ApplicationRecord
     executive_committee_members:  "Executive Committee Members"
   }
 
+  MEMBER_ATTRS_ALL =           'all'
+  MEMBER_ATTRS_VOLUNTEER =     'volunteer'
+  MEMBER_ATTRS_START_CHAPTER = 'start-chapter'
+
+  MEMBER_TYPE_ALL =       'all'
+  MEMBER_TYPE_MEMBER =    'member'
+  MEMBER_TYPE_POTENTIAL = 'potential'
+
   scope :officers,                    ->(chapter) { where('(true)') }
   scope :executive_committee_members, ->(chapter) { where('(true)') }
 
@@ -50,6 +58,15 @@ class Member < ApplicationRecord
   }
   scope :chapter_members,     ->(chapter) { where(chapter_id: chapter.id) }
   # scope :chapter_members, ->(chapter) { where(Member.arel_table[:chapter_id].not_eq(nil)) }
+  scope :all_chapter_members, ->(chapter) {
+    where(
+      Member.arel_table[:chapter_id].eq(chapter.id).or(
+        Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+          Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
+        )
+      )
+    )
+  }
 
   scope :valid_email, -> {
     where(
@@ -57,9 +74,38 @@ class Member < ApplicationRecord
       'invalid', 'bounce', 'block', 'unsubscribe'
     )
   }
+  scope :filtered_by_string, ->(search) { where("lower((first_name || ' ' || last_name || ' ' || members.email)) like lower('%#{connection.quote(search)[1..-2]}%')") }
+  scope :filtered_by_attrs, ->(member_type) {
+    if member_type == Member::MEMBER_ATTRS_VOLUNTEER
+      where(User.arel_table[:interested_in_volunteering].eq(true))
+    elsif member_type == Member::MEMBER_ATTRS_START_CHAPTER
+      where(Member.arel_table[:interested_in_starting_chapter].eq(true))
+    else
+      where("true")
+    end
+  }
 
   scope :active, -> {
     where(status: 'active')
+  }
+
+  MEMBER_FILTERS = {
+    search:       '',
+    member_type:  MEMBER_TYPE_ALL,
+    attr_type:    MEMBER_ATTRS_ALL
+  }
+
+
+  MEMBER_TYPES_HASH = {
+      "All" =>              MEMBER_TYPE_ALL,
+      "Member" =>           MEMBER_TYPE_MEMBER,
+      "Potential member" => MEMBER_TYPE_POTENTIAL
+  }
+
+  MEMBER_ATTRS_HASH = {
+      "All" =>                    MEMBER_ATTRS_ALL,
+      "Wants to volunteer" =>     MEMBER_ATTRS_VOLUNTEER,
+      "Wants to start chapter" => MEMBER_ATTRS_START_CHAPTER
   }
 
   def name
