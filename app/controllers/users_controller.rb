@@ -203,7 +203,7 @@ class UsersController < ApplicationController
                                     :id,
                                     :email, :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
-                                    :with_user_input,
+                                    :with_user_input, :bio,
                                     {answers_attributes: CandidaciesController.answers_atributes},
                                     {message_controls_attributes: [:unsubscribe_type, :control_type, :id]}
                                  ]},

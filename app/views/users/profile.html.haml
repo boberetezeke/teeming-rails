@@ -11,6 +11,11 @@
     %h3 Roles you have
     = render partial: 'members/roles', locals: { user: @user }
   %hr
+  %h3 Bio
+  %p Introduce yourself to others. This info will be displayed if you are an officer or committee member.
+  = f.semantic_fields_for :member do |ff|
+    = ff.input :bio, as: :text
+  %hr
   %h3 Volunteering
   %p.subtitle
     We are a volunteer run orginization, your time and effort allows this organization to function.

@@ -10,15 +10,15 @@ class MemberPolicy < ApplicationPolicy
   end
 
   def show?
-    can_view_members?
+    can_view_members? || (@record.user && @record.user.officers.present?)
   end
 
   def edit?
-    true
+    @user.member == @record
   end
 
   def update?
-    true
+    @user.member == @record
   end
 
   def assign_role?

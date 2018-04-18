@@ -1,18 +1,24 @@
 = semantic_form_for @user do |f|
-  = f.semantic_fields_for :member do |ff|
-    = render partial: 'members/user_details', locals: { f: ff, disabled: true }
+  - if is_current_user?(f.object.member, current_user) || current_user.can_view_members?
+    = f.semantic_fields_for :member do |ff|
+      = render partial: 'members/user_details', locals: { f: ff, disabled: true }
 
   %hr
   = render partial: 'members/officers', locals: { user: @user }
   = render partial: 'members/roles', locals: { user: @user }
-  %hr
-  %h2 Volunteering
-  = f.inputs do
-    .check_box_or_radio
-      = f.input :interested_in_volunteering, input_html: { disabled: true}
+  - if @user.member.bio
+    %hr
+    %h2 Bio
+    %p= Kramdown::Document.new(@user.member.bio).to_html.html_safe
+  - if is_current_user?(f.object.member, current_user) || current_user.can_view_members?
+    %hr
+    %h2 Volunteering
+    = f.inputs do
+      .check_box_or_radio
+        = f.input :interested_in_volunteering, input_html: { disabled: true}
 
-  - @user.member.answers.each do |answer|
-    = render partial: 'answers/show', locals: { answer: answer }
+    - @user.member.answers.each do |answer|
+      = render partial: 'answers/show', locals: { answer: answer }
 
 = render partial: 'members/actions', locals: { member: @user.member }
 
