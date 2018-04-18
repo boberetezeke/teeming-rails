@@ -28,6 +28,8 @@ class Role < ApplicationRecord
 
       ['send',                  'message'                                     ],
 
+      ['write',                 'meeting_minute'                              ],
+
       ['write',                 'officer'                                     ],
       ['assign',                'officer'                                     ],
 

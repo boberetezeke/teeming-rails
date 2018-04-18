@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     resources :events,   shallow: true
     resources :messages, shallow: true
     resources :officers, shallow: true
+    resources :meeting_minutes, shallow: true
   end
 
   resources :elections do

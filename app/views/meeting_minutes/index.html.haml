@@ -1,0 +1,5 @@
+%h2 Meeting Minutes
+
+= render partial: 'meeting_minutes/table', locals: { meeting_minutes: @meeting_minutes, show_actions: true }
+
+= link_to "New Meeting Minutes", new_chapter_meeting_minute_path(@chapter), class: 'btn btn-sm btn-success'

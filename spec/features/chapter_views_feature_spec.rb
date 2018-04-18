@@ -125,7 +125,6 @@ context "when testing with a normal user" do
 
       it "displays the view members button" do
         expect(page).to have_selector "a[href='#{chapter_members_path(chapter)}']"
-        expect(page).to have_selector "a[href='#{chapter_members_path(chapter, show_potential_members: true)}']"
       end
     end
 
