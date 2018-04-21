@@ -14,24 +14,21 @@ class MemberPolicy < ApplicationPolicy
   end
 
   def edit?
-    @user.member == @record
+    can_write_members?
   end
 
   def update?
-    @user.member == @record
-  end
-
-  def assign_role?
-    can_for_scope?(@user.can_assign_roles?)
-  end
-
-  def assign_officer?
-    can_for_scope?(@user.can_assign_officers?)
+    can_write_members?
   end
 
   private
 
   def can_view_members?
     can_for_scope?(@user.can_view_members?)
+  end
+
+  def can_write_members?
+    @user.member == @record ||
+        (@user.can_write_members?  && @record.user.nil?)
   end
 end
