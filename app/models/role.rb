@@ -1,8 +1,8 @@
 class Role < ApplicationRecord
   has_many :users
-  has_many :privileges
+  has_many :privileges, dependent: :destroy
 
-  has_many :officer_assignments
+  has_many :officer_assignments, dependent: :destroy
   has_many :officers, through: :officer_assignments
 
   scope :uncombined, ->{ where(Role.arel_table[:combined].eq(nil).or(Role.arel_table[:combined].eq(false))) }
@@ -15,37 +15,112 @@ class Role < ApplicationRecord
 
   PRIVILEGES = [
       # action                  # subject       # method name
-      ['manage_external',       'candidacy'                                   ],
+      # description (allows the user to...)
+      ['manage_external',       'candidacy',    nil,
+       [
+        "set external races as official",
+        "see messages sent to external candidates",
+        "manage (add/edit/delete) officially marked races",
+        "manage (add/edit/delete/unlock questionnaire) candidacies in officially marked races",
+        "manage the candidate questionnaires",
+        "see an external candidate's customized questionnaire link"
+       ]
+      ],
 
-      ['write',                 'chapter'                                     ],
+      ['write',                 'chapter',     nil,
+        [
+           "manage (add/edit/delete) chapters"
+        ]
+      ],
 
-      ['view_internal',         'election'                                    ],
-      ['manage_internal',       'election'                                    ],
+      ['manage_internal',       'election',   nil,
+       [
+         "view all internal elections",
+         "view all internal candidates",
+         "manage (add/edit/delete) races for internal elections",
+         "manage (add/edit/delete) questionnaires for candidacies for internal elections"
+       ]
+      ],
 
-      ['write',                 'event'                                       ],
+      ['write',                 'event',      nil,
+       [
+         "manage (add/edit/delete) events"
+       ]
+      ],
 
-      ['view',                  'member'                                      ],
+      ['view',                  'member',     nil,
+       [
+         "view shared member information and volunteer preferences"
+       ]
+      ],
 
-      ['send',                  'message'                                     ],
+      ['write',                 'member',     nil,
+       [
+           "manage member information for members who aren't users"
+       ]
+      ],
 
-      ['write',                 'meeting_minute'                              ],
+      ['send',                  'message',    nil,
+        [
+          "manage (send/save draft/edit draft/delete) messages to users"
+        ]
+      ],
 
-      ['write',                 'officer'                                     ],
-      ['assign',                'officer'                                     ],
+      ['write',                 'meeting_minute', nil,
+       [
+         "manage (add/edit/delete) meeting minutes"
+       ]
+      ],
 
-      ['view',                  'questionnaire'                               ],
-      ['write',                 'questionnaire'                               ],
+      ['write',                 'officer',    nil,
+       [
+         "manage (add/edit/delete) chapter officers and their roles"
+       ]
+      ],
 
-      ['assign',                'role'                                        ],
+      ['view',                  'questionnaire', nil,
+       [
+        "view questionnaires before being attached to issues or races???"
+       ]
+      ],
+      ['write',                 'questionnaire', nil,
+       [
+         "manage (add/edit/delete) questionnaires"
+       ]
+      ],
 
-      ['show_tallies',          'vote',         'show_vote_tallies'           ],
-      ['enter',                 'vote'                                        ],
-      ['delete',                'vote'                                        ],
-      ['download',              'vote'                                        ],
-      ['generate_tallies_for',  'vote',         'generate_vote_tallies'       ],
+      ['show_tallies',          'vote',         'show_vote_tallies',
+       [
+         "view vote tallies"
+       ]
+      ],
+
+      ['enter',                 'vote',         nil,
+       [
+         "enter in paper ballots for internal election"
+       ]
+      ],
+
+      ['delete',                'vote',         nil,
+       [
+         "delete all votes in an internal election (after votes have been downloaded)"
+       ]
+      ],
+
+      ['download',              'vote',         nil,
+       [
+         "download votes in an internal election"
+       ]
+      ],
+
+      ['generate_tallies_for',  'vote',         'generate_vote_tallies',
+       [
+         "generate vote tallies for an internal election"
+       ]
+      ],
   ]
 
-  PRIVILEGES.each do |action, subject, method_name|
+  PRIVILEGES.each do |action, subject, method_name, description|
     method_name = "#{action}_#{subject.pluralize}" unless method_name
     define_method("can_#{method_name}?") do
       privilege = privileges.where(action: action, subject: subject).first
