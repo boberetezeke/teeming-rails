@@ -2,8 +2,8 @@ class Role < ApplicationRecord
   has_many :users
   has_many :privileges, dependent: :destroy
 
-  has_many :officer_assignments, dependent: :destroy
-  has_many :officers, through: :officer_assignments
+  # has_many :officer_assignments, dependent: :destroy
+  # has_many :officers, through: :officer_assignments
 
   scope :uncombined, ->{ where(Role.arel_table[:combined].eq(nil).or(Role.arel_table[:combined].eq(false))) }
 
@@ -11,6 +11,11 @@ class Role < ApplicationRecord
 
   def combined?
     combined
+  end
+
+  def self.descriptions_for(privilege)
+    _, _, _, desc = PRIVILEGES.select{|action, subject, method_name, descriptions| action == privilege.action && subject == privilege.subject}.first
+    desc ? desc : []
   end
 
   PRIVILEGES = [
