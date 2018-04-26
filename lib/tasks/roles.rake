@@ -23,6 +23,7 @@ namespace :roles  do
           { action: 'enter', subject: 'vote' },
           { action: 'delete', subject: 'vote' },
           { action: 'download', subject: 'vote' },
+          { action: 'show_tallies', subject: 'vote' },
           { action: 'generate_tallies_for', subject: 'vote' },
       ]},
       { name: 'secretary', privileges: [

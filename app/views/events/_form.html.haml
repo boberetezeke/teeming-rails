@@ -6,8 +6,10 @@
   = f.input :occurs_at_date_str, label: "Date"
   = f.input :occurs_at_time_str, label: "Time"
   = f.input :location
+  = f.input :agenda, as: :text, input_html: { rows: 4, cols: 80 }
   = f.input :chapter_id, as: :hidden
-  = f.submit class: 'btn btn-sm btn-with-padding btn-primary'
+  #submit
+    = f.submit class: 'btn btn-sm btn-with-padding btn-primary'
 
 :javascript
   $(function() {

@@ -81,7 +81,7 @@ class OfficersController < ApplicationController
   end
 
   def officer_params
-    params.require(:officer).permit(:officer_type, role_ids: [], user_ids: [])
+    params.require(:officer).permit(:officer_type, :is_board_member, :is_executive_committee_member, :responsibilities, role_ids: [], user_ids: [])
   end
 
   def officers_breadcrumbs

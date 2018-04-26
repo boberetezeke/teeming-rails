@@ -24,7 +24,14 @@
       .event-title Description
   .row
     .col-md-12
-      = event.description
+      = Kramdown::Document.new(event.description).to_html.html_safe
+  - if @event.agenda.present?
+    .row
+      .col-md-12
+        .event-title Agenda
+    .row
+      .col-md-12
+        = Kramdown::Document.new(event.agenda).to_html.html_safe
 - if show_stats
   .row
     .col-md-12

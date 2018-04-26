@@ -1,3 +1,5 @@
+%h2 Messages
+
 = render partial: 'messages/table', locals: { messages: @messages, show_actions: true }
 - if can?(current_user, :new, Message)
   = link_to("New Message", new_chapter_message_path(@chapter), class: 'btn btn-sm btn-success')

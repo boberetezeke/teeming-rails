@@ -1,10 +1,18 @@
 %h3= @officer.officer_type
 %div
-  %strong Users
+  %strong Attributes:
+  = [(@officer.is_board_member ? "Is a board member" : nil), (@officer.is_executive_committee_member ? "Is an executive committee member" : nil)].reject(&:nil?).join(", ")
+
+%div
+  %strong Users:
   = render partial: 'users/list', locals: { users: @officer.users }
 %div
-  %strong Roles
+  %strong Roles:
   = render partial: 'roles/list', locals: { roles: @officer.roles }
+
+%div
+  %strong Responsibilities
+  = Kramdown::Document.new(@officer.responsibilities ? @officer.responsibilities : "").to_html.html_safe
 
 %hr
 %div

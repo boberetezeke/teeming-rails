@@ -185,6 +185,16 @@ form.formtastic .check_box_or_radio #user_member_attributes_interested_in_starti
     margin-top: 5px;
 }
 
+form.formtastic .check_box_or_radio #officer_is_board_member {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #officer_is_executive_committee_member {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 form.formtastic .questionnaire-fields .choice {
     margin-left: 30px;
 }

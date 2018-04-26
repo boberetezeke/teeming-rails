@@ -16,7 +16,7 @@ class Event < ApplicationRecord
 
   def set_accessors
     self.occurs_at_date_str = self.occurs_at.strftime("%m/%d/%Y")     if self.occurs_at
-    self.occurs_at_time_str = self.occurs_at.strftime("%H:%M")        if self.occurs_at
+    self.occurs_at_time_str = self.occurs_at.strftime("%I:%M%P")        if self.occurs_at
   end
 
   def published?

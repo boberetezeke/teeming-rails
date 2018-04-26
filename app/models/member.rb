@@ -9,9 +9,6 @@ class Member < ApplicationRecord
   has_many :member_group_memberships
   has_many :member_groups, through: :member_group_memberships
 
-  has_many :officer_assignments
-  has_many :officers, through: :officer_assignments
-
   has_many :answers, as: :answerable
   accepts_nested_attributes_for :answers
 
@@ -33,6 +30,7 @@ class Member < ApplicationRecord
     potential_chapter_members:    "Potential Chapter Members",
     chapter_members:              "Chapter Members",
     officers:                     "Officers",
+    board_members:                "Board Members",
     executive_committee_members:  "Executive Committee Members"
   }
 
@@ -44,8 +42,9 @@ class Member < ApplicationRecord
   MEMBER_TYPE_MEMBER =    'member'
   MEMBER_TYPE_POTENTIAL = 'potential'
 
-  scope :officers,                    ->(chapter) { where('(true)') }
-  scope :executive_committee_members, ->(chapter) { where('(true)') }
+  scope :officers,                    ->(chapter) { joins(user: :officers) }
+  scope :board_members,               ->(chapter) { officers.where(is_board_member: true) }
+  scope :executive_committee_members, ->(chapter) { officers.where(is_executive_committee_member: true) }
 
   scope :interested_in_volunteering,        ->(chapter) {
     joins(:user).where(User.arel_table[:interested_in_volunteering].eq(true))

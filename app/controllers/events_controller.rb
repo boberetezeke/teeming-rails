@@ -32,8 +32,10 @@ class EventsController < ApplicationController
 
     if @event.save
       create_rsvps
+      check_event_time
       redirect_to @event
     else
+      @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
       render :new
     end
   end
@@ -48,8 +50,10 @@ class EventsController < ApplicationController
 
   def update
     if @event.update(event_params)
+      check_event_time
       redirect_to @event
     else
+      @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
       render :edit
     end
   end
@@ -81,6 +85,11 @@ class EventsController < ApplicationController
 
   private
 
+  def check_event_time
+    if @event.occurs_at < Time.now
+      flash[:notice] = "Your event time is in the past"
+    end
+  end
   def set_event
     @event = Event.find(params[:id])
     authorize_with_args @event, {chapter_id: @event.chapter.id}
@@ -95,7 +104,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id, :member_group_id)
+    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id, :member_group_id, :agenda)
   end
 
   def create_rsvps
