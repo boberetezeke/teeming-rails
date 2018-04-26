@@ -40,8 +40,8 @@ class Election < ApplicationRecord
 
   def set_accessors
     self.vote_date_str = self.vote_date.strftime("%m/%d/%Y")          if self.vote_date
-    self.vote_start_time_str = self.vote_start_time.strftime("%H:%M") if self.vote_start_time
-    self.vote_end_time_str = self.vote_end_time.strftime("%H:%M")     if self.vote_end_time
+    self.vote_start_time_str = self.vote_start_time.strftime("%I:%M%P") if self.vote_start_time
+    self.vote_end_time_str = self.vote_end_time.strftime("%I:%M%P")     if self.vote_end_time
   end
 
   def external?
