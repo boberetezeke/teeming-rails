@@ -9,8 +9,20 @@ class MessageRecipient < ApplicationRecord
     forward(:name)
   end
 
+  def first_name
+    forward(:first_name)
+  end
+
+  def last_name
+    forward(:last_name)
+  end
+
   def email
     forward(:email)
+  end
+
+  def email=(email)
+    write_attribute(:email, email)
   end
 
   private
@@ -20,11 +32,16 @@ class MessageRecipient < ApplicationRecord
   end
 
   def forward(sym)
-    if candidacy
+    if read_attribute(:email).present?
+      if sym == :name || sym == :first_name
+        read_attribute(:email)
+      else
+        ""
+      end
+    elsif candidacy
       candidacy.send(sym)
     else
       member.send(sym)
     end
-
   end
 end

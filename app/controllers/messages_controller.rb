@@ -53,12 +53,7 @@ class MessagesController < ApplicationController
 
     @message.save
 
-    if params[:commit] == "Send"
-      if @message.valid?
-        send_email
-      end
-    end
-    respond_with @message, location: ->{ @message.chapter ? chapter_messages_path(@message, @context_params) : message_path(@message, @context_params) }
+    respond_with @message, location: ->{ params[:commit] == "Save Draft" ? chapter_messages_path(@message, @context_params) : message_path(@message, @context_params) }
   end
 
   def edit
@@ -74,15 +69,31 @@ class MessagesController < ApplicationController
     @message = Message.find(params[:id])
     authorize @message
 
-    if @message.update(message_params)
-      if params[:commit] == "Send"
-        send_email
-      end
-    end
+    @message.update(message_params)
 
     respond_with @message, location: ->{ message_path(@message, @context_params) }
   end
 
+  def send_to_all
+    @message = Message.find(params[:id])
+    @message.create_message_recipients
+    send_email(update_sent_at: true)
+    redirect_to chapter_messages_path(@message.chapter)
+  end
+
+  def preview_to
+    @message = Message.find(params[:id])
+
+    emails = params[:emails].split(/\s*[;,]\s*/).map{|email| email.strip}
+    if emails.size == 0
+      flash[:alert] = "No emails supplied to preview to"
+    else
+      @message.message_recipients = emails.map{|email| MessageRecipient.new(email: email)}
+      send_email
+    end
+
+    redirect_to message_path(@message, @context_params)
+  end
 
   def destroy
     @message = Message.find(params[:id])
@@ -101,8 +112,7 @@ class MessagesController < ApplicationController
 
   private
 
-  def send_email
-    @message.create_message_recipients
+  def send_email(update_sent_at: false)
     @message.reload.message_recipients.each do |message_recipient|
       if @message.race
         MembersMailer.delay.send_normal(@message, "endorsements@ourrevolutionmn.com", message_recipient) # .deliver # .deliver_later
@@ -110,7 +120,7 @@ class MessagesController < ApplicationController
         MembersMailer.delay.send_normal(@message, "communications@ourrevolutionmn.com", message_recipient) #.deliver # .deliver_later
       end
     end
-    @message.update(sent_at: Time.now)
+    @message.update(sent_at: Time.now) if update_sent_at
     flash[:notice] = "Message sent to #{@message.message_recipients.count} recipients"
   end
 

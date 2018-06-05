@@ -6,10 +6,19 @@
     - if message_recipient.candidacy
       %li #{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}
     - else
-      %li #{message_recipient.member.name} <#{message_recipient.member.email}>
+      - if message_recipient.member
+        %li #{message_recipient.member.name} <#{message_recipient.member.email}>
+      - else
+        %li <#{message_recipient.email}>
 
 %h3 Body
-%p #{@message.rendered_body(@message_recipient)}
+%p #{@message.rendered_body(@message_recipient, message_control_path(@message_recipient.token))}
 
 - unless @message.sent?
-  = link_to("Edit Draft", edit_message_path(@message, @context_params), class: 'btn btn-sm btn-primary')
+  %hr
+  = link_to("Send", send_to_all_message_path(@message, @context_params), method: :put, class: 'btn btn-sm btn-primary')
+  = form_tag(preview_to_message_path(@message, @context_params), method: :put, style: 'display: inline;') do
+    = submit_tag("Preview to", class: 'btn btn-sm btn-warning btn-with-padding')
+    = text_field_tag(:emails, "", placeholder: 'emails to preview to seperated by commas', style: 'width: 40%;')
+  |
+  = link_to("Edit Draft", edit_message_path(@message, @context_params), class: 'btn btn-sm btn-info')

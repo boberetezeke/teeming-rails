@@ -30,7 +30,9 @@
       be replaced when the mail is sent.
     %ul.in-formtastic
       %li.in-formtastic %logo% - will be replaced with the OurRevolution Logo
-      %li.in-formtastic %recipient_name% - will be replaced by the email recipient's name
+      %li.in-formtastic %recipient_name% - will be replaced by the email recipient's full name
+      %li.in-formtastic %recipient_first_name% - will be replaced by the email recipient's first name
+      %li.in-formtastic %recipient_last_name% - will be replaced by the email recipient's last name
       - if @race
         %li.in-formtastic %candidate_questionnaire_link% - will be replaced by the link to the candidate's questionnaire
       - elsif @election
@@ -40,4 +42,4 @@
         %li.in-formtastic %event_rsvp_link% - will be replaced by a personalized link to the user's RSVP for the event
   = f.input :body, as: :text, input_html: { rows: 5, cols: 100 }
   = f.submit "Save Draft", class: 'btn btn-sm btn-info btn-with-padding'
-  = f.submit "Send", class: 'btn btn-sm btn-primary btn-with-padding'
+  = f.submit "Preview", class: 'btn btn-sm btn-primary btn-with-padding'

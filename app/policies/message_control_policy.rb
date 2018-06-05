@@ -18,7 +18,7 @@ class MessageControlPolicy < ApplicationPolicy
   private
 
   def has_no_user_or_is_user_owner
-    @record.member.user ? @record.member.user == @user : true
+    @user.nil? || @record.member.user == @user
   end
 end
 

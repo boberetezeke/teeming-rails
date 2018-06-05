@@ -21,25 +21,25 @@ class Message < ApplicationRecord
     self.message_recipients = []
     if race
       race.candidacies.each do |candidacy|
-        if member.can_receive_message_for?(MESSAGE_TYPE_CANDIDACY)
+        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_CANDIDACY)
           self.message_recipients << MessageRecipient.new(candidacy: candidacy)
         end
       end
     elsif election
       election.member_group.all_members(election.chapter).find_each do |member|
-        if member.can_receive_message_for?(MESSAGE_TYPE_ELECTION)
+        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_ELECTION)
           self.message_recipients << MessageRecipient.new(member: member)
         end
       end
     elsif event
       event.member_group.all_members(event.chapter).find_each do |member|
-        if member.can_receive_message_for?(MESSAGE_TYPE_EVENT)
+        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_EVENT)
           self.message_recipients << MessageRecipient.new(member: member)
         end
       end
     else
       member_group.all_members(chapter).find_each do |member|
-        if member.can_receive_message_for?(MESSAGE_TYPE_GENERAL)
+        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_GENERAL)
           self.message_recipients << MessageRecipient.new(member: member)
         end
       end
@@ -58,13 +58,33 @@ class Message < ApplicationRecord
     end
   end
 
-  def rendered_body(message_recipient, errors: [])
+  def unsubscribe_footer(unsubscribe_path)
+    "<hr/>" +
+      "<p>You are receiving this email because your email preferences allow emails to be sent to you</p>" +
+      "<p>" +
+      "<a href=\"#{unsubscribe_path}\">You can unsubscribe by clicking on this link</a>" +
+      "</p>"
+  end
+
+  def rendered_body(message_recipient, unsubscribe_path, errors: [])
     host = Rails.application.config.action_mailer.default_url_options[:host]
     modified_body = body.gsub(/%(.[^%]*?)%/) do
       directive = $1
       case directive
         when /logo/
           "<div style=\"text-align: center;\"><a href=\"https://ourrevolutionmn.com\"><img width=\"250px\" height=\"250px\" src=\"https://ourrevolutionmn.herokuapp.com/images/logo-450.jpg\"></a></div>"
+        when /recipient_first_name/
+          if message_recipient
+            message_recipient.first_name
+          else
+            ""
+          end
+        when /recipient_last_name/
+          if message_recipient
+            message_recipient.last_name
+          else
+            ""
+          end
         when /recipient_name/
           if message_recipient
             message_recipient.name
@@ -125,6 +145,7 @@ class Message < ApplicationRecord
           errors.push([directive, "is unknown"])
       end
     end
-    Kramdown::Document.new(modified_body).to_html.html_safe
+
+    (Kramdown::Document.new(modified_body).to_html + unsubscribe_footer(unsubscribe_path)).html_safe
   end
 end

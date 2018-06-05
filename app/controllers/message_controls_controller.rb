@@ -46,4 +46,3 @@ class MessageControlsController < ApplicationController
     params.require(:message_control).permit(:unsubscribe_type, :control_type, :unsubscribe_reason, :member_id)
   end
 end
-# Dylan 204-391-8109

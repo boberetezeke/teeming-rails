@@ -60,7 +60,12 @@ Rails.application.routes.draw do
   resources :chapters do
     resources :members, only: [:index, :show, :edit, :update, :destroy], shallow: true
     resources :events,   shallow: true
-    resources :messages, shallow: true
+    resources :messages, shallow: true do
+      member do
+        put :send_to_all
+        put :preview_to
+      end
+    end
     resources :officers, shallow: true
     resources :meeting_minutes, shallow: true
   end
