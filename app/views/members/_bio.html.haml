@@ -1,0 +1,4 @@
+- if member.bio
+  %hr
+  %h2 Bio
+  %p= Kramdown::Document.new(member.bio).to_html.html_safe

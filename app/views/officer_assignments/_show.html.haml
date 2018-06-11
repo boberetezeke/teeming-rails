@@ -1,0 +1,14 @@
+%div
+  %span.strong Start Date:
+  = officer_assignment.start_date
+%div
+  %span.strong Start Reason:
+  = officer_assignment.reason_for_start
+%div
+  %span.strong End Date:
+  = officer_assignment.end_date
+%div
+  %span.strong End Reason:
+  = officer_assignment.reason_for_end
+
+= render partial: 'members/bio', locals: { member: officer_assignment.user.member }

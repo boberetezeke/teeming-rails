@@ -1,0 +1,5 @@
+- officer_assignments.each do |officer_assignment|
+  - if can?(current_user, :show, officer_assignment)
+    = link_to(officer_assignment.user.name, officer_assignment)
+  - else
+    = officer_assignment.user.name

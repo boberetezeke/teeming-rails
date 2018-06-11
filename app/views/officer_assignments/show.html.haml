@@ -1,0 +1,4 @@
+= render partial: 'officer_assignments/show', locals: { officer_assignment: @officer_assignment }
+%hr
+- if can?(current_user, :edit, :officer_assignment)
+  = link_to "Edit", edit_officer_assignment_path(@officer_assignment), class: 'btn btn-sm btn-primary'

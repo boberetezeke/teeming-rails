@@ -67,6 +67,7 @@ Rails.application.routes.draw do
       end
     end
     resources :officers, shallow: true
+    resources :officer_assignments, shallow: true
     resources :meeting_minutes, shallow: true
   end
 

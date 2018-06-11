@@ -3,7 +3,8 @@ class ApplicationRecord < ActiveRecord::Base
 
   def validate_time(time_sym)
     time_str_sym = "#{time_sym}_str"
-    time_str = self.send(time_str_sym).strip
+    time_str = self.send(time_str_sym)
+    time_str = time_str.strip if time_str
     return true if time_str.blank?
 
     m = /^(\d+):(\d+)([APap][mM]?)?$/.match(time_str)

@@ -4,12 +4,10 @@
       = render partial: 'members/user_details', locals: { f: ff, disabled: true }
 
   %hr
-  = render partial: 'members/officers', locals: { user: @user }
-  = render partial: 'members/roles', locals: { user: @user }
-  - if @user.member.bio
-    %hr
-    %h2 Bio
-    %p= Kramdown::Document.new(@user.member.bio).to_html.html_safe
+  = render partial: 'users/officers', locals: { user: @user }
+  = render partial: 'users/roles', locals: { user: @user }
+  = render partial: 'members/bio', local: { member: @user.member }
+
   - if is_current_user?(f.object.member, current_user) || current_user.can_view_members?
     %hr
     %h2 Volunteering
