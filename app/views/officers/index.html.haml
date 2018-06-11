@@ -1,4 +1,10 @@
-= render partial: 'officers/table', locals: { officers: @officers, show_actions: true }
+%ul.nav.nav-tabs
+  %li.presentation{tab_class(@tab, 'active')}
+    = link_to "Active", chapter_officers_path(@chapter, tab: 'active')
+  %li.presentation{tab_class(@tab, 'inactive')}
+    = link_to "Inactive", chapter_officers_path(@chapter, tab: 'inactive')
+
+= render partial: 'officers/table', locals: { officers:  @officers, show_actions: true, tab: @tab }
 
 - if can?(current_user, :new, Officer)
   = link_to "New Officer", new_chapter_officer_path(@chapter), class: 'btn btn-sm btn-success'

@@ -12,7 +12,7 @@ class MeetingMinutesController < ApplicationController
     @meeting_minutes = @chapter.meeting_minutes
     @meeting_minutes = policy_scope_with_args(@meeting_minutes, @context_params)
 
-    breadcrumbs [@chapter.name, @chapter], "Meeting Minutes"
+    breadcrumbs [@chapter.name, chapter_path(@chapter, tab: :governance)], "Meeting Minutes"
   end
 
   def show

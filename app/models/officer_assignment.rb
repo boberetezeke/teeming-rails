@@ -4,6 +4,9 @@ class OfficerAssignment < ApplicationRecord
 
   attr_accessor :start_date_str, :end_date_str
 
+  scope :active,    ->{ where(arel_table[:end_date].eq(nil).or(arel_table[:end_date].gteq(Time.now))) }
+  scope :inactive,  ->{ where(arel_table[:end_date].lt(Time.now))}
+
   START_REASONS_HASH = {
     "Election by membership" => 'election-by-membership',
     "Appointment by board"   => 'appointment-by-board'

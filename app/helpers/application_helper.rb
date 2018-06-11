@@ -75,6 +75,45 @@ module ApplicationHelper
     date_and_time_str(datetime)
   end
 
+  def officer_term_and_reasons(officer_assignment)
+    if officer_assignment.reason_for_start
+      reason_for_start =  OfficerAssignment::START_REASONS_HASH.invert[officer_assignment.reason_for_start]
+    else
+      reason_for_start = "reason for start not set"
+    end
+
+    if officer_assignment.reason_for_end
+      reason_for_end =  OfficerAssignment::END_REASONS_HASH.invert[officer_assignment.reason_for_end]
+    else
+      reason_for_end = "reason for end not set"
+    end
+
+    if officer_assignment.start_date
+      start_date = date_str(officer_assignment.start_date)
+    else
+      start_date = "start date not set"
+    end
+
+    if officer_assignment.start_date
+      start_date = date_str(officer_assignment.start_date)
+    else
+      start_date = "start date not set"
+    end
+
+    if officer_assignment.end_date
+      end_date = date_str(officer_assignment.end_date)
+    else
+      end_date = "end date not set"
+    end
+
+    "<strong>Starts</strong>: #{start_date} - (#{reason_for_start})<br/><strong>Ends</strong>: #{end_date} (#{reason_for_end})".html_safe
+  end
+
+  def date_str(date)
+    return "" unless date
+    date.strftime("%m/%d/%Y")
+  end
+
   def date_and_time_str(datetime)
     return "" unless datetime
     Time.zone.utc_to_local(datetime.utc).strftime("%m/%d/%Y %I:%M%P")

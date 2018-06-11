@@ -27,7 +27,7 @@
   .row
     .col-md-6
       %h3= link_to("Officers", chapter_officers_path(@chapter))
-      = render partial: 'officers/table', locals: {officers: @chapter.officers, show_actions: false}
+      = render partial: 'officers/table', locals: {officers: @chapter.officers.active, show_actions: false, tab: 'active'}
     .col-md-6
       %h3= link_to("Meeting Minutes", chapter_meeting_minutes_path(@chapter))
       = render partial: 'meeting_minutes/table', locals: {meeting_minutes: @meeting_minutes, show_actions: false}

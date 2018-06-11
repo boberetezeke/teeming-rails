@@ -8,8 +8,13 @@ class OfficersController < ApplicationController
   def index
     authorize_with_args Officer, @context_params
     @chapter = Chapter.find(params[:chapter_id])
+    @tab = params[:tab]
 
-    @officers = policy_scope(Officer).where(chapter: @chapter)
+    if @tab == 'inactive'
+      @officers = policy_scope(Officer).where(chapter: @chapter).inactive
+    else
+      @officers = policy_scope(Officer).where(chapter: @chapter).active
+    end
     @title = "Officers"
     @officers = @officers.paginate(page: params[:page], per_page: params[:per_page])
 
@@ -88,7 +93,7 @@ class OfficersController < ApplicationController
     if @officer
       ["Officers", chapter_officers_path(@officer.chapter)]
     else
-      [@chapter.name, chapter_path(@chapter)]
+      [@chapter.name, chapter_path(@chapter, tab: :governance)]
     end
   end
 end
