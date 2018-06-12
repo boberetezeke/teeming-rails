@@ -8,7 +8,7 @@ class OfficersController < ApplicationController
   def index
     authorize_with_args Officer, @context_params
     @chapter = Chapter.find(params[:chapter_id])
-    @tab = params[:tab]
+    @tab = params[:tab] || 'active'
 
     if @tab == 'inactive'
       @officers = policy_scope(Officer).where(chapter: @chapter).inactive
@@ -23,6 +23,7 @@ class OfficersController < ApplicationController
 
   def show
     breadcrumbs officers_breadcrumbs, @officer.officer_type
+    @chapter = @officer.chapter
   end
 
   def new

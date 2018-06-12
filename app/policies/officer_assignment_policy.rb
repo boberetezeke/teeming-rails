@@ -3,11 +3,23 @@ class OfficerAssignmentPolicy < ApplicationPolicy
     true
   end
 
+  def new?
+
+  end
+
+  def create?
+
+  end
+
   def edit?
     can_write_officers?(context_params: context_params)
   end
 
   def update?
+    can_write_officers?(context_params: context_params)
+  end
+
+  def destroy?
     can_write_officers?(context_params: context_params)
   end
 

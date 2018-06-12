@@ -1,4 +1,4 @@
 - if can?(current_user, :edit, officer)
-  = link_to "Edit", edit_officer_path(officer), class: 'btn btn-sm btn-success'
-- if can?(current_user, :destroy, officer)
+  = link_to "Edit", edit_officer_path(officer), class: 'btn btn-sm btn-primary'
+- if can?(current_user, :destroy, officer) && officer.officer_assignments.empty?
   = link_to "Delete", officer_path(officer), method: :delete, class: 'btn btn-sm btn-danger', data: { confirm: 'Are you sure?' }

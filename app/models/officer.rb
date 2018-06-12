@@ -6,7 +6,7 @@ class Officer < ApplicationRecord
   has_many :role_assignments, dependent: :destroy
   has_many :roles, through: :role_assignments
 
-  scope :active,    ->{ joins(:officer_assignments).merge(OfficerAssignment.active) }
+  scope :active,    ->{ includes(:officer_assignments).references(:officer_assignments).merge(OfficerAssignment.active) }
   scope :inactive,  ->{ joins(:officer_assignments).merge(OfficerAssignment.inactive) }
 
   def name

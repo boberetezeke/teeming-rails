@@ -4,9 +4,6 @@
   = [(@officer.is_board_member ? "Is a board member" : nil), (@officer.is_executive_committee_member ? "Is an executive committee member" : nil)].reject(&:nil?).join(", ")
 
 %div
-  %strong Users:
-  = render partial: 'users/list', locals: { users: @officer.users }
-%div
   %strong Roles:
   = render partial: 'roles/list', locals: { roles: @officer.roles }
 
@@ -14,6 +11,13 @@
   %strong Responsibilities
   = Kramdown::Document.new(@officer.responsibilities ? @officer.responsibilities : "").to_html.html_safe
 
-%hr
+%div
+  %strong Officer Assignments:
+  %div
+  - if @officer.officer_assignments.present?
+    %hr
+    = render partial: 'officer_assignments/list', locals: { officer_assignments: @officer.officer_assignments, show_actions: true }
+    %hr
 %div
   = render partial: 'officers/actions', locals: { officer: @officer }
+  = link_to "New Officer Assignment", new_chapter_officer_assignment_path(@chapter, officer_id: @officer.id), class: 'btn btn-sm btn-success'

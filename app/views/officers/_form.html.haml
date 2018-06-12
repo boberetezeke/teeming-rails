@@ -4,7 +4,7 @@
     = f.input :is_board_member, as: :boolean
   .check_box_or_radio
     = f.input :is_executive_committee_member, as: :boolean
-  = f.input :users, as: :select, multiple: true, collection: officer.chapter.members.joins(:user).map(&:user)
+  /= f.input :users, as: :select, multiple: true, collection: officer.chapter.members.joins(:user).map(&:user)
   = f.input :roles, as: :select, multiple: true, collection: Role.uncombined
   = f.input :responsibilities, as: :text
 
@@ -12,6 +12,5 @@
 
 :javascript
   $(function() {
-    $("#officer_user_ids").select2({theme: "bootstrap"})
     $("#officer_role_ids").select2({theme: "bootstrap"})
   })
