@@ -11,7 +11,7 @@ class MessageControl < ApplicationRecord
 
   CONTROL_TYPES = {
       "Don't contact me" => CONTROL_TYPE_UNSUBSCRIBE,
-      "I'm ok with contacts" => CONTROL_TYPE_NEUTRAL,
+      "I'm ok with being contacted" => CONTROL_TYPE_NEUTRAL,
       "Please keep me up to date" => CONTROL_TYPE_AFFIRM
   }
 end
