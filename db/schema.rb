@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180610202534) do
+ActiveRecord::Schema.define(version: 20180625030256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(version: 20180610202534) do
     t.boolean "show_vote_tallies"
     t.boolean "is_frozen"
     t.string "election_method"
+    t.boolean "is_public"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id"
   end
 
