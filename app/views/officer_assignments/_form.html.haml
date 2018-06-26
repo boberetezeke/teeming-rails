@@ -2,9 +2,9 @@
   = f.semantic_errors
   - if @chapter
     = f.input :user, as: :select, collection: @chapter.members.joins(:user).map(&:user)
-  = f.input :start_date_str
+  = f.input :start_date_str, input_html: { autocomplete: 'off' }
   = f.input :reason_for_start, as: :select, collection: OfficerAssignment::START_REASONS_HASH, include_blank: false
-  = f.input :end_date_str
+  = f.input :end_date_str, input_html: { autocomplete: 'off' }
   = f.input :reason_for_end, as: :select, collection: OfficerAssignment::END_REASONS_HASH, include_blank: false
   = f.input :officer_id, as: :hidden
 
