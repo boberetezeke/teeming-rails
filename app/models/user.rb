@@ -116,7 +116,8 @@ class User < ApplicationRecord
 
     officer_assignments.each do |officer_assignment|
       if officer_assignment.active?
-        officer_assignment.officer.roles.each do |role|
+        officer = officer_assignment.officer
+        officer.roles.each do |role|
           role.privileges.each do |privilege|
             unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
               dup_privilege = privilege.dup
