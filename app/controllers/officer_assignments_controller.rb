@@ -11,6 +11,7 @@ class OfficerAssignmentsController < ApplicationController
   end
 
   def create
+    @chapter = Chapter.find(params[:chapter_id])
     @officer_assignment = OfficerAssignment.new(officer_assignment_params)
     @officer_assignment.save
 

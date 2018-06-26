@@ -4,11 +4,11 @@ class OfficerAssignmentPolicy < ApplicationPolicy
   end
 
   def new?
-
+    can_for_scope?(@user.can_write_officers?, context_params)
   end
 
   def create?
-
+    can_for_scope?(@user.can_write_officers?, context_params)
   end
 
   def edit?

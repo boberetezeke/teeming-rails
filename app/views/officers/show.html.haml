@@ -20,4 +20,5 @@
     %hr
 %div
   = render partial: 'officers/actions', locals: { officer: @officer }
-  = link_to "New Officer Assignment", new_chapter_officer_assignment_path(@chapter, officer_id: @officer.id), class: 'btn btn-sm btn-success'
+  - if can?(current_user, :new, OfficerAssignment)
+    = link_to "New Officer Assignment", new_chapter_officer_assignment_path(@chapter, officer_id: @officer.id), class: 'btn btn-sm btn-success'

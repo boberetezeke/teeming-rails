@@ -69,7 +69,7 @@ class OfficersController < ApplicationController
 
   def set_officer
     @officer = Officer.find(params[:id])
-    authorize @officer
+    authorize_with_args @officer, @context_params
   end
 
   def update_users(users)

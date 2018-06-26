@@ -11,7 +11,7 @@
       %tr
         %td
           - if can?(current_user, :show, officer)
-            = link_to(officer.officer_type, officer)
+            = link_to(officer.officer_type, officer_path(officer, chapter_id: officer.chapter_id))
           - else
             = officer.officer_type
         %td

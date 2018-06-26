@@ -8,6 +8,8 @@
   %br
 
   - if show_actions
-    = link_to("Edit", edit_officer_assignment_path(officer_assignment), class: 'btn btn-sm btn-primary')
-    = link_to("Delete", officer_assignment_path(officer_assignment), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-sm btn-danger')
+    - if can?(current_user, :update, officer_assignment)
+      = link_to("Edit", edit_officer_assignment_path(officer_assignment), class: 'btn btn-sm btn-primary')
+    - if can?(current_user, :destroy, officer_assignment)
+      = link_to("Delete", officer_assignment_path(officer_assignment), method: :delete, data: {confirm: 'Are you sure?'}, class: 'btn btn-sm btn-danger')
     %br
