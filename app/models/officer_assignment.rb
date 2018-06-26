@@ -40,4 +40,11 @@ class OfficerAssignment < ApplicationRecord
       end
     end
   end
+
+  def active?
+    start_date &&
+        end_date &&
+        Time.zone.now >= start_date &&
+        Time.zone.now <= end_date
+  end
 end

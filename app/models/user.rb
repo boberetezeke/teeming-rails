@@ -114,13 +114,15 @@ class User < ApplicationRecord
       end
     end
 
-    officers.each do |officer|
-      officer.roles.each do |role|
-        role.privileges.each do |privilege|
-          unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
-            dup_privilege = privilege.dup
-            dup_privilege.scope =  {chapter_id: officer.chapter.id}.to_json if officer.chapter
-            privileges.push(dup_privilege)
+    officer_assignments.each do |officer_assignment|
+      if officer_assignment.active?
+        officer_assignment.officer.roles.each do |role|
+          role.privileges.each do |privilege|
+            unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
+              dup_privilege = privilege.dup
+              dup_privilege.scope =  {chapter_id: officer.chapter.id}.to_json if officer.chapter
+              privileges.push(dup_privilege)
+            end
           end
         end
       end
