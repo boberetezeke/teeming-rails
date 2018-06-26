@@ -9,7 +9,7 @@
   - if @user.all_roles.present?
     %hr
     %h3 Roles you have
-    = render partial: 'members/roles', locals: { user: @user }
+    = render partial: 'users/roles', locals: { user: @user }
   %hr
   %h3 Bio
   %p Introduce yourself to others. This info will be displayed if you are an officer or committee member.
