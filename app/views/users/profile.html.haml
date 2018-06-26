@@ -5,7 +5,7 @@
   - if @user.officers.present?
     %hr
     %h3 Offices you occupy
-    = render partial: 'members/officers', locals: { user: @user }
+    = render partial: 'users/officers', locals: { user: @user }
   - if @user.all_roles.present?
     %hr
     %h3 Roles you have
