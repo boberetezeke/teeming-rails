@@ -11,9 +11,9 @@ class OfficersController < ApplicationController
     @tab = params[:tab] || 'active'
 
     if @tab == 'inactive'
-      @officers = policy_scope(Officer).where(chapter: @chapter).inactive
+      @officers = policy_scope(Officer).where(chapter: @chapter).inactive.distinct
     else
-      @officers = policy_scope(Officer).where(chapter: @chapter).active
+      @officers = policy_scope(Officer).where(chapter: @chapter).active.distinct
     end
     @title = "Officers"
     @officers = @officers.paginate(page: params[:page], per_page: params[:per_page])
