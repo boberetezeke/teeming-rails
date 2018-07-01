@@ -9,6 +9,7 @@ class Message < ApplicationRecord
 
   scope :for_chapter, ->(chapter) { where(chapter_id: chapter.id) }
   scope :sent,        ->{ where(Message.arel_table[:sent_at].not_eq(nil)) }
+  scope :by_most_recent, ->{ order('updated_at desc')}
 
   validate :body_is_valid?
 

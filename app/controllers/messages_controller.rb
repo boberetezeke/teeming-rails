@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
     authorize_with_args Message, @context_params
     @chapter = Chapter.find(params[:chapter_id])
 
-    @messages = @chapter.messages
+    @messages = @chapter.messages.by_most_recent
     @messages = policy_scope_with_args(@messages, @context_params)
 
     breadcrumbs [@chapter.name, @chapter], "Messages"
@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
     @election = @message.election
     @event = @message.event
 
-    @message.create_message_recipients if @message.message_recipients.blank?
+    @message.create_message_recipients unless @message.sent_at
     @message_recipient = @message.message_recipients.first
 
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)
