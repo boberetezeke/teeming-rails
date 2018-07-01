@@ -2,14 +2,18 @@
 
 %h3 To
 %ul
-  - @message.message_recipients.each do |message_recipient|
+  - @message.message_recipients.each_with_index do |message_recipient, index|
     - if message_recipient.candidacy
-      %li #{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}
+      %li= "#{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}"
     - else
       - if message_recipient.member
-        %li #{message_recipient.member.name} <#{message_recipient.member.email}>
+        %li= "#{message_recipient.member.name} <#{message_recipient.member.email}>"
       - else
-        %li <#{message_recipient.email}>
+        %li= "<#{message_recipient.email}>"
+    - overflow = 10
+    - if index >= overflow
+      %li and #{@message.message_recipients.size - overflow - 1} more recipients
+      - break
 
 %h3 Body
 %p #{@message.rendered_body(@message_recipient, message_control_path(@message_recipient.token))}
