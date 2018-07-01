@@ -25,3 +25,6 @@
           %td= render partial: 'members/actions', locals: { member: member }
   %div{dt.refreshable("pagination")}
     = will_paginate @users, renderer: BootstrapPagination::Rails
+
+- if can?(current_user, :new, :member)
+  = link_to "Add Member", new_chapter_member_path(chapter: @chapter), class: 'btn btn-sm btn-success'

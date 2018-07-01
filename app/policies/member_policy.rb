@@ -9,6 +9,10 @@ class MemberPolicy < ApplicationPolicy
     can_for_scope?(@user.can_view_members?, context_params)
   end
 
+  def new?
+    can_for_scope?(@user.can_write_members?, context_params)
+  end
+
   def show?
     can_view_members? || (@record.user && @record.user.officers.present?)
   end
@@ -18,6 +22,10 @@ class MemberPolicy < ApplicationPolicy
   end
 
   def update?
+    can_write_members?
+  end
+
+  def destroy?
     can_write_members?
   end
 

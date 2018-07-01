@@ -19,6 +19,7 @@ class Member < ApplicationRecord
 
   attr_accessor :with_user_input
 
+  validates :email, :uniqueness => true
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }
   validates :address_1, presence: true,              if: ->{ with_user_input }
   validates :city, presence: true,                   if: ->{ with_user_input }
@@ -113,6 +114,22 @@ class Member < ApplicationRecord
 
   def message_control_for(unsubscribe_type)
     message_controls.where(unsubscribe_type: unsubscribe_type).first
+  end
+
+  def share_name_with?(current_user)
+    !user || (user && user.share_name_with?(current_user))
+  end
+
+  def share_email_with?(current_user)
+    !user || (user && user.share_email_with?(current_user))
+  end
+
+  def share_phone_with?(current_user)
+    !user || (user && user.share_phone_with?(current_user))
+  end
+
+  def share_address_with?(current_user)
+    !user || (user && user.share_address_with?(current_user))
   end
 
   def can_receive_message_for?(medium_type, message_type)

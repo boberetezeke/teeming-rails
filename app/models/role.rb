@@ -4,6 +4,7 @@ class Role < ApplicationRecord
 
   # has_many :officer_assignments, dependent: :destroy
   # has_many :officers, through: :officer_assignments
+  alias_method :old_dup, :dup
 
   scope :uncombined, ->{ where(Role.arel_table[:combined].eq(nil).or(Role.arel_table[:combined].eq(false))) }
 
@@ -11,6 +12,12 @@ class Role < ApplicationRecord
 
   def combined?
     combined
+  end
+
+  def dup
+    new_role = self.old_dup
+    new_role.privileges = self.privileges.map{ |privilege| privilege.dup }
+    new_role
   end
 
   def self.descriptions_for(privilege)

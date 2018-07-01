@@ -175,7 +175,7 @@ form.formtastic .check_box_or_radio #user_run_for_state_board {
     margin-top: 5px;
 }
 
-form.formtastic .check_box_or_radio #user_interested_in_volunteering {
+form.formtastic .check_box_or_radio #member_user_attributes_interested_in_volunteering {
     margin-left: -20px;
     margin-top: 5px;
 }

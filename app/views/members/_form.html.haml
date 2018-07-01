@@ -1,5 +1,7 @@
-= semantic_form_for member do |f|
+= semantic_form_for [chapter, member] do |f|
   = f.semantic_errors
+  - unless member.user
+    = f.input :email
   = render partial: 'members/user_details', locals: { f: f, disabled: !can?(current_user, :edit, member) }
   -#- if f.object.user
   -#  %hr
