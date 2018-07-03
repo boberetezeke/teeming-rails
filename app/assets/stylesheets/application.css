@@ -180,6 +180,11 @@ form.formtastic .check_box_or_radio #member_user_attributes_interested_in_volunt
     margin-top: 5px;
 }
 
+form.formtastic .check_box_or_radio #user_interested_in_volunteering {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 form.formtastic .check_box_or_radio #user_member_attributes_interested_in_starting_chapter {
     margin-left: -20px;
     margin-top: 5px;
@@ -323,4 +328,8 @@ form.formtastic select.form-control.narrow {
 
 .disqualified {
     text-color: red;
+}
+
+.btn-wide {
+    width: 100px;
 }

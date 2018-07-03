@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180625030256) do
+ActiveRecord::Schema.define(version: 20180702014436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(version: 20180625030256) do
     t.boolean "interested_in_starting_chapter"
     t.integer "potential_chapter_id"
     t.text "bio"
+    t.boolean "added_with_new_user"
     t.index ["chapter_id"], name: "index_members_on_chapter_id"
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true
     t.index ["potential_chapter_id"], name: "index_members_on_potential_chapter_id"

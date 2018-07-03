@@ -14,13 +14,25 @@ class UsersController < ApplicationController
       @setup_states_total = STATES.size
 
       convert_answer_checkboxes_from_text
+
       # for user info page
-      @user.member = Member.new(email: @user.email, message_controls: [
-          MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL,
-                             control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
-          MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_TEXT,
-                             control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
-      ]) unless @user.member
+      if @user.member
+        @display_found_member_modal = !@user.member.added_with_new_user
+      else
+        existing_member = Member.find_by_email(@user.email)
+        if existing_member
+          @user.member = existing_member
+          @display_found_member_modal = true
+        else
+          @user.member = Member.new(email: @user.email, added_with_new_user: true, message_controls: [
+              MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL,
+                                 control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
+              MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_TEXT,
+                                 control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
+          ])
+        end
+      end
+
       @user.member.with_user_input = true
 
       # for candidancies page
