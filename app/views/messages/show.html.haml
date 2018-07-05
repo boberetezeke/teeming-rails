@@ -10,9 +10,9 @@
         %li= "#{message_recipient.member.name} <#{message_recipient.member.email}>"
       - else
         %li= "<#{message_recipient.email}>"
-    - overflow = 10
+    - overflow = 5
     - if index >= overflow
-      %li and #{@message.message_recipients.size - overflow - 1} more recipients
+      %li ....
       - break
 
 %h3 Body

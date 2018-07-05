@@ -23,7 +23,7 @@ class MessagesController < ApplicationController
     @election = @message.election
     @event = @message.event
 
-    @message.create_message_recipients unless @message.sent_at
+    @message.create_message_recipients(limit: 10) unless @message.sent_at
     @message_recipient = @message.message_recipients.first
 
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)
@@ -76,8 +76,8 @@ class MessagesController < ApplicationController
 
   def send_to_all
     @message = Message.find(params[:id])
-    @message.create_message_recipients
-    send_email(update_sent_at: true)
+    MessageSendJob.perform_later(@message.id)
+    flash[:notice] = "Message sending has started, it may take a few minutes for the first emails to be sent"
     redirect_to chapter_messages_path(@message.chapter)
   end
 
@@ -113,14 +113,7 @@ class MessagesController < ApplicationController
   private
 
   def send_email(update_sent_at: false)
-    @message.reload.message_recipients.each do |message_recipient|
-      if @message.race
-        MembersMailer.delay.send_normal(@message, "endorsements@ourrevolutionmn.com", message_recipient) # .deliver # .deliver_later
-      else
-        MembersMailer.delay.send_normal(@message, "communications@ourrevolutionmn.com", message_recipient) #.deliver # .deliver_later
-      end
-    end
-    @message.update(sent_at: Time.now) if update_sent_at
+    @message.send_email(update_sent_at: update_sent_at)
     flash[:notice] = "Message sent to #{@message.message_recipients.count} recipients"
   end
 

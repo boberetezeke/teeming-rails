@@ -18,30 +18,35 @@ class Message < ApplicationRecord
   MESSAGE_TYPE_CANDIDACY =  'candidacy'
   MESSAGE_TYPE_ELECTION =   'election'
 
-  def create_message_recipients
+  def create_message_recipients(limit: nil)
     self.message_recipients = []
+    count = 0
     if race
       race.candidacies.each do |candidacy|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_CANDIDACY)
           self.message_recipients << MessageRecipient.new(candidacy: candidacy)
+          count += 1; return if limit && count >= limit
         end
       end
     elsif election
       election.member_group.all_members(election.chapter).find_each do |member|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_ELECTION)
           self.message_recipients << MessageRecipient.new(member: member)
+          count += 1; return if limit && count >= limit
         end
       end
     elsif event
       event.member_group.all_members(event.chapter).find_each do |member|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_EVENT)
           self.message_recipients << MessageRecipient.new(member: member)
+          count += 1; return if limit && count >= limit
         end
       end
     else
       member_group.all_members(chapter).find_each do |member|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_GENERAL)
           self.message_recipients << MessageRecipient.new(member: member)
+          count += 1; return if limit && count >= limit
         end
       end
     end
@@ -58,6 +63,23 @@ class Message < ApplicationRecord
       errors.add(:body, render_errors.map{|directive, error| "directive '#{directive}' #{error}"}.join(", "))
     end
   end
+
+  def send_to_all
+    create_message_recipients
+    send_email(update_sent_at: true)
+  end
+
+  def send_email(update_sent_at: false)
+    self.reload.message_recipients.each do |message_recipient|
+      if race
+        MembersMailer.delay.send_normal(self, "endorsements@ourrevolutionmn.com", message_recipient) # .deliver # .deliver_later
+      else
+        MembersMailer.delay.send_normal(self, "communications@ourrevolutionmn.com", message_recipient) #.deliver # .deliver_later
+      end
+    end
+    update(sent_at: Time.now) if update_sent_at
+  end
+
 
   def unsubscribe_footer(unsubscribe_path)
     "<hr/>" +
