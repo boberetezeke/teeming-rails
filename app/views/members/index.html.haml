@@ -2,7 +2,9 @@
 
 = DynamicTable::Table.new(view: self, base_path: chapter_members_path(@chapter), filters: Member::MEMBER_FILTERS, params: params).generate do |dt|
   Search: #{dt.text_field_tag :search}
-  - unless @chapter.is_state_wide
+  - if @chapter.is_state_wide
+    By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_STATE_WIDE_HASH)}
+  - else
     By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_HASH)}
   By Attributes: #{dt.select_tag_options_for_select(:attr_type, Member::MEMBER_ATTRS_HASH)}
   %table.table
@@ -28,3 +30,7 @@
 
 - if can?(current_user, :new, :member)
   = link_to "Add Member", new_chapter_member_path(chapter: @chapter), class: 'btn btn-sm btn-success'
+- if can?(current_user, :import, :member)
+  = form_tag(import_chapter_members_path(@chapter), multipart: true, style: 'display: inline') do
+    = submit_tag 'Import', class: 'btn btn-sm btn-primary btn-with-padding', id: 'import-members'
+    = file_field_tag 'import_file', style: 'display: inline;'

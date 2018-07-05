@@ -58,7 +58,11 @@ Rails.application.routes.draw do
   resources :message_controls, only: [:edit, :update, :show, :create]
 
   resources :chapters do
-    resources :members, only: [:index, :new, :create, :show, :edit, :update, :destroy], shallow: true
+    resources :members, only: [:index, :new, :create, :show, :edit, :update, :destroy], shallow: true do
+      collection do
+        post :import
+      end
+    end
     resources :events,   shallow: true
     resources :messages, shallow: true do
       member do

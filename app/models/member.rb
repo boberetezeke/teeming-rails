@@ -26,6 +26,14 @@ class Member < ApplicationRecord
   validates :state, presence: true,                  if: ->{ with_user_input }
   validates :zip, presence: true,                    if: ->{ with_user_input }
 
+  DATABANK_EXPORT_COLUMNS = [
+    "id",
+    "databank_id", "address_1", "address_2", "city", "company", "email", "first_name", "home_phone", "last_name", "middle_initial",
+    "mobile_phone", "state", "status", "work_phone", "zip", "created_at", "updated_at"
+  ]
+  DATABANK_COL_TO_INDEX = Hash[DATABANK_EXPORT_COLUMNS.map.with_index{|col, index| [col.to_sym, index]}]
+  DATABANK_INDEX_TO_COL = DATABANK_COL_TO_INDEX.invert
+
   SCOPE_TYPES = {
     interested_in_volunteering:   "Interested in Volunteering",
     potential_chapter_members:    "Potential Chapter Members",
@@ -39,9 +47,11 @@ class Member < ApplicationRecord
   MEMBER_ATTRS_VOLUNTEER =     'volunteer'
   MEMBER_ATTRS_START_CHAPTER = 'start-chapter'
 
-  MEMBER_TYPE_ALL =       'all'
-  MEMBER_TYPE_MEMBER =    'member'
-  MEMBER_TYPE_POTENTIAL = 'potential'
+  MEMBER_TYPE_ALL =             'all'
+  MEMBER_TYPE_MEMBER =          'member'
+  MEMBER_TYPE_POTENTIAL =       'potential'
+  MEMBER_TYPE_USER_MEMBER =     'user-member'
+  MEMBER_TYPE_NON_USER_MEMBER = 'non-user-member'
 
   scope :officers,                    ->(chapter) { joins(user: :officers) }
   scope :board_members,               ->(chapter) { officers.where(is_board_member: true) }
@@ -67,6 +77,8 @@ class Member < ApplicationRecord
       )
     )
   }
+  scope :without_user, ->{ where(user_id: nil) }
+  scope :with_user, ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
 
   scope :valid_email, -> {
     where(
@@ -97,9 +109,15 @@ class Member < ApplicationRecord
 
 
   MEMBER_TYPES_HASH = {
+      "All" =>               MEMBER_TYPE_ALL,
+      "Members" =>           MEMBER_TYPE_MEMBER,
+      "Potential members" => MEMBER_TYPE_POTENTIAL
+  }
+
+  MEMBER_TYPES_STATE_WIDE_HASH = {
       "All" =>              MEMBER_TYPE_ALL,
-      "Member" =>           MEMBER_TYPE_MEMBER,
-      "Potential member" => MEMBER_TYPE_POTENTIAL
+      "User Members" =>     MEMBER_TYPE_USER_MEMBER,
+      "Non-User Members" => MEMBER_TYPE_NON_USER_MEMBER
   }
 
   MEMBER_ATTRS_HASH = {
@@ -107,6 +125,25 @@ class Member < ApplicationRecord
       "Wants to volunteer" =>     MEMBER_ATTRS_VOLUNTEER,
       "Wants to start chapter" => MEMBER_ATTRS_START_CHAPTER
   }
+
+  def self.import_file(filename)
+    state_chapter_id = Chapter.state_wide.id
+    CSV.foreach(filename) do |row|
+      email = row[DATABANK_COL_TO_INDEX[:email]]
+      if Member.find_by_email(email).blank?
+        member = Member.new
+        row.each_with_index do |column_value, index|
+          col_name = DATABANK_INDEX_TO_COL[index]
+          if !([:id, :created_at, :updatd_at].include?(col_name))
+            member.send("#{col_name}=", column_value)
+          end
+        end
+
+        member.chapter_id = state_chapter_id
+        member.save
+      end
+    end
+  end
 
   def name
     "#{first_name} #{last_name}"

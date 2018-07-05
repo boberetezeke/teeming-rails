@@ -17,9 +17,15 @@ class MembersController < ApplicationController
     elsif params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
       @members = @members.potential_chapter_members(@chapter)
       @title = "Potential Members"
-    else
+    elsif params[:member_type] == Member::MEMBER_TYPE_MEMBER
       @title = "Chapter Members"
       @members = @members.chapter_members(@chapter)
+    elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
+      @title = "User Members"
+      @members = @members.chapter_members(@chapter).with_user
+    else
+      @title = "Non-User Members"
+      @members = @members.chapter_members(@chapter).without_user
     end
 
     @members = @members.filtered_by_string(params[:search]) if params[:search]
@@ -64,6 +70,29 @@ class MembersController < ApplicationController
     @member.destroy
 
     redirect_to chapter_members_path(@member.chapter)
+  end
+
+  def import
+    authorize Member, :import?
+
+    if params[:import_file]
+      title_line = CSV.open(params[:import_file].tempfile.path).first
+      title_line = title_line.map(&:strip)
+      if title_line == Member::DATABANK_EXPORT_COLUMNS
+        ImportJob.perform_later(current_user.id, {
+            tempfile: params[:import_file].tempfile.path,
+            original_filename: params[:import_file].original_filename,
+            content_type: params[:import_file].content_type}
+        )
+        flash[:notice] = "User import started, you will be notified by email when it is finished"
+      else
+        flash[:alert] = "import file not in correct format"
+      end
+    else
+      flash[:alert] = "No file selected to import"
+    end
+
+    redirect_to chapter_members_path(@chapter)
   end
 
   private
