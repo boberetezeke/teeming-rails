@@ -28,3 +28,4 @@ db/backups/
 
 .env
 .DS_Store
+import.csv
