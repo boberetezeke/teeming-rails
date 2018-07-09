@@ -37,4 +37,33 @@ namespace :members  do
       end
     end
   end
+
+  desc "add unsubscribes for database2.csv from unsubscribes from send grid"
+  task :add_unsubscribes do
+    suppressions = Hash[CSV.read("members/unsubscribes/asm_groups_3893_suppressions.csv").map{|row| [row[0], true]}]
+    spam_reports = Hash[CSV.read("members/unsubscribes/suppression_spam_reports.csv").map{|row| [row[1], true]}]
+    unsubscribes = Hash[CSV.read("members/unsubscribes/suppression_unsubscribes.csv").map{|row| [row[0], true]}]
+
+    all_unsubscribes = suppressions.merge(spam_reports.merge(unsubscribes))
+    with_unsubscribes = CSV.open("members/databank3.csv", "wb")
+
+    index = 0
+    CSV.foreach("members/databank2.csv") do |row|
+      if index == 0
+        with_unsubscribes << row + ['unsubscribe']
+      else
+        email = row[6]
+        with_unsubscribes << row + [all_unsubscribes[email] ? "true": "false"]
+      end
+
+      index += 1
+    end
+
+    with_unsubscribes.close
+  end
+
+  desc "remove non-user members"
+  task :remove_non_user_members => :environment do
+    Member.where(user_id: nil).destroy_all
+  end
 end

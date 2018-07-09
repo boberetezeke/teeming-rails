@@ -40,9 +40,13 @@ class MessageControlsController < ApplicationController
     end
   end
 
+  def self.permitted_attributes
+    [:unsubscribe_type, :control_type, :unsubscribe_reason, :member_id]
+  end
+
   private
 
   def message_control_params
-    params.require(:message_control).permit(:unsubscribe_type, :control_type, :unsubscribe_reason, :member_id)
+    params.require(:message_control).permit(self.class.permitted_attributes)
   end
 end

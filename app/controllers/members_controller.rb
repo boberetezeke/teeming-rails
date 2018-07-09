@@ -11,20 +11,16 @@ class MembersController < ApplicationController
 
     @members = policy_scope(Member).includes(:user).references(:user)
 
+    @title = "Members"
     if params[:member_type] == Member::MEMBER_TYPE_ALL
       @members = @members.all_chapter_members(@chapter)
-      @title = "Chapter and Potential Members"
     elsif params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
       @members = @members.potential_chapter_members(@chapter)
-      @title = "Potential Members"
     elsif params[:member_type] == Member::MEMBER_TYPE_MEMBER
-      @title = "Chapter Members"
       @members = @members.chapter_members(@chapter)
     elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
-      @title = "User Members"
       @members = @members.chapter_members(@chapter).with_user
     else
-      @title = "Non-User Members"
       @members = @members.chapter_members(@chapter).without_user
     end
 
@@ -102,6 +98,7 @@ class MembersController < ApplicationController
                                    :first_name, :middle_initial, :last_name,
                                    :mobile_phone, :work_phone, :home_phone,
                                    :address_1, :address_2, :city, :state, :zip,
+                                   message_controls_attributes: [:id] + MessageControlsController.permitted_attributes,
                                    user_attributes: [:id, {role_ids: [], officer_ids: []}])
   end
 

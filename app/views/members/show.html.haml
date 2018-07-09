@@ -3,6 +3,10 @@
     = f.input :email, input_html: { disabled: true }
   - if is_current_user?(f.object, current_user) || current_user.can_view_members?
     = render partial: 'members/user_details', locals: { f: f, disabled: true }
+    - if f.object.message_controls.present?
+      %hr
+      = f.fields_for :message_controls do |ff|
+        = render partial: 'message_controls/form', locals: { f: ff, disabled: true }
 
   %hr
   - if f.object.user
