@@ -12,16 +12,16 @@ class MembersController < ApplicationController
     @members = policy_scope(Member).includes(:user).references(:user)
 
     @title = "Members"
-    if params[:member_type] == Member::MEMBER_TYPE_ALL
-      @members = @members.all_chapter_members(@chapter)
-    elsif params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
+    if params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
       @members = @members.potential_chapter_members(@chapter)
     elsif params[:member_type] == Member::MEMBER_TYPE_MEMBER
       @members = @members.chapter_members(@chapter)
     elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
       @members = @members.chapter_members(@chapter).with_user
-    else
+    elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
       @members = @members.chapter_members(@chapter).without_user
+    else
+      @members = @members.all_chapter_members(@chapter)
     end
 
     @members = @members.filtered_by_string(params[:search]) if params[:search]

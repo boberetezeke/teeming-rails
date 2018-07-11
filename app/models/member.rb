@@ -128,8 +128,9 @@ class Member < ApplicationRecord
 
   MEMBER_TYPES_HASH = {
       "All" =>               MEMBER_TYPE_ALL,
-      "Members" =>           MEMBER_TYPE_MEMBER,
-      "Potential members" => MEMBER_TYPE_POTENTIAL
+      "User Members" =>      MEMBER_TYPE_MEMBER,
+      "Non-User Members" =>  MEMBER_TYPE_NON_USER_MEMBER,
+      "Potential User Members" => MEMBER_TYPE_POTENTIAL
   }
 
   MEMBER_TYPES_STATE_WIDE_HASH = {
