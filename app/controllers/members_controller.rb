@@ -76,9 +76,12 @@ class MembersController < ApplicationController
       title_line = title_line.map(&:strip)
       if title_line == Member::DATABANK_EXPORT_COLUMNS
         data = nil
-        File.open(params[:import_file].tempfile.path) {|f| data = f.read }
+        t = Tempfile.new("import-file")
+        File.open(params[:import_file].tempfile.path) {|f| data = f.read; t.write(data) }
+        t.close
         ImportJob.perform_later(current_user.id, {
-            tempfile: params[:import_file].tempfile.path,
+            # tempfile: params[:import_file].tempfile.path,
+            tempfile: t.path,
             original_filename: params[:import_file].original_filename,
             content_type: params[:import_file].content_type}
         )
