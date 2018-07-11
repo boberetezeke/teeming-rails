@@ -40,8 +40,12 @@ class MessagesController < ApplicationController
       @chapter = @event.chapter
     else
       @chapters = Chapter.all
-      @member_groups = MemberGroup.all
       @chapter = Chapter.find(params[:chapter_id])
+      if @chapter.is_state_wide
+        @member_groups = MemberGroup.state_wide_groups
+      else
+        @member_groups = MemberGroup.chapter_groups
+      end
     end
     @message = Message.new(chapter: @chapter, race: @race, election: @election, event: @event)
     breadcrumbs messages_breadcrumbs, "New Message"

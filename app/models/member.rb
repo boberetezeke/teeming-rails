@@ -40,7 +40,8 @@ class Member < ApplicationRecord
     chapter_members:              "Chapter Members",
     officers:                     "Officers",
     board_members:                "Board Members",
-    executive_committee_members:  "Executive Committee Members"
+    executive_committee_members:  "Executive Committee Members",
+    all_members:                  "All Members",
   }
 
   MEMBER_ATTRS_ALL =           'all'
@@ -53,9 +54,24 @@ class Member < ApplicationRecord
   MEMBER_TYPE_USER_MEMBER =     'user-member'
   MEMBER_TYPE_NON_USER_MEMBER = 'non-user-member'
 
-  scope :officers,                    ->(chapter) { joins(user: :officers) }
-  scope :board_members,               ->(chapter) { officers.where(is_board_member: true) }
-  scope :executive_committee_members, ->(chapter) { officers.where(is_executive_committee_member: true) }
+  scope :officers,                    ->(chapter) {
+    joins(user: :officers)
+        .where(Member.arel_table[:chapter_id].eq(chapter.id))
+  }
+
+  scope :board_members,               ->(chapter) {
+    joins(user: :officers)
+      .where(Officer.arel_table[:is_board_member].eq(true).and(
+        Member.arel_table[:chapter_id].eq(chapter.id)
+      ))
+  }
+
+  scope :executive_committee_members, ->(chapter) {
+    joins(user: :officers)
+      .where(Officer.arel_table[:is_executive_committee_member].eq(true).and(
+        Member.arel_table[:chapter_id].eq(chapter.id)
+      ))
+  }
 
   scope :interested_in_volunteering,        ->(chapter) {
     joins(:user).where(User.arel_table[:interested_in_volunteering].eq(true))
@@ -77,6 +93,8 @@ class Member < ApplicationRecord
       )
     )
   }
+  scope :all_members, ->(chapter){ all }
+
   scope :without_user, ->{ where(user_id: nil) }
   scope :with_user, ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
 
