@@ -5,6 +5,8 @@ class MessagesController < ApplicationController
   before_action :set_context
   before_action :set_context_params
 
+  EMAIL_LIMIT_FOR_PREVIEW = 20
+
   def index
     authorize_with_args Message, @context_params
     @chapter = Chapter.find(params[:chapter_id])
@@ -23,7 +25,7 @@ class MessagesController < ApplicationController
     @election = @message.election
     @event = @message.event
 
-    @message.create_message_recipients(limit: 10) unless @message.sent_at
+    @message.create_message_recipients(limit: EMAIL_LIMIT_FOR_PREVIEW) unless @message.sent_at
     @message_recipient = @message.message_recipients.unqueued.first
 
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)

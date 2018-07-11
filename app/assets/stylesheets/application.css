@@ -333,3 +333,16 @@ form.formtastic select.form-control.narrow {
 .btn-wide {
     width: 100px;
 }
+
+.message-to {
+    height: 100px;
+    overflow: auto;
+    background-color: #fcfcfc;
+}
+
+.message-body {
+    height: 400px;
+    overflow: auto;
+    padding: 5px;
+    background-color: #fcfcfc;
+}
