@@ -7,9 +7,9 @@ class Message < ApplicationRecord
   has_many :message_recipients, dependent: :destroy
   belongs_to :member_group
 
-  scope :for_chapter, ->(chapter) { where(chapter_id: chapter.id) }
-  scope :sent,        ->{ where(Message.arel_table[:sent_at].not_eq(nil)) }
-  scope :by_most_recent, ->{ order('updated_at desc')}
+  scope :for_chapter,     ->(chapter) { where(chapter_id: chapter.id) }
+  scope :sent,            ->{ where(Message.arel_table[:sent_at].not_eq(nil)) }
+  scope :by_most_recent,  ->{ order('updated_at desc')}
 
   validate :body_is_valid?
 
@@ -18,20 +18,28 @@ class Message < ApplicationRecord
   MESSAGE_TYPE_CANDIDACY =  'candidacy'
   MESSAGE_TYPE_ELECTION =   'election'
 
-  def create_message_recipients(limit: nil)
-    self.message_recipients = []
+  def message_recipients_for_show
+    if sent_at
+      message_recipients
+    else
+      message_recipients.unqueued
+    end
+  end
+
+  def create_message_recipients(limit: nil, set_queued_at: false)
+    self.message_recipients.where(queued_at: nil).destroy_all
     count = 0
     if race
       race.candidacies.each do |candidacy|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_CANDIDACY)
-          self.message_recipients << MessageRecipient.new(candidacy: candidacy)
+          self.message_recipients << MessageRecipient.new(candidacy: candidacy, queued_at: set_queued_at ? Time.now : nil)
           count += 1; return if limit && count >= limit
         end
       end
     elsif election
       election.member_group.all_members(election.chapter).find_each do |member|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_ELECTION)
-          self.message_recipients << MessageRecipient.new(member: member)
+          self.message_recipients << MessageRecipient.new(member: member, queued_at: set_queued_at ? Time.now : nil)
           count += 1; return if limit && count >= limit
         end
       end
@@ -65,7 +73,7 @@ class Message < ApplicationRecord
   end
 
   def send_to_all
-    create_message_recipients
+    create_message_recipients(set_queued_at: true)
     send_email(update_sent_at: true)
   end
 

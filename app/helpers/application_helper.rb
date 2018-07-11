@@ -21,7 +21,7 @@ module ApplicationHelper
     job_info = YAML.load(job.handler)
     if job_info.is_a?(Delayed::PerformableMailer)
       email, from, to = job_info.args
-      "email: #{email.subject} to #{to.member.email}"
+      "email: #{email.subject} to '#{to.email}'"
     elsif job_info.job_data['job_class'] == "ImportJob"
       filename = job_info.job_data['arguments'][1]["original_filename"]
       "Importing Members from file: #{filename}"

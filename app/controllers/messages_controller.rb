@@ -92,7 +92,7 @@ class MessagesController < ApplicationController
     if emails.size == 0
       flash[:alert] = "No emails supplied to preview to"
     else
-      @message.message_recipients = emails.map{|email| MessageRecipient.new(email: email)}
+      @message.message_recipients = emails.map{|email| MessageRecipient.new(email: email, queued_at: Time.now)}
       send_email
     end
 

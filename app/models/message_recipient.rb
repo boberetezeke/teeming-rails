@@ -5,6 +5,8 @@ class MessageRecipient < ApplicationRecord
 
   before_create :create_token
 
+  scope :unqueued,        ->{ where(queued_at: nil) }
+
   def name
     forward(:name)
   end
@@ -33,7 +35,7 @@ class MessageRecipient < ApplicationRecord
 
   def forward(sym)
     if read_attribute(:email).present?
-      if sym == :name || sym == :first_name
+      if sym == :name || sym == :first_name || sym == :email
         read_attribute(:email)
       else
         ""
