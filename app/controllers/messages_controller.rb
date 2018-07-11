@@ -24,7 +24,7 @@ class MessagesController < ApplicationController
     @event = @message.event
 
     @message.create_message_recipients(limit: 10) unless @message.sent_at
-    @message_recipient = @message.message_recipients.first
+    @message_recipient = @message.message_recipients.unqueued.first
 
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)
   end
