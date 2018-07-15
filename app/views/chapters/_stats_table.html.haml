@@ -10,7 +10,7 @@
     - chapters.each do |chapter|
       %tr.row
         %td= link_to(chapter.name, chapter)
-        %td= chapter.members.count
+        %td= chapter.members.with_user.count
         %td= chapter.officers.count
         - if show_actions
           %td
@@ -21,7 +21,7 @@
 
     %tr.row
       %td Totals
-      %td= chapters.map{|c| c.members.count}.sum
+      %td= chapters.map{|c| c.members.with_user.count}.sum
       %td
       - if show_actions
         %td
