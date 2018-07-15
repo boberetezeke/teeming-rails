@@ -41,6 +41,7 @@ gem 'jwt', '>= 1.5.6'
 gem 'kaminari'
 gem 'pry-rails'
 gem 'sendgrid-ruby'
+gem 'aws-sdk-s3', '~> 1'
 
 gem 'honeybadger'
 
