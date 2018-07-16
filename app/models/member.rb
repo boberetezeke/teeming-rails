@@ -56,25 +56,29 @@ class Member < ApplicationRecord
 
   scope :officers,                    ->(chapter) {
     joins(user: :officers)
-      .where(Member.arel_table[:chapter_id].eq(chapter.id))
       .merge(Officer.active)
   }
+  #.where(Member.arel_table[:chapter_id].eq(chapter.id))
 
   scope :board_members,               ->(chapter) {
     joins(user: :officers)
-      .where(Officer.arel_table[:is_board_member].eq(true).and(
-        Member.arel_table[:chapter_id].eq(chapter.id)
-      ))
+      .where(Officer.arel_table[:is_board_member].eq(true)
+      )
       .merge(Officer.active)
   }
+  # .and(
+  #   Member.arel_table[:chapter_id].eq(chapter.id)
+  # )
 
   scope :executive_committee_members, ->(chapter) {
     joins(user: :officers)
-      .where(Officer.arel_table[:is_executive_committee_member].eq(true).and(
-        Member.arel_table[:chapter_id].eq(chapter.id)
-      ))
+      .where(Officer.arel_table[:is_executive_committee_member].eq(true)
+      )
       .merge(Officer.active)
   }
+  # .and(
+  #   Member.arel_table[:chapter_id].eq(chapter.id)
+  # )
 
   scope :interested_in_volunteering,        ->(chapter) {
     joins(:user).where(User.arel_table[:interested_in_volunteering].eq(true))
