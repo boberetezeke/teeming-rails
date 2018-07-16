@@ -11,7 +11,9 @@ describe MemberGroup do
   let!(:user)           { FactoryBot.create(:user,   email: 'user@a.com', chapter: chapter) }
   let!(:user_other)     { FactoryBot.create(:user,   email: 'user@b.com', chapter: other_chapter) }
   let!(:user_officer)   { FactoryBot.create(:user, email: 'officer@a.com', chapter: chapter) }
-  let!(:officer)        { FactoryBot.create(:officer, users: [user_officer], chapter: chapter) }
+  let!(:officer)        { FactoryBot.create(:officer, users: [user_officer], chapter: chapter, start_date: 15.days.ago.to_date, end_date: 15.days.from_now.to_date) }
+  let!(:user_officer_out_of_date)   { FactoryBot.create(:user, email: 'officer@aood.com', chapter: chapter) }
+  let!(:officer_out_of_date)        { FactoryBot.create(:officer, users: [user_officer_out_of_date], chapter: chapter, start_date: Date.new(2017,1,1), end_date: Date.new(2017, 12, 31)) }
   let!(:user_board_member)        { FactoryBot.create(:user, email: 'board_member@a.com', chapter: chapter) }
   let!(:officer_board_member)     { FactoryBot.create(:officer, users: [user_board_member], is_board_member: true, chapter: chapter) }
   let!(:user_exec_cmmt_member)    { FactoryBot.create(:user, email: 'exec_cmmt_member@a.com', chapter: chapter) }
@@ -23,7 +25,7 @@ describe MemberGroup do
     context "when selecting chapter members" do
       let(:member_group) { MemberGroup.new(scope_type: :chapter_members, group_type: MemberGroup::GROUP_TYPE_SCOPE) }
       it "selects chapter members" do
-        expect(member_group.all_members(chapter)).to match_array([member, user.member, user_officer.member, user_board_member.member, user_exec_cmmt_member.member])
+        expect(member_group.all_members(chapter)).to match_array([member, user.member, user_officer.member, user_officer_out_of_date.member, user_board_member.member, user_exec_cmmt_member.member])
       end
 
       it "selects other chapter members" do
