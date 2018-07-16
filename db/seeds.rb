@@ -160,9 +160,7 @@ skills_questionnaire.destroy if skills_questionnaire
     Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 #end
 
-if MemberGroup.count == 0
-  MemberGroup.write_member_groups
-end
+MemberGroup.write_member_groups
 
 minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
 minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
@@ -195,6 +193,7 @@ initial_board_election = Election.find_or_create_by(name: 'Initial Board Electio
   %p.in-formtastic The board membership, when available, should be equally split between urban and rural areas as defined through congressional districts.
 =end
 
+=begin
 initial_board_race_notes = <<EOT
 Your voice is needed on the Statewide Board!
 
@@ -275,4 +274,4 @@ if !initial_board_questionnaire
     Question.create(questionnaire_section: leadership_section, order_index: 7, text: 'Why is holding a position on the Board of Our Revolution MN important to you? What\'s in it for you? ', question_type: Question::QUESTION_TYPE_LONG_TEXT)
     Question.create(questionnaire_section: leadership_section, order_index: 8, text: 'Is there anything else you would like the Our Revolution MN members to know about you?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 end
-
+=end
