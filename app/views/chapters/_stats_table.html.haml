@@ -11,7 +11,7 @@
       %tr.row
         %td= link_to(chapter.name, chapter)
         %td= chapter.members.with_user.count
-        %td= chapter.officers.count
+        %td= chapter.active_officer_assignments.count
         - if show_actions
           %td
             - if can?(current_user, :edit, chapter)

@@ -13,4 +13,8 @@ class Chapter < ApplicationRecord
   def self.state_wide
     Chapter.find_by_is_state_wide(true)
   end
+
+  def active_officer_assignments
+    officers.joins(:officer_assignments).merge(OfficerAssignment.active)
+  end
 end
