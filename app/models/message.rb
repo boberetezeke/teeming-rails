@@ -27,34 +27,17 @@ class Message < ApplicationRecord
   end
 
   def num_recipients
-    total = 0
     if race
-      race.candidacies.each do |candidacy|
-        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_CANDIDACY)
-          total += 1
-        end
-      end
+      members = race.candidacies
     elsif election
-      election.member_group.all_members(election.chapter).find_each do |member|
-        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_ELECTION)
-          total += 1
-        end
-      end
+      members = election.member_group.all_members(election.chapter)
     elsif event
-      event.member_group.all_members(event.chapter).find_each do |member|
-        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_EVENT)
-          total += 1
-        end
-      end
+      members = event.member_group.all_members(event.chapter)
     else
-      member_group.all_members(chapter).find_each do |member|
-        if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_GENERAL)
-          total += 1
-        end
-      end
+      members = member_group.all_members(chapter)
     end
 
-    total
+    members.sendable.count
   end
 
   def create_message_recipients(limit: nil, set_queued_at: false)

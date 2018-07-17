@@ -126,6 +126,15 @@ class Member < ApplicationRecord
     where(status: 'active')
   }
 
+  scope :sendable, -> {
+    includes(:message_controls)
+    .references(:message_controls)
+    .where(MessageControl.arel_table[:control_type].eq(nil).or(
+        MessageControl.arel_table[:control_type].not_eq(MessageControl::CONTROL_TYPE_UNSUBSCRIBE)
+      )
+    )
+  }
+
   MEMBER_FILTERS = {
     search:       '',
     member_type:  MEMBER_TYPE_ALL,
