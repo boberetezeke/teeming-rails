@@ -60,14 +60,14 @@ class Message < ApplicationRecord
     elsif event
       event.member_group.all_members(event.chapter).find_each do |member|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_EVENT)
-          self.message_recipients << MessageRecipient.new(member: member)
+          self.message_recipients << MessageRecipient.new(member: member, queued_at: set_queued_at ? Time.now : nil)
           count += 1; return if limit && count >= limit
         end
       end
     else
       member_group.all_members(chapter).find_each do |member|
         if member.can_receive_message_for?(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, MESSAGE_TYPE_GENERAL)
-          self.message_recipients << MessageRecipient.new(member: member)
+          self.message_recipients << MessageRecipient.new(member: member, queued_at: set_queued_at ? Time.now : nil)
           count += 1; return if limit && count >= limit
         end
       end
