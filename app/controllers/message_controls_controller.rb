@@ -2,8 +2,11 @@ class MessageControlsController < ApplicationController
   def show
     @message_recipient = MessageRecipient.find_by_token(params[:id])
     @message_control = @message_recipient.member.message_control_for(MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL)
-
-    authorize @message_control
+    if @message_control
+      authorize @message_control
+    else
+      redirect_to edit_message_control_path(params[:id])
+    end
   end
 
   def create
