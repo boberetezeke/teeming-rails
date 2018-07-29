@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180711153447) do
+ActiveRecord::Schema.define(version: 20180728154207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(version: 20180711153447) do
     t.boolean "is_state_wide"
     t.string "name"
     t.text "description"
+    t.string "visibility"
   end
 
   create_table "choice_tallies", id: :serial, force: :cascade do |t|
@@ -109,7 +110,6 @@ ActiveRecord::Schema.define(version: 20180711153447) do
     t.text "description"
     t.date "vote_date"
     t.string "election_type"
-    t.boolean "hide_on_dashboard"
     t.integer "member_group_id"
     t.datetime "vote_start_time"
     t.datetime "vote_end_time"
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 20180711153447) do
     t.boolean "is_frozen"
     t.string "election_method"
     t.boolean "is_public"
+    t.string "visibility"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id"
   end
 
@@ -147,6 +148,7 @@ ActiveRecord::Schema.define(version: 20180711153447) do
     t.integer "member_group_id"
     t.datetime "published_at"
     t.text "agenda"
+    t.string "visibility"
     t.index ["chapter_id"], name: "index_events_on_chapter_id"
     t.index ["member_group_id"], name: "index_events_on_member_group_id"
   end
@@ -244,6 +246,7 @@ ActiveRecord::Schema.define(version: 20180711153447) do
     t.datetime "updated_at"
     t.datetime "sent_at"
     t.integer "event_id"
+    t.string "visibility"
     t.index ["chapter_id"], name: "index_messages_on_chapter_id"
     t.index ["election_id"], name: "index_messages_on_election_id"
     t.index ["event_id"], name: "index_messages_on_event_id"

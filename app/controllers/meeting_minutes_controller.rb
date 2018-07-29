@@ -52,6 +52,7 @@ class MeetingMinutesController < ApplicationController
   def set_published_at(meeting_minute)
     if params['commit'] == "Save" && @meeting_minute.published_at.nil?
       meeting_minute.published_at = Time.now
+      meeting_minute.save if meeting_minute.persisted?
     end
   end
 

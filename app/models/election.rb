@@ -14,6 +14,28 @@ class Election < ApplicationRecord
   has_one :questionnaire, as: :questionnairable
   has_many :messages, dependent: :destroy
 
+  scope :show_on_dashboard, ->(chapter) {
+    where(
+      arel_table[:election_type].eq(ELECTION_TYPE_EXTERNAL).or(
+          chapter ? arel_table[:chapter_id].eq(chapter.id) : Arel::Nodes::True.new
+      )
+    )
+  }
+
+  scope :visible, ->(chapter) {
+    where(
+      (chapter ?
+           arel_table[:visibility].gteq(Visibility::VISIBILITY_SHOW_CHAPTER)
+           :
+           arel_table[:visibility].eq(Visibility::VISIBILITY_SHOW_ALL)
+      )
+    )
+  }
+
+  scope :for_chapter, ->(chapter) {
+    where(chapter ? arel_table[:chapter_id].eq(chapter.id) : Arel::Nodes::True.new)
+  }
+
   ELECTION_TYPE_INTERNAL = 'internal'
   ELECTION_TYPE_EXTERNAL = 'external'
 

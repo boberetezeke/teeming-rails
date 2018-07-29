@@ -7,6 +7,7 @@ class UsersController < ApplicationController
     @user = current_user
     @title = "Our Revolution MN Membership"
     @events = policy_scope(Event.future)
+    @elections = policy_scope(Election.show_on_dashboard(nil).visible(nil))
 
     @setup_state = @user.setup_state
     if @setup_state.present?
@@ -34,21 +35,6 @@ class UsersController < ApplicationController
       end
 
       @user.member.with_user_input = true
-
-      # for candidancies page
-      #@race = Race.find_by_name('Initial Board Election Race')
-      # HACK - delete existing candidacy to avoid save error - Couldn't find Answer with ID=346 for Candidacy with ID=
-      #if @user.candidacies.present?
-      #  @user.candidacies.destroy_all
-      #end
-      #@user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
-
-      if @user.event_rsvps.present?
-        @user.event_rsvps.destroy_all
-      end
-
-      @initial_convention = Event.first
-      @user.event_rsvps.build(user: current_user, event: @initial_convention)
     end
   end
 
