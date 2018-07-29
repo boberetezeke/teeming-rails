@@ -3,6 +3,7 @@ class EventRsvpsController < ApplicationController
 
   def edit
     @event_rsvp = EventRsvp.find(params[:id])
+    @event = @event_rsvp.event
   end
 
   def update
