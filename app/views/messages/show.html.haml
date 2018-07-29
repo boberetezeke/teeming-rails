@@ -24,7 +24,7 @@
 
 %h3 Body
 %div.message-body
-  %p #{@message.rendered_body(@message_recipient, message_control_path(@message_recipient.token))}
+  %p #{@message.rendered_body(@message_recipient, @message_recipient ? message_control_path(@message_recipient.token) : '')}
 
 - unless @message.sent?
   %hr
