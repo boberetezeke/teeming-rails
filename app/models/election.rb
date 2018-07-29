@@ -25,7 +25,7 @@ class Election < ApplicationRecord
   scope :visible, ->(chapter) {
     where(
       (chapter ?
-           arel_table[:visibility].gteq(Visibility::VISIBILITY_SHOW_CHAPTER)
+           arel_table[:visibility].in([Visibility::VISIBILITY_SHOW_CHAPTER, Visibility::VISIBILITY_SHOW_ALL])
            :
            arel_table[:visibility].eq(Visibility::VISIBILITY_SHOW_ALL)
       )
