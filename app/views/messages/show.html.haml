@@ -5,7 +5,7 @@
   %div
     %strong Number of recipients total:
     #{@message.num_recipients}
-  - unless @message.send_at
+  - unless @message.sent_at
     %div
       %strong Number shown:
       #{[@message.message_recipients_for_show.count, MessagesController::EMAIL_LIMIT_FOR_PREVIEW].min}
