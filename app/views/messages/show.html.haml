@@ -5,22 +5,23 @@
   %div
     %strong Number of recipients total:
     #{@message.num_recipients}
-  %div
-    %strong Number shown:
-    #{[@message.message_recipients_for_show.count, MessagesController::EMAIL_LIMIT_FOR_PREVIEW].min}
-  %ul.message-to
-    - @message.message_recipients_for_show.each_with_index do |message_recipient, index|
-      - if message_recipient.candidacy
-        %li= "#{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}"
-      - else
-        - if message_recipient.member
-          %li= "#{message_recipient.member.name} <#{message_recipient.member.email}>"
+  - unless @message.send_at
+    %div
+      %strong Number shown:
+      #{[@message.message_recipients_for_show.count, MessagesController::EMAIL_LIMIT_FOR_PREVIEW].min}
+    %ul.message-to
+      - @message.message_recipients_for_show.each_with_index do |message_recipient, index|
+        - if message_recipient.candidacy
+          %li= "#{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}"
         - else
-          %li= "<#{message_recipient.email}>"
-      - overflow = MessagesController::EMAIL_LIMIT_FOR_PREVIEW
-      - if index >= overflow
-        %li ....
-        - break
+          - if message_recipient.member
+            %li= "#{message_recipient.member.name} <#{message_recipient.member.email}>"
+          - else
+            %li= "<#{message_recipient.email}>"
+        - overflow = MessagesController::EMAIL_LIMIT_FOR_PREVIEW
+        - if index >= overflow
+          %li ....
+          - break
 
 %h3 Body
 %div.message-body
