@@ -20,11 +20,15 @@
         No Date Specified
 - if show_description
   .row
-    .col-md-12
+    .col-md-8
       .event-title Description
+    .col-md-4
+      .event-title Type
   .row
-    .col-md-12
+    .col-md-8
       = Kramdown::Document.new(event.description).to_html.html_safe
+    .col-md-4
+      = event.event_type_str
   - if @event.agenda.present?
     .row
       .col-md-12
@@ -36,7 +40,10 @@
   .row
     .col-md-12
       .strong RSVP Stats:
-      In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
+      - if event.online_only? || event.offline_only?
+        #{event.event_rsvps.count} RSVPs
+      - else
+        In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
 
 - if show_actions
   - if can?(current_user, :edit, event)
@@ -49,17 +56,17 @@
   - if can?(current_user, :destroy, event)
     = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
 
-- if show_rsvp && event_rsvp
+- if show_rsvp
   .row
     .col-md-12
       .event-title Your RSVP
   .row
     .col-md-12
-      - if event_rsvp.rsvp_type
+      - if event_rsvp
         = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
         = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
       - else
-        = link_to "Set Your RSVP", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
+        = link_to "Set Your RSVP", event_event_rsvps_path(event), method: :post, class: 'btn btn-sm btn-primary'
 %hr
 
 

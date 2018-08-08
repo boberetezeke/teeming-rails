@@ -19,7 +19,7 @@ class EventsController < ApplicationController
   end
 
   def new
-    @event = Event.new(chapter_id: params[:chapter_id])
+    @event = Event.new(chapter_id: params[:chapter_id], event_type: Event::EVENT_TYPE_ONLINE_AND_OFFLINE)
     authorize_with_args @event, @context_params
     @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
 
@@ -31,7 +31,6 @@ class EventsController < ApplicationController
     authorize @event
 
     if @event.save
-      create_rsvps
       check_event_time
       redirect_to @event
     else
@@ -86,7 +85,7 @@ class EventsController < ApplicationController
   private
 
   def check_event_time
-    if @event.occurs_at < Time.now
+    if @event.occurs_at && @event.occurs_at < Time.now
       flash[:notice] = "Your event time is in the past"
     end
   end
@@ -104,13 +103,9 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id, :member_group_id, :agenda)
-  end
-
-  def create_rsvps
-    @event.member_group.all_members(@event.chapter).each do |member|
-      EventRsvp.create(user: member.user, event: @event, during_initialization: true)
-    end
+    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description,
+                                  :event_type, :online_details,
+                                  :location, :chapter_id, :member_group_id, :agenda)
   end
 
   def event_breadcrumbs(include_link: true)

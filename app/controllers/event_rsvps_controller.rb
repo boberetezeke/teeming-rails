@@ -1,6 +1,12 @@
 class EventRsvpsController < ApplicationController
   before_action :authenticate_user!
 
+  def create
+    @event = Event.find(params[:event_id])
+    @event_rsvp = EventRsvp.create(user: current_user, event: @event, during_initialization: true)
+    redirect_to edit_event_rsvp_path(@event_rsvp)
+  end
+
   def edit
     @event_rsvp = EventRsvp.find(params[:id])
     @event = @event_rsvp.event

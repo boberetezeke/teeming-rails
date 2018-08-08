@@ -5,12 +5,23 @@ class Event < ApplicationRecord
   belongs_to :chapter
   belongs_to :member_group
 
+  EVENT_TYPE_OFFLINE_ONLY = 'offline_only'
+  EVENT_TYPE_ONLINE_ONLY = 'online_only'
+  EVENT_TYPE_ONLINE_AND_OFFLINE = 'online_and_offline'
+
+  EVENT_TYPES_HASH = {
+    'Online only' => EVENT_TYPE_ONLINE_ONLY,
+    'Offline only' => EVENT_TYPE_OFFLINE_ONLY,
+    'Online and offline' => EVENT_TYPE_ONLINE_AND_OFFLINE
+  }
+
   attr_accessor :occurs_at_date_str, :occurs_at_time_str
 
   scope :future, ->{ where(Event.arel_table[:occurs_at].gt(Time.zone.now)) }
   scope :published, ->{ where(Event.arel_table[:published_at].not_eq(nil)) }
 
   validates :name, presence: true
+  validates :event_type, presence: true
 
   validate :occurs_at_date_and_time_is_valid
 
@@ -23,12 +34,24 @@ class Event < ApplicationRecord
     self.published_at.present?
   end
 
+  def online_only?
+    event_type == EVENT_TYPE_ONLINE_ONLY
+  end
+
+  def offline_only?
+    event_type == EVENT_TYPE_OFFLINE_ONLY
+  end
+
   def publish
     update(published_at: Time.now)
   end
 
   def unpublish
     update(published_at: nil)
+  end
+
+  def event_type_str
+    EVENT_TYPES_HASH.invert[event_type]
   end
 
   def occurs_at_date_and_time_is_valid

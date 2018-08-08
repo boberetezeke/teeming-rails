@@ -63,7 +63,9 @@ Rails.application.routes.draw do
         post :import
       end
     end
-    resources :events,   shallow: true
+    resources :events,   shallow: true do
+      resources :event_rsvps, only: [:create]
+    end
     resources :messages, shallow: true do
       member do
         put :send_to_all

@@ -5,7 +5,9 @@
   = f.input :member_group_id, as: :select, collection: member_groups, include_blank: false, label: 'Members invited'
   = f.input :occurs_at_date_str, label: "Date"
   = f.input :occurs_at_time_str, label: "Time"
-  = f.input :location
+  = f.input :event_type, as: :select, collection: Event::EVENT_TYPES_HASH, include_blank: false
+  = f.input :location,          input_html: { class: f.object.online_only?  ? "hidden" : ""}
+  = f.input :online_details,    input_html: { class: f.object.offline_only? ? "hidden" : "", rows: 4, cols: 80}
   = f.input :agenda, as: :text, input_html: { rows: 4, cols: 80 }
   = f.input :chapter_id, as: :hidden
   #submit
@@ -14,4 +16,20 @@
 :javascript
   $(function() {
     $("#event_occurs_at_date_str").datepicker({orientation: 'bottom'})
+    $("#event_event_type").change(function() {
+      var val = $("#event_event_type").val()
+      console.log("val = " + val)
+      if (val == "#{Event::EVENT_TYPE_ONLINE_ONLY}") {
+        $("#event_location_input").addClass("hidden");
+        $("#event_online_details_input").removeClass("hidden");
+      }
+      else if (val == "#{Event::EVENT_TYPE_OFFLINE_ONLY}") {
+        $("#event_location_input").removeClass("hidden");
+        $("#event_online_details_input").addClass("hidden");
+      }
+      else {
+        $("#event_location_input").removeClass("hidden");
+        $("#event_online_details_input").removeClass("hidden");
+      }
+    })
   })
