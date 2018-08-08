@@ -174,6 +174,21 @@ class Message < ApplicationRecord
             errors.push(['event_rsvp_link', "has no event associated with this message"])
             ""
           end
+
+        when /event_agenda/
+          if event && event.agenda.present?
+            "<hr>#{Kramdown::Document.new(event.agenda).to_html}"
+          else
+            ""
+          end
+
+        when /event_online_details/
+          if event && event.agenda.present?
+            "<hr>#{Kramdown::Document.new(event.online_details).to_html}"
+          else
+            ""
+          end
+
         when /candidate_questionnaire_link/
           if message_recipient
             if message_recipient.candidacy
