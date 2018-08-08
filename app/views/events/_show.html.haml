@@ -9,7 +9,10 @@
   .col-md-4
     %span.event-title Where
     %br
-    %span.event-data= event.location
+    - if event.online_only?
+      %span.event-data Online
+    - else
+      %span.event-data= event.location
   .col-md-4
     %span.event-title When
     %br
@@ -29,6 +32,7 @@
       = Kramdown::Document.new(event.description).to_html.html_safe
     .col-md-4
       = event.event_type_str
+      -
   - if @event.agenda.present?
     .row
       .col-md-12
@@ -36,6 +40,13 @@
     .row
       .col-md-12
         = Kramdown::Document.new(event.agenda).to_html.html_safe
+  - if !@event.offline_only? && @event.online_details.present?
+    .row
+      .col-md-12
+        .event-title Online Connection Details
+    .row
+      .col-md-12
+        = Kramdown::Document.new(event.online_details).to_html.html_safe
 - if show_stats
   .row
     .col-md-12
