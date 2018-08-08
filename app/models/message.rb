@@ -162,7 +162,7 @@ class Message < ApplicationRecord
             if message_recipient
               user = message_recipient.member&.user
               if user
-                url = Rails.application.routes.url_helpers.edit_event_rsvp_path(event.event_rsvps.for_user(user).first)
+                url = Rails.application.routes.url_helpers.event_path(event, goto_rsvp: true)
                 "<a href=\"#{host}#{url}\">RSVP for #{event.name}</a>"
               else
                 "Create a user account on https://ourrevolutionmn.com/members to RSVP to this event."

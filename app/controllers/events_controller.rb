@@ -15,7 +15,12 @@ class EventsController < ApplicationController
 
   def show
     @event_rsvp = @event.event_rsvps.for_user(current_user).first
-    breadcrumbs event_breadcrumbs, @event.name
+    if params[:goto_rsvp]
+      @event_rsvp = EventRsvp.create(user: current_user, event: @event, during_initialization: true) unless @event_rsvp
+      redirect_to edit_event_rsvp_path(@event_rsvp)
+    else
+      breadcrumbs event_breadcrumbs, @event.name
+    end
   end
 
   def new
