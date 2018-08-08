@@ -40,6 +40,7 @@
       - elsif @event
         %li.in-formtastic %event_link% - will be replaced by the link to the event
         %li.in-formtastic %event_rsvp_link% - will be replaced by a personalized link to the user's RSVP for the event
+        %li.in-formtastic %event_description% - will be replaced by the event's description
         %li.in-formtastic %event_agenda% - will be replaced by the event's agenda
         %li.in-formtastic %event_online_details% - will be replaced by the event's online details
   = f.input :body, as: :text, input_html: { rows: 5, cols: 100 }

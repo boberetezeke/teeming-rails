@@ -175,6 +175,13 @@ class Message < ApplicationRecord
             ""
           end
 
+        when /event_description/
+          if event && event.description.present?
+            "<hr>#{Kramdown::Document.new(event.description).to_html}"
+          else
+            ""
+          end
+
         when /event_agenda/
           if event && event.agenda.present?
             "<hr>#{Kramdown::Document.new(event.agenda).to_html}"
