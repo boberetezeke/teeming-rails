@@ -33,20 +33,22 @@
     .col-md-4
       = event.event_type_str
       -
-  - if @event.agenda.present?
+  - display_online_details = !@event.offline_only? && @event.online_details.present?
+  - if @event.agenda.present? || display_online_details
     .row
-      .col-md-12
-        .event-title Agenda
+      - if @event.agenda.present?
+        .col-md-8
+          .event-title Agenda
+      - if display_online_details
+        .col-md-4
+          .event-title Online Connection Details
     .row
-      .col-md-12
-        = Kramdown::Document.new(event.agenda).to_html.html_safe
-  - if !@event.offline_only? && @event.online_details.present?
-    .row
-      .col-md-12
-        .event-title Online Connection Details
-    .row
-      .col-md-12
-        = Kramdown::Document.new(event.online_details).to_html.html_safe
+      - if @event.agenda.present?
+        .col-md-8
+          = Kramdown::Document.new(event.agenda).to_html.html_safe
+      - if display_online_details
+        .col-md-4
+          = Kramdown::Document.new(event.online_details).to_html.html_safe
 - if show_stats
   .row
     .col-md-12
@@ -78,7 +80,6 @@
         = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
       - else
         = link_to "Set Your RSVP", event_event_rsvps_path(event), method: :post, class: 'btn btn-sm btn-primary'
-%hr
 
 
 
