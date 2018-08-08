@@ -6,6 +6,8 @@ class MemberGroup < ApplicationRecord
   GROUP_TYPE_COMMITTEE = 'committee'
   GROUP_TYPES = [GROUP_TYPE_SCOPE, GROUP_TYPE_COMMITTEE]
 
+  default_scope ->{ order('name asc') }
+
   def self.write_member_groups
     Member::SCOPE_TYPES.each do |scope_type, scope_name|
       unless MemberGroup.find_by_name(scope_name)
@@ -25,7 +27,9 @@ class MemberGroup < ApplicationRecord
   def all_members(chapter)
     if group_type == GROUP_TYPE_SCOPE
       if chapter
-        if chapter.is_state_wide || scope_type == 'potential_chapter_members'
+        if (chapter.is_state_wide &&
+              (scope_type == 'all_members' ||  scope_type == 'all_users')) ||
+            scope_type == 'potential_chapter_members'
           scope = Member.all
         else
           scope = chapter.members

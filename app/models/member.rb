@@ -35,13 +35,15 @@ class Member < ApplicationRecord
   DATABANK_INDEX_TO_COL = DATABANK_COL_TO_INDEX.invert
 
   SCOPE_TYPES = {
-    interested_in_volunteering:   "Interested in Volunteering",
-    potential_chapter_members:    "Potential Chapter Members",
     chapter_members:              "Chapter Members",
+    chapter_users:                "Chapter Users",
+    all_members:                  "All Members",
+    all_users:                    "All Users",
+    potential_chapter_members:    "Potential Chapter Members",
+    interested_in_volunteering:   "Interested in Volunteering",
     officers:                     "Officers",
     board_members:                "Board Members",
-    executive_committee_members:  "Executive Committee Members",
-    all_members:                  "All Members",
+    executive_committee_members:  "Executive Committee Members"
   }
 
   MEMBER_ATTRS_ALL =           'all'
@@ -90,7 +92,8 @@ class Member < ApplicationRecord
     ))
   }
   scope :chapter_members,     ->(chapter) { where(chapter_id: chapter.id) }
-  # scope :chapter_members, ->(chapter) { where(Member.arel_table[:chapter_id].not_eq(nil)) }
+  scope :chapter_users,       ->(chapter) { joins(:user).where(chapter_id: chapter.id) }
+
   scope :all_chapter_members, ->(chapter) {
     where(
       Member.arel_table[:chapter_id].eq(chapter.id).or(
@@ -100,7 +103,9 @@ class Member < ApplicationRecord
       )
     )
   }
+
   scope :all_members, ->(chapter){ all }
+  scope :all_users,   ->(chapter){ joins(:user) }
 
   scope :without_user, ->{ where(user_id: nil) }
   scope :with_user, ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
