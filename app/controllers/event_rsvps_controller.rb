@@ -14,6 +14,7 @@ class EventRsvpsController < ApplicationController
 
   def update
     @event_rsvp = EventRsvp.find(params[:id])
+    @event = @event_rsvp.event
     if @event_rsvp.update(event_rsvp_params)
       redirect_to @event_rsvp.event
     else
