@@ -6,8 +6,6 @@ class UsersController < ApplicationController
   def home
     @user = current_user
     @title = "Our Revolution MN Membership"
-    @events = policy_scope(Event.future)
-    @elections = policy_scope(Election.show_on_dashboard(nil).visible(nil))
 
     @setup_state = @user.setup_state
     if @setup_state.present?
@@ -35,6 +33,9 @@ class UsersController < ApplicationController
       end
 
       @user.member.with_user_input = true
+    else
+      @events = policy_scope(Event.future)
+      @elections = policy_scope(Election.show_on_dashboard(nil).visible(nil))
     end
   end
 
