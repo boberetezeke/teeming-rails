@@ -57,32 +57,22 @@ describe OfficersController do
 
     describe "#create" do
       it "redirects to the root path when the user has no privileges" do
-        post :create, params: { chapter_id: chapter.id, officer: { officer_type: "Prez", role_ids: [role.id], user_ids: [user.id]} }
+        post :create, params: { chapter_id: chapter.id, officer: { officer_type: "Prez", role_ids: [role.id]} }
         expect(response).to redirect_to(root_path)
       end
 
       it "redirects to the root path when the user has officer write privileges for a different chapter" do
         sign_in other_chapter_officer_writer_user
-        post :create, params: { chapter_id: chapter.id, officer: { officer_type: "Prez", role_ids: [role.id], user_ids: [user.id]} }
+        post :create, params: { chapter_id: chapter.id, officer: { officer_type: "Prez", role_ids: [role.id]} }
         expect(response).to redirect_to(root_path)
       end
 
       it "renders the index view" do
         sign_in chapter_officer_writer_user
-        post :create, params: { chapter_id: chapter.id, officer: { officer_type: "Prez", role_ids: [role.id], user_ids: [user.id]} }
+        post :create, params: { chapter_id: chapter.id, officer: { officer_type: "Prez", role_ids: [role.id]} }
         officer = Officer.first
         expect(officer.officer_type).to eq("Prez")
         expect(officer.roles).to eq([role])
-        expect(officer.users).to eq([user])
-
-        user_privileges = officer.users.first.role.privileges
-        expect(user_privileges.count).to eq(2)
-
-        role_assign_privilege = user_privileges.where(subject: 'role', action: 'assign').first
-        message_send_privilege = user_privileges.where(subject: 'message', action: 'send').first
-        expect(role_assign_privilege).to_not be_nil
-        expect(message_send_privilege).to_not be_nil
-        expect(message_send_privilege.scope).to eq({chapter_id: chapter.id}.to_json)
 
         expect(response).to redirect_to(officer_path(officer))
       end
@@ -109,32 +99,22 @@ describe OfficersController do
 
     describe "#update" do
       it "redirects to the root path when the user has no privileges" do
-        put :update, params: { id: officer, officer: {officer_type: "Prez", role_ids: [role.id], user_ids: [user.id]} }
+        put :update, params: { id: officer, officer: {officer_type: "Prez", role_ids: [role.id]} }
         expect(response).to redirect_to(root_path)
       end
 
       it "redirects to the root path when the user has officer write privileges for a different chapter" do
         sign_in other_chapter_officer_writer_user
-        put :update, params: { id: officer, officer: {officer_type: "Prez", role_ids: [role.id], user_ids: [user.id]} }
+        put :update, params: { id: officer, officer: {officer_type: "Prez", role_ids: [role.id]} }
         expect(response).to redirect_to(root_path)
       end
 
       it "renders the index view" do
         sign_in chapter_officer_writer_user
-        put :update, params: { id: officer, officer: {officer_type: "Prez", role_ids: [role.id], user_ids: [user.id]} }
+        put :update, params: { id: officer, officer: {officer_type: "Prez", role_ids: [role.id]} }
         officer.reload
         expect(officer.officer_type).to eq("Prez")
         expect(officer.roles).to eq([role])
-        expect(officer.users).to eq([user])
-
-        user_privileges = officer.users.first.role.privileges
-        expect(user_privileges.count).to eq(2)
-
-        role_assign_privilege = user_privileges.where(subject: 'role', action: 'assign').first
-        message_send_privilege = user_privileges.where(subject: 'message', action: 'send').first
-        expect(role_assign_privilege).to_not be_nil
-        expect(message_send_privilege).to_not be_nil
-        expect(message_send_privilege.scope).to eq({chapter_id: chapter.id}.to_json)
 
         expect(response).to redirect_to(officer_path(officer))
       end
@@ -155,20 +135,7 @@ describe OfficersController do
       it "renders the index view" do
         sign_in chapter_officer_writer_user
 
-        officer.roles = [role]
-        officer.users = [user]
-        user.update_role_from_roles
-
-        user_privileges = user.role.privileges
-        expect(user_privileges.count).to eq(2)
-
         delete :destroy, params: { id: officer }
-
-        user_privileges = user.role.privileges
-        expect(user_privileges.count).to eq(1)
-
-        role_assign_privilege = user_privileges.where(subject: 'role', action: 'assign').first
-        expect(role_assign_privilege).to_not be_nil
 
         expect(response).to redirect_to(chapter_officers_path(chapter))
       end

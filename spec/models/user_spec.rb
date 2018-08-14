@@ -6,7 +6,8 @@ describe User do
       let(:chapter)       { FactoryBot.create(:chapter) }
       let(:user)          { FactoryBot.create(:user, role: nil, chapter: chapter) }
       let(:officer_role)  { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'officer_subject', action: 'officer_action')])}
-      let(:officer)       { FactoryBot.create(:officer, chapter: chapter, users: [user], roles: [officer_role])}
+      let(:officer)       { FactoryBot.create(:officer, chapter: chapter, roles: [officer_role])}
+      let(:officer_assignment) { FactoryBot.create(:officer_assignment, officer: officer, user: user)}
 
       it "creates a role with identical privileges to one entry in roles" do
         user.roles = [Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])]
@@ -22,7 +23,7 @@ describe User do
 
 
       it "creates a role with privileges combined from roles and officer roles" do
-        officer
+        officer_assignment
         user.roles = [Role.new(name: 'role', privileges: [Privilege.new(action: 'action', subject: 'subject')])]
         user.save
         user.update_role_from_roles

@@ -51,21 +51,21 @@ describe MessageControlsController do
 
         it "redirects to root path when accessing this endpoint" do
           get :show, params: { id: message_recipient.token }
-          expect(response).to redirect_to(root_path)
+          expect(response).to be_ok
         end
       end
 
       describe "edit" do
         it "redirects to root path when accessing this endpoint" do
           get :edit, params: { id: message_recipient.token }
-          expect(response).to redirect_to(root_path)
+          expect(response).to be_ok
         end
       end
 
       describe "create" do
         it "redirects to root path when accessing this endpoint" do
           put :create, params: { message_recipient_id: message_recipient.id, message_control: { member_id: member.id, unsubscribe_type: MessageControl::CONTROL_TYPE_UNSUBSCRIBE } }
-          expect(response).to redirect_to(root_path)
+          expect(response).to redirect_to(message_control_path(message_recipient.token))
         end
       end
 
@@ -74,7 +74,7 @@ describe MessageControlsController do
 
         it "redirects to root path when accessing this endpoint" do
           put :update, params: { id: message_control.id, message_recipient_id: message_recipient.id, message_control: { unsubscribe_type: MessageControl::CONTROL_TYPE_UNSUBSCRIBE } }
-          expect(response).to redirect_to(root_path)
+          expect(response).to redirect_to(message_control_path(message_recipient.token))
         end
       end
     end

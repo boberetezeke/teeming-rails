@@ -18,6 +18,7 @@ describe "Signup process" do
     let(:user) { FactoryBot.create(:user) }
 
     before do
+      user.member.update(added_with_new_user: true)
       Rails.application.load_seed # loading seeds
       sign_in user
       visit home_users_path

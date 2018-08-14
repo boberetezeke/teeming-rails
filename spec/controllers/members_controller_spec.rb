@@ -33,6 +33,7 @@ describe MembersController do
 
   context "when user is signed in with member view privileges" do
     before do
+      FactoryBot.create(:chapter, is_state_wide: true)
       sign_in member_viewer_user
     end
 

@@ -42,7 +42,7 @@ context "when testing with a normal user" do
       end
 
       context "when there are external elections but no races in this chapter" do
-        let!(:election) { FactoryBot.create(:election, :external, name: '2020 Elections') }
+        let!(:election) { FactoryBot.create(:election, :external, name: '2020 Elections', visibility: Visibility::VISIBILITY_SHOW_ALL) }
 
         it "displays the external elections section" do
           visit chapter_path(chapter)
@@ -53,7 +53,7 @@ context "when testing with a normal user" do
       end
 
       context "when there are external elections but and races in this chapter" do
-        let!(:election) { FactoryBot.create(:election, :external, name: '2020 Elections') }
+        let!(:election) { FactoryBot.create(:election, :external, name: '2020 Elections', visibility: Visibility::VISIBILITY_SHOW_ALL) }
         let!(:race)     { FactoryBot.create(:race, election: election, name: 'Governor', chapter: chapter) }
         let!(:other_chapter_race)     { FactoryBot.create(:race, election: election, name: 'Governor', chapter: other_chapter) }
 

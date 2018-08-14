@@ -182,12 +182,9 @@ describe VotesController do
     let!(:ranked_choice_2_1)         { FactoryBot.create(:choice, question: ranked_choice_question_2, title: 'choice 2-1', order_index: 1) }
     let!(:ranked_choice_2_2)         { FactoryBot.create(:choice, question: ranked_choice_question_2, title: 'choice 2-2', order_index: 2) }
 
-    let!(:vote_user_1)               { FactoryBot.create(:user, email: 'voter_1@user.com') }
-    let!(:vote_member_1)             { FactoryBot.create(:member, user: vote_user_1, first_name: 'voter1', last_name: 'user1') }
-    let!(:vote_user_2)               { FactoryBot.create(:user, email: 'voter_2@user.com') }
-    let!(:vote_member_2)             { FactoryBot.create(:member, user: vote_user_2, first_name: 'voter2', last_name: 'user2') }
-    let!(:vote_user_3)               { FactoryBot.create(:user, email: 'voter_3@user.com') }
-    let!(:vote_member_3)             { FactoryBot.create(:member, user: vote_user_3, first_name: 'voter3', last_name: 'user3') }
+    let!(:vote_user_1)               { FactoryBot.create(:user,   email: 'voter_1@user.com') }
+    let!(:vote_user_2)               { FactoryBot.create(:user,   email: 'voter_2@user.com') }
+    let!(:vote_user_3)               { FactoryBot.create(:user,   email: 'voter_3@user.com') }
 
     let!(:vote_completion_1)         { FactoryBot.create(:vote_completion, election: election, user: vote_user_1, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )}
     let!(:vote_completion_2)         { FactoryBot.create(:vote_completion, election: election, user: vote_user_2, has_voted: true, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE )}
