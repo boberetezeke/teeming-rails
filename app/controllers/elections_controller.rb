@@ -89,7 +89,9 @@ class ElectionsController < ApplicationController
   end
 
   def election_params
-    params.require(:election).permit(:name, :chapter_id, :election_type, :election_method, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
+    params.require(:election).permit(:name, :chapter_id, :election_type, :election_method,
+                                     :vote_date_str, :vote_start_time_str, :vote_end_time_str,
+                                     :visibility, :member_group_id)
   end
 
   def elections_breadcrumbs(include_link: true)

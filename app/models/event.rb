@@ -20,6 +20,16 @@ class Event < ApplicationRecord
   scope :future, ->{ where(Event.arel_table[:occurs_at].gt(Time.zone.now)) }
   scope :published, ->{ where(Event.arel_table[:published_at].not_eq(nil)) }
 
+  scope :visible, ->(chapter) {
+    where(
+        (chapter ?
+             arel_table[:visibility].in([Visibility::VISIBILITY_SHOW_CHAPTER, Visibility::VISIBILITY_SHOW_ALL])
+             :
+             arel_table[:visibility].eq(Visibility::VISIBILITY_SHOW_ALL)
+        )
+    )
+  }
+
   validates :name, presence: true
   validates :event_type, presence: true
 

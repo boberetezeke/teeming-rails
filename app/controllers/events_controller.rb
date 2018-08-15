@@ -110,7 +110,7 @@ class EventsController < ApplicationController
   def event_params
     params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description,
                                   :event_type, :online_details,
-                                  :location, :chapter_id, :member_group_id, :agenda)
+                                  :location, :chapter_id, :member_group_id, :agenda, :election_id, :visibility)
   end
 
   def event_breadcrumbs(include_link: true)

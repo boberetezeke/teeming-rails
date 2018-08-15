@@ -23,13 +23,17 @@
         No Date Specified
 - if show_description
   .row
-    .col-md-8
+    .col-md-4
       .event-title Description
+    .col-md-4
+      .event-title Who
     .col-md-4
       .event-title Type
   .row
-    .col-md-8
+    .col-md-4
       = Kramdown::Document.new(event.description).to_html.html_safe
+    .col-md-4
+      = event.member_group.name
     .col-md-4
       = event.event_type_str
       -

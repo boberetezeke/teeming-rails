@@ -15,7 +15,7 @@
       = render partial: 'elections/vote_actions', locals: { election: @election }
     - else
       = link_to("Edit", edit_election_path(@election), class: 'btn btn-sm btn-primary')
-      /= link_to("Add Race", new_election_race_path(@election, @context_params), class: 'btn btn-sm btn-success')
+      = link_to("Add Race", new_election_race_path(@election, @context_params), class: 'btn btn-sm btn-success')
       = link_to("Add Issue", new_election_issue_path(@election, @context_params), class: 'btn btn-sm btn-success')
       = link_to("Freeze", freeze_election_path(@election), method: :put, class: 'btn btn-sm btn-warning')
     = link_to("Delete", election_path(@election, @context_params), method: :delete, class: 'btn btn-sm btn-danger')

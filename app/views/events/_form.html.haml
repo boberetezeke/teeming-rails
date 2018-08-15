@@ -9,6 +9,7 @@
   = f.input :location,          input_html: { class: f.object.online_only?  ? "hidden" : ""}
   = f.input :online_details,    input_html: { class: f.object.offline_only? ? "hidden" : "", rows: 4, cols: 80}
   = f.input :agenda, as: :text, input_html: { rows: 4, cols: 80 }
+  = f.input :visibility, as: :select, collection: Visibility::VISIBILITIES_HASH
   = f.input :chapter_id, as: :hidden
   #submit
     = f.submit class: 'btn btn-sm btn-with-padding btn-primary'

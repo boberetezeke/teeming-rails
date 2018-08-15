@@ -8,7 +8,7 @@
       %h3= link_to("Chapters", chapters_path)
       = render partial: 'chapters/stats_table', locals: {chapters: Chapter.all, show_actions: false, on_dashboard: true}
       %h3 Upcoming Events
-      - if Event.future.blank?
+      - if @events.blank?
         There are no upcoming events scheduled at this time
       - else
         = render partial: 'events/table', locals: {events: @events, user: current_user, show_stats: true, on_dashboard: true}

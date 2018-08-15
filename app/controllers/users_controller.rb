@@ -34,7 +34,7 @@ class UsersController < ApplicationController
 
       @user.member.with_user_input = true
     else
-      @events = policy_scope(Event.future)
+      @events = policy_scope(Event.future.visible(nil))
       @elections = policy_scope(Election.show_on_dashboard(nil).visible(nil))
     end
   end

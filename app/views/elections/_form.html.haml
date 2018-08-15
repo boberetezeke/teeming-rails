@@ -8,6 +8,7 @@
   = f.input :vote_date_str, label: 'Vote Date'
   = f.input :vote_start_time_str, label: 'Vote Start Time'
   = f.input :vote_end_time_str, label: 'Vote End Time'
+  = f.input :visibility, as: :select, collection: Visibility::VISIBILITIES_HASH
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
 
 :javascript

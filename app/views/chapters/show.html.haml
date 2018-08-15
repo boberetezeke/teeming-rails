@@ -14,8 +14,8 @@
       = link_to "View Past Elections", elections_path(chapter_id: @chapter)
     .col-md-6
       %h3= link_to("Upcoming Events", chapter_events_path(@chapter))
-      - if @chapter.events.published.future.blank?
-        There are no upcoming events scheduled at this time
+      - if @events.blank?
+        There are no upcoming events scheduled at this time, #{link_to("click to view past events", events_path(chapter_id: @chapter.id))}
       - else
         = render partial: 'events/table', locals: {events: @events, user: current_user, show_stats: true}
       %h3= link_to("Messages", chapter_messages_path(@chapter))
