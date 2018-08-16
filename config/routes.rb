@@ -41,8 +41,8 @@ Rails.application.routes.draw do
   end
   resources :races, only: [] do
   end
-  resources :event_rsvps, only: [:new, :create, :edit, :update]
   resources :events do
+    resources :event_rsvps, only: [:new, :edit, :update], shallow: true
     resources :event_sign_ins, shallow: true
     member do
       put :email
