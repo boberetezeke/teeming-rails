@@ -1,7 +1,7 @@
 .race-dates
   - if race.filing_deadline_date
     %p
-      Filing date:
+      Filing deadline:
       %strong #{race.filing_deadline_date.utc.to_date}
       - unless race.before_filing_deadline?(Time.now.utc)
         (Closed)
