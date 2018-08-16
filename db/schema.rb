@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180808132733) do
+ActiveRecord::Schema.define(version: 20180816005739) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.string "answerable_type"
     t.integer "answerable_id"
     t.index ["answerable_id"], name: "index_answers_on_answerable_id"
+    t.index ["candidacy_id"], name: "index_answers_on_candidacy_id"
+    t.index ["question_id"], name: "index_answers_on_question_id"
     t.index ["user_id"], name: "index_answers_on_user_id"
   end
 
@@ -48,13 +50,18 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.datetime "questionnaire_submitted_at"
     t.datetime "unlock_requested_at"
     t.index ["created_by_user_id"], name: "index_candidacies_on_created_by_user_id"
+    t.index ["race_id"], name: "index_candidacies_on_race_id"
     t.index ["updated_by_user_id"], name: "index_candidacies_on_updated_by_user_id"
+    t.index ["user_id"], name: "index_candidacies_on_user_id"
   end
 
   create_table "candidate_assignments", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
     t.integer "answers_id"
+    t.index ["answers_id"], name: "index_candidate_assignments_on_answers_id"
+    t.index ["role_id"], name: "index_candidate_assignments_on_role_id"
+    t.index ["user_id"], name: "index_candidate_assignments_on_user_id"
   end
 
   create_table "chapters", id: :serial, force: :cascade do |t|
@@ -118,6 +125,9 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.string "election_method"
     t.boolean "is_public"
     t.string "visibility"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["chapter_id"], name: "index_elections_on_chapter_id"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id"
   end
 
@@ -151,6 +161,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.string "visibility"
     t.string "event_type"
     t.text "online_details"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["chapter_id"], name: "index_events_on_chapter_id"
     t.index ["member_group_id"], name: "index_events_on_member_group_id"
   end
@@ -161,6 +173,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.integer "created_by_user_id"
     t.integer "updated_by_user_id"
     t.integer "chapter_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["chapter_id"], name: "index_issues_on_chapter_id"
     t.index ["created_by_user_id"], name: "index_issues_on_created_by_user_id"
     t.index ["election_id"], name: "index_issues_on_election_id"
@@ -217,6 +231,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.integer "unsubscribed_from_message_id"
     t.string "unsubscribe_type"
     t.string "control_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["member_id"], name: "index_message_controls_on_member_id"
     t.index ["unsubscribed_from_message_id"], name: "index_message_controls_on_unsubscribed_from_message_id"
   end
@@ -290,6 +306,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.text "responsibilities"
     t.boolean "is_board_member"
     t.boolean "is_executive_committee_member"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["chapter_id"], name: "index_officers_on_chapter_id"
     t.index ["member_id"], name: "index_officers_on_member_id"
   end
@@ -314,6 +332,7 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.integer "race_id"
     t.string "questionnairable_type"
     t.integer "questionnairable_id"
+    t.index ["race_id"], name: "index_questionnaires_on_race_id"
   end
 
   create_table "questions", id: :serial, force: :cascade do |t|
@@ -322,6 +341,7 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.string "question_type"
     t.integer "order_index"
     t.integer "questionnaire_section_id"
+    t.index ["questionnaire_id"], name: "index_questions_on_questionnaire_id"
     t.index ["questionnaire_section_id"], name: "index_questions_on_questionnaire_section_id"
   end
 
@@ -346,6 +366,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.boolean "endorsement_complete"
     t.index ["chapter_id"], name: "index_races_on_chapter_id"
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id"
+    t.index ["election_id"], name: "index_races_on_election_id"
+    t.index ["role_id"], name: "index_races_on_role_id"
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id"
   end
 
@@ -361,6 +383,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
   create_table "roles", id: :serial, force: :cascade do |t|
     t.string "name"
     t.boolean "combined"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -408,6 +432,8 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.string "disqualification_message"
     t.integer "election_id"
     t.string "ballot_identifier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["election_id"], name: "index_vote_completions_on_election_id"
     t.index ["race_id"], name: "index_vote_completions_on_race_id"
     t.index ["token"], name: "index_vote_completions_on_token"
@@ -431,4 +457,14 @@ ActiveRecord::Schema.define(version: 20180808132733) do
     t.index ["user_id"], name: "index_votes_on_user_id"
   end
 
+  add_foreign_key "answers", "candidacies"
+  add_foreign_key "answers", "questions"
+  add_foreign_key "candidacies", "races"
+  add_foreign_key "candidacies", "users"
+  add_foreign_key "candidate_assignments", "answers", column: "answers_id"
+  add_foreign_key "candidate_assignments", "users"
+  add_foreign_key "elections", "chapters"
+  add_foreign_key "questionnaires", "races"
+  add_foreign_key "questions", "questionnaires"
+  add_foreign_key "races", "elections"
 end

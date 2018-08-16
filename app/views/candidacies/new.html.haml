@@ -2,6 +2,9 @@
 
 - if @race.election.internal? && @race.notes
   = Kramdown::Document.new(@race.notes).to_html.html_safe
+  %hr
+  Fill out the questionnaire below and click Create Candidacy at the bottom to create your candidacy.
+  Don't worry, you can edit / delete your candidacy before the election.
 
 = semantic_form_for @candidacy do |f|
   = render partial: 'form', locals: {f: f, race: @race, candidacy: @candidacy }
