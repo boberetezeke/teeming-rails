@@ -53,6 +53,7 @@ class Election < ApplicationRecord
   scope :external, ->{ where(election_type: ELECTION_TYPE_EXTERNAL) }
   scope :by_election_type, ->{ order('election_type asc') }
   scope :by_most_recent,   ->{ order("vote_date desc") }
+  scope :before_date, ->(date){ where(arel_table[:vote_date].lt(date)) }
 
   attr_accessor :vote_date_str
   attr_accessor :vote_start_time_str, :vote_end_time_str

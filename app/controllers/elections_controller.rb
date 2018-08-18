@@ -10,7 +10,7 @@ class ElectionsController < ApplicationController
 
     @chapter = Chapter.find_by_id(params[:chapter_id])
     @tab = params[:tab] || 'external'
-    @internal_elections = Election.internal.for_chapter(@chapter)
+    @internal_elections = Election.internal.before_date(Time.now.to_date).for_chapter(@chapter)
     @external_elections = Election.external
 
     breadcrumbs *elections_breadcrumbs(include_link: false)
