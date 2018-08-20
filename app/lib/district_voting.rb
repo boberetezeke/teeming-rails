@@ -44,7 +44,7 @@ module DistrictVoting
   end
 
   def self.district_question
-    @district_question ||= Question.where(text: 'For the purpose of fulfilling balance requirements put forth in the Our Revolution MN bylaws, specify your congressional district').order('id desc').first
+    @district_question ||= Question.where(text: 'For the purpose of fulfilling balance requirements put forth in the Our Revolution MN bylaws, specify your congressional district').order('id asc').first
   end
 
   def self.voting_rules
