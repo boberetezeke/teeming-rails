@@ -8,7 +8,7 @@
       = f.input :middle_initial, input_html: { disabled: disabled }
     .col-md-5
       = f.input :last_name, input_html: { disabled: disabled }
-- if is_current_user?(f.object, current_user) # || f.object.share_phone_with?(current_user)
+- if is_current_user?(f.object, current_user) || true # || f.object.share_phone_with?(current_user)
   .row
     .col-md-4
       = f.input :mobile_phone, input_html: { disabled: disabled }
