@@ -1,5 +1,8 @@
 - if f.object.user
-  = f.hidden_field :email
+  - if disabled
+    = f.input :email, input_html: { disabled: disabled }
+  - else
+    = f.hidden_field :email
 - if is_current_user?(f.object, current_user) || f.object.share_name_with?(current_user)
   .row
     .col-md-5
@@ -16,7 +19,7 @@
       = f.input :home_phone, input_html: { disabled: disabled }
     .col-md-4
       = f.input :work_phone, input_html: { disabled: disabled }
-- if is_current_user?(f.object, current_user) || f.object.share_address_with?(current_user)
+- if is_current_user?(f.object, current_user) || true # f.object.share_address_with?(current_user)
   .row
     .col-md-12
       = f.input :address_1, input_html: { disabled: disabled }
