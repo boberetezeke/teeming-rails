@@ -26,8 +26,9 @@ class MembersController < ApplicationController
 
     @members = @members.filtered_by_string(params[:search]) if params[:search]
     @members = @members.filtered_by_attrs(params[:attr_type]) if params[:attr_type]
-    @members = @members.distinct
+    @member_ids = @members.pluck(:id).uniq
 
+    @members = @members.where(id: @member_ids)
     @members = @members.paginate(page: params[:page], per_page: params[:per_page])
     @members = @members.order('city asc')
 
