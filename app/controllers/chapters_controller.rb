@@ -10,7 +10,7 @@ class ChaptersController < ApplicationController
   end
 
   def show
-    if @chapter.affiliate?
+    if @chapter.affiliate? || @chapter.is_state_wide
       @context_params = {chapter_id: params[:id]}
 
       @title = "#{@chapter.name} Chapter"
