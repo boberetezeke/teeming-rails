@@ -3,22 +3,27 @@ class ChaptersController < ApplicationController
   before_action :set_chapter, only: [:show, :edit, :update, :destroy]
 
   def index
-    @chapters = Chapter.all
+    @chapters = Chapter.in_order
     @title = "Chapters"
 
     breadcrumbs chapters_breadcrumbs(include_link: false)
   end
 
   def show
-    @context_params = {chapter_id: params[:id]}
+    if @chapter.affiliate?
+      @context_params = {chapter_id: params[:id]}
 
-    @title = "#{@chapter.name} Chapter"
-    @tab = params[:tab] || 'activity'
-    @events = policy_scope_with_args(@chapter.events.future.visible(@chapter), @context_params)
-    @elections = policy_scope_with_args(Election.show_on_dashboard(@chapter).visible(@chapter), @context_params)
-    @messages = policy_scope_with_args(@chapter.messages, @context_params)
-    @meeting_minutes = policy_scope_with_args(@chapter.meeting_minutes, @context_params)
-    breadcrumbs chapters_breadcrumbs, @chapter.name
+      @title = "#{@chapter.name} Chapter"
+      @tab = params[:tab] || 'activity'
+      @events = policy_scope_with_args(@chapter.events.future.visible(@chapter), @context_params)
+      @elections = policy_scope_with_args(Election.show_on_dashboard(@chapter).visible(@chapter), @context_params)
+      @messages = policy_scope_with_args(@chapter.messages, @context_params)
+      @meeting_minutes = policy_scope_with_args(@chapter.meeting_minutes, @context_params)
+      breadcrumbs chapters_breadcrumbs, @chapter.name
+    else
+      flash[:alert] = "Only affiliate chapters have chapter pages"
+      redirect_to chapters_path
+    end
   end
 
   def new

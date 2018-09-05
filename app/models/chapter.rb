@@ -19,6 +19,7 @@ class Chapter < ApplicationRecord
   has_one :skills_questionnaire, as: :questionnairable, class_name: 'Questionnaire'
 
   scope :local_chapters, ->{ where(is_state_wide: false) }
+  scope :in_order, ->{ order('name asc')}
 
   def self.state_wide
     Chapter.find_by_is_state_wide(true)

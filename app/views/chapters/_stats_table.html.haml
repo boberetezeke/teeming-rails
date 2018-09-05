@@ -10,7 +10,10 @@
   %tbody
     - chapters.each do |chapter|
       %tr.row
-        %td= link_to(chapter.name, chapter)
+        - if chapter.affiliate?
+          %td= link_to(chapter.name, chapter)
+        - else
+          %td= chapter.name
         %td= chapter.chapter_type_str
         %td= chapter.members.with_user.count
         - if chapter.affiliate?
