@@ -10,7 +10,7 @@
   %tbody
     - chapters.each do |chapter|
       %tr.row
-        - if chapter.affiliate?
+        - if chapter.affiliate? || chapter.is_state_wide
           %td= link_to(chapter.name, chapter)
         - else
           %td= chapter.name
