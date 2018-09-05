@@ -1,6 +1,6 @@
 .row
   .col-md-12
-    = f.input :chapter, as: :select, collection: Chapter.all, include_blank: false, input_html: { disabled: disabled }
+    = f.input :chapter, as: :select, collection: Chapter.collection_hash, include_blank: false, input_html: { disabled: disabled }, hint: "Affiliate - has signed a Memorandum of Understanding (MOU) with the State organization, Recognized - has been recognized by State and National, but hasn't signed an MOU with State"
 .row
   .col-md-12
     .check_box_or_radio

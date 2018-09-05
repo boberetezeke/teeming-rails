@@ -2,6 +2,7 @@
   %thead
     %tr.row
       %th Name
+      %th Type
       %th Number of Members
       %th Number of Officers
       - if show_actions
@@ -10,8 +11,12 @@
     - chapters.each do |chapter|
       %tr.row
         %td= link_to(chapter.name, chapter)
+        %td= chapter.chapter_type_str
         %td= chapter.members.with_user.count
-        %td= chapter.active_officer_assignments.count
+        - if chapter.affiliate?
+          %td= chapter.active_officer_assignments.count
+        - else
+          %td
         - if show_actions
           %td
             - if can?(current_user, :edit, chapter)
@@ -21,7 +26,15 @@
 
     %tr.row
       %td Totals
+      %td
       %td= chapters.map{|c| c.members.with_user.count}.sum
       %td
       - if show_actions
         %td
+
+%p
+  Type -
+  %strong Affiliate
+  %span has signed a Memorandum of Understanding (MOU) with the State organization,
+  %strong Recognized
+  %span has been recognized by State and National, but hasn't signed an MOU with State

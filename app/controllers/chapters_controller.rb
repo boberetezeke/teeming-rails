@@ -57,7 +57,7 @@ class ChaptersController < ApplicationController
   end
 
   def chapter_params
-    params.require(:chapter).permit(:name)
+    params.require(:chapter).permit(:name, :chapter_type)
   end
 
   def chapters_breadcrumbs(include_link: true)
