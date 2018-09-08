@@ -135,7 +135,7 @@ end
 
 state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
 ['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
-  Chapter.find_or_create_by(name: chapter, is_state_wide: false)
+  Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
 end
 
 # account = Account.find_or_create_by_name("Our Revolution Minnesota")
