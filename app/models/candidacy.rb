@@ -43,7 +43,11 @@ class Candidacy < ApplicationRecord
   end
 
   def questionnaire_submitted?
-    questionnaire_submitted_at.present?
+    race.election.external? && questionnaire_submitted_at.present?
+  end
+
+  def internal_race_after_announced?
+    race.election.internal? && Time.zone.now.to_date > race.candidates_announcement_date
   end
 
   def unlock_requested?

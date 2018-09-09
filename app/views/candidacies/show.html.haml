@@ -3,7 +3,7 @@
 - if current_user.can_manage_external_candidacies?
   %div #{link_to("Questionnaire Link", edit_candidate_questionnaire_path(@candidacy.token))}
 
-- if @candidacy.questionnaire_submitted?
+- if @candidacy.questionnaire_submitted? || @candidacy.internal_race_after_announced?
   = semantic_form_for @candidacy, url: candidate_questionnaire_path, method: :put do |f|
     = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
 - else
