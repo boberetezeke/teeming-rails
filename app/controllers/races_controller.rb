@@ -63,7 +63,7 @@ class RacesController < ApplicationController
 
   def create_questionnaire
     race = Race.find(params[:id])
-    questionnaire = Questionnaire.create(questionnairable: race, name: race.name)
+    questionnaire = Questionnaire.create(questionnairable: race, name: race.name, use_type: Questionnaire::USE_TYPE_CANDIDACY)
     QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
 
     redirect_to questionnaire_path(questionnaire, @context_params)
@@ -90,6 +90,26 @@ class RacesController < ApplicationController
     race = Race.find(params[:id])
 
     race.questionnaire.destroy
+
+    redirect_to race_path(race, @context_params)
+  end
+
+  def new_election_questionnaire
+    @race = Race.find(params[:id])
+  end
+
+  def create_election_questionnaire
+    race = Race.find(params[:id])
+    questionnaire = Questionnaire.create(questionnairable: race, name: race.name, use_type: Questionnaire::USE_TYPE_CANDIDACY)
+    QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
+
+    redirect_to questionnaire_path(questionnaire, @context_params)
+  end
+
+  def delete_election_questionnaire
+    race = Race.find(params[:id])
+
+    race.election_questionnaire.destroy
 
     redirect_to race_path(race, @context_params)
   end

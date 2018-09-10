@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180905011840) do
+ActiveRecord::Schema.define(version: 20180909235551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -325,6 +325,7 @@ ActiveRecord::Schema.define(version: 20180905011840) do
     t.integer "race_id"
     t.string "questionnairable_type"
     t.integer "questionnairable_id"
+    t.string "use_type"
   end
 
   create_table "questions", id: :serial, force: :cascade do |t|
@@ -355,6 +356,7 @@ ActiveRecord::Schema.define(version: 20180905011840) do
     t.integer "chapter_id"
     t.boolean "is_official"
     t.boolean "endorsement_complete"
+    t.integer "election_candidacy_segregation_choice_id"
     t.index ["chapter_id"], name: "index_races_on_chapter_id"
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id"
     t.index ["updated_by_user_id"], name: "index_races_on_updated_by_user_id"

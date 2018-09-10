@@ -1,0 +1,6 @@
+%h2 New Election Questionnaire
+
+= semantic_form_for @race do |f|
+  = f.input :election_candidacy_segregation_choice_id, as: :select, collection: @questionnaire_choices
+  = f.submit "Create Questionnaire"
+

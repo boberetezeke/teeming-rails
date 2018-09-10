@@ -103,6 +103,10 @@ Rails.application.routes.draw do
         put :email_questionnaire
         patch :copy_questionnaire
         delete :delete_questionnaire
+
+        get :new_election_questionnaire
+        put :create_election_questionnaire
+        delete :delete_election_questionnaire
       end
     end
     resources :issues, shallow: true do
