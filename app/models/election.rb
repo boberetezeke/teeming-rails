@@ -109,6 +109,9 @@ class Election < ApplicationRecord
     self.issues.each do |issue|
       self.questionnaire.append_questionnaire_sections(issue.questionnaire)
     end
+    self.races.each do |race|
+      self.questionnaire.append_questionnaire_sections(race.election_questionnaire)
+    end
   end
 
   def unfreeze_election

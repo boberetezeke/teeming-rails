@@ -96,12 +96,44 @@ class RacesController < ApplicationController
 
   def new_election_questionnaire
     @race = Race.find(params[:id])
+    questions = @race.questionnaire.questionnaire_sections.map{|qs| qs.questions }.flatten
+    choice_questions = questions.select{|q| q.question_type == Question::QUESTION_TYPE_MULTIPLE_CHOICE}
+    @questionnaire_choices = choice_questions.map{|cq| [cq.text, cq.id]}
   end
 
   def create_election_questionnaire
     race = Race.find(params[:id])
-    questionnaire = Questionnaire.create(questionnairable: race, name: race.name, use_type: Questionnaire::USE_TYPE_CANDIDACY)
-    QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
+    race.update(race_params)
+
+    questionnaire = Questionnaire.create(questionnairable: race, name: race.name, use_type: Questionnaire::USE_TYPE_ELECTION)
+    questionnaire_section = QuestionnaireSection.create(questionnaire: questionnaire, order_index: 1, title: 'First Section')
+
+
+    if race.election_candidacy_segregation_choice_id
+      choice_hash = {}
+      race.candidacies.each do |candidacy|
+        answer = candidacy.answers.select{|answer| answer.question.id == race.election_candidacy_segregation_choice_id}.first
+        choices = answer.question.choices.map{|c| c.title}
+        choice = choices.select{|c| c == answer.text}
+        if choice_hash[choice]
+          choice_hash[choice] .push(candidacy)
+        else
+          choice_hash[choice] = [candidacy]
+        end
+
+        choice_hash.each do |choice, candidacies|
+          question = Question.create(questionnaire_section: questionnaire_section, question_type: Question::QUESTION_TYPE_RANKED_CHOICE)
+          candidacies.sort_by{|c| c.name}.each do |candidacy|
+            question.choices << Choice.new(title: "#{candidacy.name} - [candidacy:#{candidacy.id}]", value: candidacy.name)
+          end
+        end
+      end
+    else
+      question = Question.create(questionnaire_section: questionnaire_section, question_type: Question::QUESTION_TYPE_RANKED_CHOICE, order_index: 1, text: 'Candidates')
+      race.candidacies.sort_by{|c| c.name}.each_with_index do |candidacy, index|
+        question.choices << Choice.new(title: "#{candidacy.name} - [candidacy:#{candidacy.id}]", value: candidacy.name, order_index: index)
+      end
+    end
 
     redirect_to questionnaire_path(questionnaire, @context_params)
   end
@@ -138,7 +170,8 @@ class RacesController < ApplicationController
 
   def race_params
     params.require(:race).permit(:name, :election_id, :chapter_id, :level_of_government, :locale, :notes, :filing_deadline_date_str,
-                                 :candidates_announcement_date_str, :is_official, :endorsement_complete)
+                                 :candidates_announcement_date_str, :is_official, :endorsement_complete,
+                                 :election_candidacy_segregation_choice_id)
   end
 
   def races_breadcrumbs(election, include_link: true)
