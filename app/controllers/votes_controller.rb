@@ -219,6 +219,34 @@ class VotesController < ApplicationController
     breadcrumbs votes_breadcrumbs, "Vote"
   end
 
+  def raw_vote_questionnaires
+    @election = Election.find(params[:election_id])
+    authorize @election, :tallies?
+
+    @vote_completions = @election.vote_completions.completed.by_id
+  end
+
+  def raw_vote_questionnaire
+    @vote_completion = VoteCompletion.find(params[:id])
+    @election = @vote_completion.election
+    Answer.translate_choice_text(@vote_completion.answers)
+
+    @prev_vote_completion = @vote_completion.prev_id_for_election(@vote_completion.election)
+    @next_vote_completion = @vote_completion.next_id_for_election(@vote_completion.election)
+
+    authorize @election, :tallies?
+  end
+
+  def update_raw_vote
+    @vote_completion = VoteCompletion.find(params[:id])
+    @election = @vote_completion.election
+    authorize @election, :tallies?
+
+    @vote_completion.update(raw_vote_params(params))
+
+    redirect_to raw_vote_questionnaire_vote_path(@vote_completion, election_id: @vote_completion.election_id)
+  end
+
   def enter
     @election = Election.find(params[:election_id])
     authorize @election, :enter?
@@ -265,6 +293,10 @@ class VotesController < ApplicationController
   end
 
   private
+
+  def raw_vote_params(params)
+    params.require(:vote_completion).permit(:vote_type)
+  end
 
   def vote_completion_params(params)
     params.require(:vote_completion).permit(

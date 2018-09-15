@@ -87,6 +87,7 @@ Rails.application.routes.draw do
       collection do
         get :tallies
         get :raw_votes
+        get :raw_vote_questionnaires
         put :generate_tallies
         get :view
         get :wait
@@ -95,6 +96,10 @@ Rails.application.routes.draw do
         get :enter
         get :download_votes
         put :delete_votes
+      end
+      member do
+        get :raw_vote_questionnaire
+        put :update_raw_vote
       end
     end
     resources :races, shallow: true do
