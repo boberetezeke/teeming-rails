@@ -32,11 +32,11 @@ class VoteCompletion < ApplicationRecord
   scope :by_reverse_id, ->{ order('id desc') }
 
   def next_id_for_election(election)
-    election.vote_completions.where(VoteCompletion.arel_table[:id].gt(self.id)).by_id.first
+    election.vote_completions.completed.where(VoteCompletion.arel_table[:id].gt(self.id)).by_id.first
   end
 
   def prev_id_for_election(election)
-    election.vote_completions.where(VoteCompletion.arel_table[:id].lt(self.id)).by_reverse_id.first
+    election.vote_completions.completed.where(VoteCompletion.arel_table[:id].lt(self.id)).by_reverse_id.first
   end
 
   def disqualified?
