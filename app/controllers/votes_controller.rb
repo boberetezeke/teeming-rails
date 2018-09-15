@@ -89,6 +89,10 @@ class VotesController < ApplicationController
 
         @vote_completion = VoteCompletion.new(new_vote_completion_args)
 
+        @vote_completion.has_voted = true
+        @vote_completion.user = user
+        @vote_completion.vote_type = VoteCompletion::VOTE_COMPLETION_TYPE_PAPER
+
         params_answer_attributes = params['vote_completion']['answers_attributes']
         @vote_completion.answers_attributes = Answer.translate_choice_params(params_answer_attributes)
 
