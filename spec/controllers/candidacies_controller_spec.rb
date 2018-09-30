@@ -6,7 +6,7 @@ describe CandidaciesController do
   let(:internal_election)   { FactoryBot.create(:election, :internal) }
   let(:race)                { FactoryBot.create(:race, election: internal_election, filing_deadline_date: Date.new(2017,3,10) ) }
   let(:user)                { FactoryBot.create(:user) }
-  let!(:questionnaire)      { FactoryBot.create(:questionnaire, questionnairable: race) }
+  let!(:questionnaire)      { FactoryBot.create(:questionnaire, questionnairable: race, use_type: Questionnaire::USE_TYPE_CANDIDACY) }
 
   before do
     sign_in user
