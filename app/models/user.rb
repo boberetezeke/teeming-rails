@@ -59,11 +59,13 @@ class User < ApplicationRecord
   end
 
   def share_phone_with?(user)
-    share_phone
+    # share_phone
+    true
   end
 
   def share_address_with?(user)
-    share_address
+    # share_address
+    true
   end
 
   def accepted_bylaws
