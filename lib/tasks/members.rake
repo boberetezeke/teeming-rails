@@ -69,12 +69,13 @@ namespace :members  do
 
 
   desc "merge contacts"
-  task :merge_contacts, [:filename] => :environment do |t, args|
-    if args[:filename].present?
-      contacts_str = File.read(args[:filename])
+  task :merge_contacts, [:curl_address] => :environment do |t, args|
+    if args[:curl_address].present?
+      system("curl #{args[:curl_address]} >/tmp/merge.csv")
+      contacts_str = File.read("/tmp/merge.csv")
       ImportCds.import_contacts_csv(contacts_str)
     else
-      puts "filename argument missing"
+      puts "curl_address argument missing"
     end
   end
 
