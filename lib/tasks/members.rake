@@ -66,4 +66,26 @@ namespace :members  do
   task :remove_non_user_members => :environment do
     Member.where(user_id: nil).destroy_all
   end
+
+
+  desc "merge contacts"
+  task :merge_contacts, [:filename] => :environment do |t, args|
+    if args[:filename].present?
+      contacts_str = File.read(args[:filename])
+      ImportCds.import_contacts_csv(contacts_str)
+    else
+      puts "filename argument missing"
+    end
+  end
+
+  desc "geocode members"
+  task :geocode => :environment do
+    Member.where("lower(state) = 'mn'").find_each do |member|
+      Geocoding.update_lat_lon_for_member(member)
+
+      puts "updating #{member.email} - city:#{member.city} - latitude: #{member.latitude} - longitude: #{member.longitude}"
+
+      member.save if member.changed?
+    end
+  end
 end

@@ -19,7 +19,10 @@ class Member < ApplicationRecord
 
   attr_accessor :with_user_input
 
-  validates :email, :uniqueness => true
+  geocoded_by :address
+  acts_as_taggable_on :districts, :subcaucuses, :sources
+
+  validates :email, :uniqueness => true, allow_nil: true
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }
   validates :address_1, presence: true,              if: ->{ with_user_input }
   validates :city, presence: true,                   if: ->{ with_user_input }
@@ -202,6 +205,10 @@ class Member < ApplicationRecord
 
   def name
     "#{first_name} #{last_name}"
+  end
+
+  def address
+    [([address_1, address_2].reject(&:nil?).join(' ')), city, state, "United States"].compact.join(', ')
   end
 
   def message_control_for(unsubscribe_type)

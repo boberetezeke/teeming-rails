@@ -59,6 +59,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts-as-taggable-on (6.0.0)
+      activerecord (~> 5.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
@@ -141,6 +143,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
+    geocoder (1.5.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     haml (5.0.4)
@@ -348,6 +351,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
+  acts-as-taggable-on (~> 6.0)
   aws-sdk-s3 (~> 1)
   bcrypt (~> 3.1.7)
   bootstrap-datepicker-rails
@@ -364,6 +368,7 @@ DEPENDENCIES
   factory_bot_rails
   formtastic (~> 3.0)
   formtastic-bootstrap
+  geocoder
   haml
   honeybadger
   jquery-rails

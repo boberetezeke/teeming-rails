@@ -35,6 +35,8 @@ gem 'puma', '~> 3.0'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
+gem 'geocoder'
+gem 'acts-as-taggable-on', '~> 6.0'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'jwt', '>= 1.5.6'
