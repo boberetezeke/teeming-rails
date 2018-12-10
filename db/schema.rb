@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181129012644) do
+ActiveRecord::Schema.define(version: 20181210193700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 20181129012644) do
     t.text "description"
     t.string "visibility"
     t.string "chapter_type"
+    t.text "boundaries_description_yml"
   end
 
   create_table "choice_tallies", id: :serial, force: :cascade do |t|

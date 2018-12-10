@@ -1510,7 +1510,7 @@ module Geocoding
       },
       "perham" => {
           lat:  46.5944042,
-          lon: 95.5725415,
+          lon: -95.5725415,
           county: 'otter tail',
           zip_codes: ['56572']
       },
@@ -1845,12 +1845,6 @@ module Geocoding
           county: 'fillmore',
           zip_codes: ['55975']
       },
-      "st anthony" => {
-          lat: 45.0205192565918,
-          lon: -93.21800231933594,
-          county: 'hennepin',
-          zip_codes: ['']
-      },
       "stacy" => {
           lat: 45.39802169799805,
           lon: -92.98744201660156,
@@ -2102,18 +2096,20 @@ module Geocoding
       end
     end
 
-    if m = /^(.*),/.match(city)
-        city = m[1]
-    end
-    city = city.downcase
-    city = city.gsub(/(st\.|saint)/, "st")
-
-    info = @cities[city]
+    info = @cities[clean_city(city)]
     if info
       [info[:lat], info[:lon]]
     else
       nil
     end
+  end
+
+  def self.clean_city(city)
+      if m = /^(.*),/.match(city)
+          city = m[1]
+      end
+      city = city.downcase
+      city = city.gsub(/(st\.|saint)/, "st")
   end
 
   def self.update_lat_lon_for_member(member)

@@ -89,4 +89,56 @@ namespace :members  do
       member.save if member.changed?
     end
   end
+
+  desc "set chapter boundaries YAML"
+  task :set_chapter_boundaries_yml, [:chapter_boundaries_yml_file] => :environment do |t, args|
+    yml = YAML.load(File.open(args[:chapter_boundaries_yml_file]))
+    chapter_hash = Chapter.all.map{|c| [c.name.downcase.strip, c.id]}.to_h
+
+    yml.each do |chapter_and_boundaries|
+      puts "chapter_and_boundaries: #{chapter_and_boundaries}"
+      chapter_name = chapter_and_boundaries[:name]
+      if chapter_hash[chapter_name.downcase.strip].nil?
+        puts "Chapter not found: #{chapter_name}"
+        exit
+      end
+    end
+
+    yml.each do |chapter_and_boundaries|
+      chapter_name = chapter_and_boundaries[:name].downcase.strip
+      chapter = Chapter.find(chapter_hash[chapter_name])
+      chapter.boundaries_description_yml = chapter_and_boundaries[:boundaries].to_yaml
+      chapter.save
+    end
+  end
+
+  desc "set potential chapter id"
+  task :set_potential_chapter => :environment do |t, args|
+    state_chapter = Chapter.find_by(is_state_wide: true)
+    member = Member.arel_table
+    members_to_check = Member.where(
+      member[:chapter_id].eq(state_chapter.id).or(member[:chapter_id].eq(nil)).and(
+          member[:latitude].not_eq(nil).and(member[:longitude].not_eq(nil))
+      ))
+    chapters = Chapter.all.reject(&:is_state_wide)
+    cities_to_chapter = {}
+    chapters.each{|c| c.cities.each{|city| cities_to_chapter[city] = c}}
+
+    potential_chapter_ids_set = 0
+    members_to_check.find_each do |member|
+      if member.city.present?
+        city = Geocoding.clean_city(member.city)
+        chapter = cities_to_chapter[city]
+        if chapter
+          puts "for #{member.first_name} #{member.last_name} in #{member.city} setting chapter to #{chapter.name}"
+          member.potential_chapter_id = chapter.id
+          member.save
+          potential_chapter_ids_set += 1
+        end
+      end
+    end
+
+    puts "Members to check #{members_to_check.size}"
+    puts "Updated #{potential_chapter_ids_set} potential chapter ids"
+  end
 end

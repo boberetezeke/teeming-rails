@@ -2,4 +2,5 @@
   = f.semantic_errors
   = f.input :name
   = f.input :chapter_type, as: :select, collection: Chapter::CHAPTER_TYPES_HASH
+  = f.input :boundaries_description_yml, as: :text
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'

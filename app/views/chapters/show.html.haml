@@ -25,6 +25,8 @@
     = link_to("New Interal Election", new_election_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-success')
   - if can?(current_user, :index, Member)
     = link_to("Members (#{Member.chapter_members(@chapter).count})", chapter_members_path(chapter_id: @chapter.id), class: 'btn btn-sm btn-primary')
+  %hr
+    %p= @chapter.cities.join(", ")
 - elsif @tab == 'governance'
   .row
     .col-md-6

@@ -12,6 +12,7 @@
       %tr.row
         %th Name
         %th Email
+        %th User?
         %th Volunteer?
         %th City
         %th Chapter / (Potential)
@@ -21,6 +22,7 @@
         %tr.row
           %td= link_to(member.name, member)
           %td= member.user ? member.user.email : member.email
+          %td= member.user ? "Yes" : "No"
           %td= member.user ? (member.user.interested_in_volunteering ? "Yes" : "No") : "No"
           %td= member.city
           %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : member.chapter.name
