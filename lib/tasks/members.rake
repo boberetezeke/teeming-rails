@@ -118,7 +118,7 @@ namespace :members  do
     member = Member.arel_table
     members_to_check = Member.where(
       member[:chapter_id].eq(state_chapter.id).or(member[:chapter_id].eq(nil)).and(
-          member[:latitude].not_eq(nil).and(member[:longitude].not_eq(nil))
+          member[:city].not_eq(nil)
       ))
     chapters = Chapter.all.reject(&:is_state_wide)
     cities_to_chapter = {}

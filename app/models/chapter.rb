@@ -44,7 +44,7 @@ class Chapter < ApplicationRecord
   end
 
   def affiliate?
-    chapter_type == CHAPTER_TYPE_AFFILIATE
+    chapter_type == CHAPTER_TYPE_AFFILIATE || chapter_type == CHAPTER_TYPE_IN_FORMATION
   end
 
   def active_officer_assignments
