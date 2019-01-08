@@ -18,10 +18,20 @@ class MembersController < ApplicationController
       @members = @members.chapter_members(@chapter)
     elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
       @members = @members.chapter_members(@chapter).with_user
+    elsif params[:member_type] == Member::MEMBER_TYPE_NON_MEMBER
+      @members = @members.chapter_members(@chapter).non_members(@chapter)
     elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
-      @members = @members.chapter_members(@chapter).without_user
+      @members = @members.chapter_members(@chapter).non_user_members
     else
       @members = @members.all_chapter_members(@chapter)
+    end
+
+    if params[:source]
+      @members = @members.tagged_with(params[:source], on: 'sources')
+    end
+
+    if params[:subcaucus]
+      @members = @members.tagged_with(params[:subcaucus], on: 'subcaucuses')
     end
 
     @members = @members.filtered_by_string(params[:search]) if params[:search]
@@ -101,7 +111,7 @@ class MembersController < ApplicationController
   private
 
   def member_params
-    params.require(:member).permit(:email,
+    params.require(:member).permit(:email, :notes,
                                    :first_name, :middle_initial, :last_name,
                                    :mobile_phone, :work_phone, :home_phone,
                                    :address_1, :address_2, :city, :state, :zip,
@@ -124,7 +134,7 @@ class MembersController < ApplicationController
 
   def members_breadcrumbs
     if @member
-      ["Members", chapter_members_path(@member.chapter)]
+      ["Members", @member.chapter ? chapter_members_path(@member.chapter) : chapter_members_path(@member.potential_chapter)]
     else
       [@chapter.name, chapter_path(@chapter)]
     end

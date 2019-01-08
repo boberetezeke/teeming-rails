@@ -30,7 +30,7 @@ class MemberPolicy < ApplicationPolicy
   end
 
   def destroy?
-    can_write_members?
+    can_destroy_members?
   end
 
   private
@@ -40,7 +40,11 @@ class MemberPolicy < ApplicationPolicy
   end
 
   def can_write_members?
+    @user.member == @record || @user.can_write_members?
+  end
+
+  def can_destroy_members?
     @user.member == @record ||
-        (@user.can_write_members?  && @record.user.nil?)
+      (@user.can_write_members?  && @record.user.nil?)
   end
 end

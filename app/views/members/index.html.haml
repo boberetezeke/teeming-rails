@@ -2,30 +2,35 @@
 
 = DynamicTable::Table.new(view: self, base_path: chapter_members_path(@chapter), filters: Member::MEMBER_FILTERS, params: params).generate do |dt|
   Search: #{dt.text_field_tag :search}
-  - if @chapter.is_state_wide
-    By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_STATE_WIDE_HASH)}
-  - else
-    By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_HASH)}
-  By Attributes: #{dt.select_tag_options_for_select(:attr_type, Member::MEMBER_ATTRS_HASH)}
+  %div
+    - if @chapter.is_state_wide
+      By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_STATE_WIDE_HASH)}
+    - else
+      By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_HASH)}
+    By Attributes: #{dt.select_tag_options_for_select(:attr_type, Member::MEMBER_ATTRS_HASH)}
+    By Subcaucus: #{dt.select_tag_options_for_select(:subcaucus,  ["Any"] + Member.tags_on(:subcaucuses).map(&:name))}
+    By Source: #{dt.select_tag_options_for_select(:source,  ["Any"] + Member.tags_on(:sources).map(&:name))}
   %table.table
     %thead
       %tr.row
         %th Name
         %th Email
-        %th User?
+        %th Type
         %th Volunteer?
         %th City
         %th Chapter / (Potential)
+        %th Notes
         %th Action
     %tbody{dt.refreshable("table-body")}
       - @members.each do |member|
         %tr.row
           %td= link_to(member.name, member)
           %td= member.user ? member.user.email : member.email
-          %td= member.user ? "Yes" : "No"
+          %td= member.is_non_member ? "Non-member" : (member.user ? "User" : "Member")
           %td= member.user ? (member.user.interested_in_volunteering ? "Yes" : "No") : "No"
           %td= member.city
           %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : member.chapter.name
+          %td= truncate(member.notes, length: 25)
           %td= render partial: 'members/actions', locals: { member: member }
   %div{dt.refreshable("pagination")}
     = will_paginate @users, renderer: BootstrapPagination::Rails

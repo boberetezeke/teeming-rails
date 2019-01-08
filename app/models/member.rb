@@ -22,7 +22,7 @@ class Member < ApplicationRecord
   geocoded_by :address
   acts_as_taggable_on :districts, :subcaucuses, :sources
 
-  validates :email, :uniqueness => true, allow_nil: true
+  validates :email, :uniqueness => true, allow_nil: true, unless: ->{ email.blank? && user.blank? }
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }
   validates :address_1, presence: true,              if: ->{ with_user_input }
   validates :city, presence: true,                   if: ->{ with_user_input }
@@ -57,6 +57,7 @@ class Member < ApplicationRecord
   MEMBER_TYPE_MEMBER =          'member'
   MEMBER_TYPE_POTENTIAL =       'potential'
   MEMBER_TYPE_USER_MEMBER =     'user-member'
+  MEMBER_TYPE_NON_MEMBER =      'non-member'
   MEMBER_TYPE_NON_USER_MEMBER = 'non-user-member'
 
   scope :officers,                    ->(chapter) {
@@ -90,9 +91,10 @@ class Member < ApplicationRecord
   }
 
   scope :potential_chapter_members, ->(chapter) {
-    where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
-      Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
-    ))
+    where(Member.arel_table[:potential_chapter_id].eq(chapter.id))
+    # where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+    #   Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
+    # ))
   }
   scope :chapter_members,     ->(chapter) { where(chapter_id: chapter.id) }
   scope :chapter_users,       ->(chapter) { joins(:user).where(chapter_id: chapter.id) }
@@ -100,14 +102,21 @@ class Member < ApplicationRecord
   scope :all_chapter_members, ->(chapter) {
     where(
       Member.arel_table[:chapter_id].eq(chapter.id).or(
-        Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
-          Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
-        )
+        Member.arel_table[:potential_chapter_id].eq(chapter.id)
       )
     )
+    # where(
+    #   Member.arel_table[:chapter_id].eq(chapter.id).or(
+    #     Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+    #       Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
+    #     )
+    #   )
+    # )
   }
 
-  scope :all_members, ->(chapter){ all }
+  scope :non_members, ->(chapter){ where(Member.arel_table[:is_non_member].eq(true).and(Member.arel_table[:potential_chapter_id].eq(chapter.id))) }
+  scope :non_user_members, ->{ where(Member.arel_table[:is_non_member].eq(nil).and(Member.arel_table[:user_id].eq(nil))) }
+  scope :all_members, ->(chapter){ where(is_non_member: nil) }
   scope :all_users,   ->(chapter){ joins(:user) }
 
   scope :without_user, ->{ where(user_id: nil) }
@@ -119,7 +128,7 @@ class Member < ApplicationRecord
       'invalid', 'bounce', 'block', 'unsubscribe'
     )
   }
-  scope :filtered_by_string, ->(search) { where("lower((first_name || ' ' || last_name || ' ' || members.email)) like lower('%#{connection.quote(search)[1..-2]}%')") }
+  scope :filtered_by_string, ->(search) { where("lower(concat(first_name,  ' ', last_name, ' ', members.email, ' ', members.notes)) like lower('%#{connection.quote(search)[1..-2]}%')") }
   scope :filtered_by_attrs, ->(member_type) {
     if member_type == Member::MEMBER_ATTRS_VOLUNTEER
       where(User.arel_table[:interested_in_volunteering].eq(true))
@@ -146,14 +155,16 @@ class Member < ApplicationRecord
   MEMBER_FILTERS = {
     search:       '',
     member_type:  MEMBER_TYPE_ALL,
-    attr_type:    MEMBER_ATTRS_ALL
+    attr_type:    MEMBER_ATTRS_ALL,
+    source:       "Any",
+    subcaucus:    "Any"
   }
 
 
   MEMBER_TYPES_HASH = {
       "All" =>               MEMBER_TYPE_ALL,
       "User Members" =>      MEMBER_TYPE_MEMBER,
-      "Non-User Members" =>  MEMBER_TYPE_NON_USER_MEMBER,
+      "Non Members" =>  MEMBER_TYPE_NON_MEMBER,
       "Potential User Members" => MEMBER_TYPE_POTENTIAL
   }
 

@@ -58,6 +58,7 @@ module ImportCds
                      address: r[5], city: r[6], zip: r[7],
                      is_bernie: is_bernie, is_hillary: is_hillary, tags: tags.join(' '))
     end
+
     members = Member.all.to_a
     members_by_email = {}
     members.each{|m| members_by_email[m.email] = m}
@@ -123,6 +124,13 @@ module ImportCds
 
       if m.user_id.nil?
         cs.each do |c|
+          source = c.tags.split(/ /).select{|t| /source:/.match(t)}.map{|t|match = /source:([^\s]+)/.match(t); match ? match[1]: nil}.first
+          if !(m.source_list.include?(source))
+            puts "Updating #{m.name} by adding #{source}"
+            m.source_list.add(source)
+            m.save
+          end
+
           if (c.address && m.address_1.blank?) ||
               (c.city && m.city.blank?) ||
               (c.zip && m.zip.blank?)
@@ -176,7 +184,7 @@ module ImportCds
             m.district_list.add($1)
           when /subcaucus:(.*)$/
             m.subcaucus_list.add($1)
-          when /sources:(.*)$/
+          when /source:(.*)$/
             m.source_list.add($1)
           end
         end

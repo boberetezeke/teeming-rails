@@ -1,5 +1,5 @@
 = semantic_form_for [chapter, member] do |f|
-  - disabled = !can?(current_user, :edit, member)
+  - disabled = (member.user && current_user.member != member)
   = f.semantic_errors
   - unless member.user
     = f.input :email
@@ -9,6 +9,8 @@
     = f.fields_for :message_controls do |ff|
       = render partial: 'message_controls/form', locals: { f: ff, disabled: disabled }
       = ff.input :id, as: :hidden
+  %hr
+  = f.input :notes, as: :text
   -#- if f.object.user
   -#  %hr
   -#  = f.fields_for :user do |ff|

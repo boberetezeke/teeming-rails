@@ -1,4 +1,4 @@
 - if can?(current_user, :edit, member)
-  = link_to 'Edit', edit_member_path(member), class: 'btn btn-sm btn-success'
+  = link_to 'Edit' + (member.user.nil? ? '' : ' Metadata'), edit_member_path(member), class: 'btn btn-sm btn-success'
 - if can?(current_user, :destroy, member)
   = link_to 'Delete', member_path(member), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
