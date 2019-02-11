@@ -128,6 +128,19 @@ class Member < ApplicationRecord
       'invalid', 'bounce', 'block', 'unsubscribe'
     )
   }
+  scope :tagged_by_string, ->(search, members) {
+    if search.size >= 3
+      tags = ActsAsTaggableOn::Tag.where("lower(name) like lower('%#{connection.quote(search)[1..-2]}%')")
+      if tags.present?
+        members.tagged_with(tags)
+      else
+        members
+      end
+    else
+      members
+    end
+  }
+
   scope :filtered_by_string, ->(search) { where("lower(concat(first_name,  ' ', last_name, ' ', members.email, ' ', members.notes)) like lower('%#{connection.quote(search)[1..-2]}%')") }
   scope :filtered_by_attrs, ->(member_type) {
     if member_type == Member::MEMBER_ATTRS_VOLUNTEER
@@ -157,7 +170,8 @@ class Member < ApplicationRecord
     member_type:  MEMBER_TYPE_ALL,
     attr_type:    MEMBER_ATTRS_ALL,
     source:       "Any",
-    subcaucus:    "Any"
+    subcaucus:    "Any",
+    general_tag:  "Any"
   }
 
 

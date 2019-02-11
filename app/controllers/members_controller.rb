@@ -34,6 +34,10 @@ class MembersController < ApplicationController
       @members = @members.tagged_with(params[:subcaucus], on: 'subcaucuses')
     end
 
+    if params[:general_tag]
+      @members = @members.tagged_with(params[:general_tag], on: 'general_tags')
+    end
+
     @members = @members.filtered_by_string(params[:search]) if params[:search]
     @members = @members.filtered_by_attrs(params[:attr_type]) if params[:attr_type]
     @member_ids = @members.pluck(:id).uniq
