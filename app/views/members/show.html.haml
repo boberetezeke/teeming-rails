@@ -27,18 +27,22 @@
           = render partial: 'answers/show', locals: { answer: answer }
 
 .row
-  .col-md-4
+  .col-md-3
+    %strong General Tags
+  .col-md-3
     %strong Subcaucus
-  .col-md-4
+  .col-md-3
     %strong Sources
-  .col-md-4
+  .col-md-3
     %strong District
 .row
-  .col-md-4
+  .col-md-3
+    = @member.general_tags.map(&:name).join(", ")
+  .col-md-3
     = @member.subcaucuses.map(&:name).join(", ")
-  .col-md-4
+  .col-md-3
     = @member.sources.map(&:name).join(", ")
-  .col-md-4
+  .col-md-3
     = @member.districts.map(&:name).join(", ")
 .row
   .col-md-12

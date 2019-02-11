@@ -54,6 +54,7 @@ class MembersController < ApplicationController
     @member = Member.new(member_params)
     @member.chapter = Chapter.find(params[:chapter_id])
     @member.save
+    handle_tags(member_tag_params)
 
     respond_with(@member)
   end
@@ -70,8 +71,45 @@ class MembersController < ApplicationController
 
   def update
     @member.update(member_params)
+    handle_tags(member_tag_params)
     @member.user.update_role_from_roles if @member.user
     respond_with(@member)
+  end
+
+  def handle_tags(params)
+    tag_attribute_names = [:general_tags, :subcaucuses, :districts, :sources]
+    tag_attribute_names.each do |tag_attribute_name|
+      handle_tag(tag_attribute_name, params)
+    end
+  end
+
+  def handle_tag(tag_attribute_name, params)
+    singular_tag_name = tag_attribute_name.to_s.singularize
+    tags = @member.send(tag_attribute_name).map(&:name)
+    new_tags = params["#{singular_tag_name}_ids"].select(&:present?).map do |id|
+      tag = ActsAsTaggableOn::Tag.find_by_id(id)
+      tag ? tag.name : id
+    end
+
+    tags_to_remove = tags - new_tags
+    tags_to_insert = new_tags - tags
+
+    puts "tags: #{tags}"
+    puts "new_tags: #{new_tags}"
+    puts "tags_to_remove: #{tags_to_remove}"
+    puts "tags_to_insert: #{tags_to_insert}"
+
+    tags_to_remove.each do |tag_to_remove|
+      puts "removing tag: #{tag_to_remove}"
+      @member.send("#{tag_attribute_name.to_s.singularize}_list").remove(tag_to_remove)
+    end
+
+    tags_to_insert.each do |tag_to_insert|
+      puts "inserting tag: #{tag_to_insert}"
+      @member.send("#{tag_attribute_name.to_s.singularize}_list").add(tag_to_insert)
+    end
+
+    @member.save
   end
 
   def destroy
@@ -117,6 +155,10 @@ class MembersController < ApplicationController
                                    :address_1, :address_2, :city, :state, :zip,
                                    message_controls_attributes: [:id] + MessageControlsController.permitted_attributes,
                                    user_attributes: [:id, {role_ids: [], officer_ids: []}])
+  end
+
+  def member_tag_params
+    params.require(:member).permit({general_tag_ids: [], subcaucus_ids: [], district_ids: [], source_ids: []})
   end
 
   def set_member

@@ -10,6 +10,11 @@
       = render partial: 'message_controls/form', locals: { f: ff, disabled: disabled }
       = ff.input :id, as: :hidden
   %hr
+    = f.input :general_tags, hint: "Tags that don't fall into the folowing categories", as: :select, multiple: true, collection: Member.general_tag_counts.map{|tag| [tag.name, tag.id]}
+    = f.input :subcaucuses, hint: "Indicates who or what they support", as: :select, multiple: true, collection: Member.subcaucus_counts.map{|tag| [tag.name, tag.id]}
+    = f.input :districts, hint: "State Rep or Senate Districts", as: :select, multiple: true, collection: Member.district_counts.map{|tag| [tag.name, tag.id]}
+    = f.input :sources, hint: "What is the data source for this member", as: :select, multiple: true, collection: Member.source_counts.map{|tag| [tag.name, tag.id]}
+  %hr
   = f.input :notes, as: :text
   -#- if f.object.user
   -#  %hr
@@ -22,7 +27,11 @@
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
 
 :javascript
-  //$(function() {
-  //  $("#member_user_attributes_role_ids").select2({theme: "bootstrap"})
-  //  $("#member_user_attributes_officer_ids").select2({theme: "bootstrap"})
-  //})
+  $(function() {
+    $("#member_general_tag_ids").select2({theme: "bootstrap", tags: true})
+    $("#member_subcaucus_ids").select2({theme: "bootstrap", tags: true})
+    $("#member_district_ids").select2({theme: "bootstrap", tags: true})
+    $("#member_source_ids").select2({theme: "bootstrap", tags: true})
+    //$("#member_user_attributes_role_ids").select2({theme: "bootstrap"})
+    //$("#member_user_attributes_officer_ids").select2({theme: "bootstrap"})
+  })

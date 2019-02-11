@@ -20,7 +20,7 @@ class Member < ApplicationRecord
   attr_accessor :with_user_input
 
   geocoded_by :address
-  acts_as_taggable_on :districts, :subcaucuses, :sources
+  acts_as_taggable_on :districts, :subcaucuses, :sources, :general_tags
 
   validates :email, :uniqueness => true, allow_nil: true, unless: ->{ email.blank? && user.blank? }
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }
