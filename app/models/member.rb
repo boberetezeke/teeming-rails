@@ -17,6 +17,8 @@ class Member < ApplicationRecord
 
   has_many :message_recipients, dependent: :destroy
 
+  has_many :contact_attempts
+
   attr_accessor :with_user_input
 
   geocoded_by :address
@@ -229,7 +231,11 @@ class Member < ApplicationRecord
   end
 
   def name
-    "#{first_name} #{last_name}"
+    if first_name || last_name
+      "#{first_name} #{last_name}"
+    else
+      email
+    end
   end
 
   def address

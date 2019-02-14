@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190106225106) do
+ActiveRecord::Schema.define(version: 20190214050008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,43 @@ ActiveRecord::Schema.define(version: 20190106225106) do
     t.string "title"
     t.string "value"
     t.index ["question_id"], name: "index_choices_on_question_id"
+  end
+
+  create_table "contact_attempts", force: :cascade do |t|
+    t.bigint "contact_bank_id"
+    t.bigint "member_id"
+    t.string "contact_type"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contact_bank_id"], name: "index_contact_attempts_on_contact_bank_id"
+    t.index ["member_id"], name: "index_contact_attempts_on_member_id"
+  end
+
+  create_table "contact_banks", force: :cascade do |t|
+    t.string "name"
+    t.text "script"
+    t.text "notes"
+    t.bigint "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "chapter_id"
+    t.index ["chapter_id"], name: "index_contact_banks_on_chapter_id"
+    t.index ["owner_id"], name: "index_contact_banks_on_owner_id"
+  end
+
+  create_table "contactees", force: :cascade do |t|
+    t.bigint "contact_bank_id"
+    t.bigint "member_id"
+    t.index ["contact_bank_id"], name: "index_contactees_on_contact_bank_id"
+    t.index ["member_id"], name: "index_contactees_on_member_id"
+  end
+
+  create_table "contactors", force: :cascade do |t|
+    t.bigint "contact_bank_id"
+    t.bigint "user_id"
+    t.index ["contact_bank_id"], name: "index_contactors_on_contact_bank_id"
+    t.index ["user_id"], name: "index_contactors_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

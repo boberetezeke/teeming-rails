@@ -28,6 +28,11 @@ Rails.application.routes.draw do
   end
 
   resources :roles, only: [:index, :show]
+  resources :contact_banks  do
+    collection do
+      post :new2
+    end
+  end
 
   resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]
   resources :candidacies do

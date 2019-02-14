@@ -1,0 +1,15 @@
+%h2 Contact Bank: #{@contact_bank.name}
+
+.row
+  .col-md-6
+    %h3 Contactors
+    %ul
+      - @contact_bank.contactors.each do |contactor|
+        %li= contactor.user.name
+  .col-md-6
+    %h3 Contactees
+    %ul
+      - @contact_bank.contactees.each do |contactee|
+        %li= contactee.member.name
+
+= link_to "Edit", edit_contact_bank_path(@contact_bank), class: 'btn btn-sm btn-primary'

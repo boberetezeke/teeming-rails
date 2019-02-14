@@ -38,6 +38,10 @@
   %div{dt.refreshable("pagination")}
     = will_paginate @users, renderer: BootstrapPagination::Rails
 
+= form_tag(new2_contact_banks_path, method: :post, style: 'display: inline') do
+  = hidden_field_tag(:chapter_id, @chapter.id)
+  = hidden_field_tag(:member_ids, @members_ids)
+  = submit_tag 'Create Contact Bank', class: 'btn btn-sm btn-primary btn-with-padding', id: 'new-contact-bank'
 - if can?(current_user, :new, :member)
   = link_to "Add Member", new_chapter_member_path(chapter: @chapter), class: 'btn btn-sm btn-success'
 - if can?(current_user, :import, :member)

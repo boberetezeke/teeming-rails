@@ -36,11 +36,24 @@ class User < ApplicationRecord
 
   has_many :shares
 
+  has_many :contactors
+  has_many :contact_banks, through: :contactors
+
   before_save :setup_wizard
 
   scope :with_roles, ->{ where(User.arel_table[:role_id].not_eq(nil)) }
+  scope :for_chapter, ->(chapter) {
+    joins(:member)
+      .where(
+        Member.arel_table[:chapter_id].eq(chapter.id)
+      )
+      .order("concat(members.first_name, members.last_name)") }
 
   attr_accessor :authorize_args
+
+  def self.with_members
+    Member.limit(2000).joins(:user).order('members.first_name asc, members.last_name asc').map(&:user)
+  end
 
   def new_candidacy(race)
     Candidacy.new(user: self, race: race)
@@ -81,7 +94,7 @@ class User < ApplicationRecord
   end
 
   def name
-    member.name
+    member ? member.name : ""
   end
 
   def in_race?(race)
