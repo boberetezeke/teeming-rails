@@ -1,11 +1,15 @@
 %h2 Contact Bank: #{@contact_bank.name}
+%h4 Setup by: #{@contact_bank.owner.name}
 
 .row
   .col-md-6
     %h3 Contactors
-    %ul
-      - @contact_bank.contactors.each do |contactor|
-        %li= contactor.user.name
+    - if current_user == @contact_bank.owner
+      %ul
+        - @contact_bank.contactors.each do |contactor|
+          %li= contactor.user.name
+    - else
+
   .col-md-6
     %h3 Contactees
     %ul

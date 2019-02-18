@@ -5,6 +5,11 @@ class ContactBankPolicy < ApplicationPolicy
     end
   end
 
+  def show?
+    Contactor.exists?(contact_bank_id: @record.id, user_id: @user.id) ||
+    @record.owner_id == @user.id
+  end
+
   def new?
     can_write_contact_banks?
   end

@@ -51,6 +51,18 @@ class MembersController < ApplicationController
     breadcrumbs members_breadcrumbs, @title
   end
 
+  def select2
+    @chapter = Chapter.find(params[:chapter_id])
+    if params[:term].present?
+      @members = @chapter.members.filtered_by_string(params[:term]).limit(50)
+    else
+      @members = []
+    end
+    respond_to do |format|
+      format.json { render(json: {results: @members.map{|member| {text: member.name, id: member.id}}}.to_json) }
+    end
+  end
+
   def new
     @chapter = Chapter.find(params[:chapter_id])
     @member = Member.new

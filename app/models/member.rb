@@ -122,7 +122,7 @@ class Member < ApplicationRecord
   scope :all_users,   ->(chapter){ joins(:user) }
 
   scope :without_user, ->{ where(user_id: nil) }
-  scope :with_user, ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
+  scope :with_user,    ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
 
   scope :valid_email, -> {
     where(

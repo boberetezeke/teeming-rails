@@ -39,6 +39,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def select2
+    @chapter = Chapter.find(params[:chapter_id])
+    if params[:term].present?
+      @users = @chapter.members.filtered_by_string(params[:term]).with_user.includes(:user).limit(50).map(&:user)
+    else
+      @users = []
+    end
+    respond_to do |format|
+      format.json { render(json: {results: @users.map{|user| {text: user.member.name, id: user.id}}}.to_json) }
+    end
+  end
+
   def privacy_policy
   end
 

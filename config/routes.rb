@@ -66,6 +66,12 @@ Rails.application.routes.draw do
     resources :members, only: [:index, :new, :create, :show, :edit, :update, :destroy], shallow: true do
       collection do
         post :import
+        get :select2
+      end
+    end
+    resources :users, only: [] do
+      collection do
+        get :select2
       end
     end
     resources :events,   shallow: true do
