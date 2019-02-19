@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190214050008) do
+ActiveRecord::Schema.define(version: 20190211034211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,14 +99,17 @@ ActiveRecord::Schema.define(version: 20190214050008) do
   end
 
   create_table "contact_attempts", force: :cascade do |t|
-    t.bigint "contact_bank_id"
-    t.bigint "member_id"
+    t.bigint "contactor_id"
+    t.bigint "contactee_id"
     t.string "contact_type"
+    t.string "direction_type"
+    t.string "result_type"
     t.text "notes"
+    t.datetime "contact_completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["contact_bank_id"], name: "index_contact_attempts_on_contact_bank_id"
-    t.index ["member_id"], name: "index_contact_attempts_on_member_id"
+    t.index ["contactee_id"], name: "index_contact_attempts_on_contactee_id"
+    t.index ["contactor_id"], name: "index_contact_attempts_on_contactor_id"
   end
 
   create_table "contact_banks", force: :cascade do |t|
@@ -114,9 +117,9 @@ ActiveRecord::Schema.define(version: 20190214050008) do
     t.text "script"
     t.text "notes"
     t.bigint "owner_id"
+    t.bigint "chapter_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "chapter_id"
     t.index ["chapter_id"], name: "index_contact_banks_on_chapter_id"
     t.index ["owner_id"], name: "index_contact_banks_on_owner_id"
   end
@@ -124,6 +127,7 @@ ActiveRecord::Schema.define(version: 20190214050008) do
   create_table "contactees", force: :cascade do |t|
     t.bigint "contact_bank_id"
     t.bigint "member_id"
+    t.datetime "contact_completed_at"
     t.index ["contact_bank_id"], name: "index_contactees_on_contact_bank_id"
     t.index ["member_id"], name: "index_contactees_on_member_id"
   end

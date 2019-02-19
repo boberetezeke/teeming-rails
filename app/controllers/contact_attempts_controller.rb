@@ -1,0 +1,14 @@
+class ContactAttemptsController < ApplicationController
+  def create
+    @contact_attempt = ContactAttempt.new(contact_attempt_params)
+    @contact_attempt.save
+
+    respond_with(@contact_attempt, location: @contact_attempt.contactee)
+  end
+
+  private
+
+  def contact_attempt_params
+    params.require(:contact_attempt).permit(:contact_type, :direction_type, :result_type, :notes, :contactee_id)
+  end
+end

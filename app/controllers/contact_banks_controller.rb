@@ -10,8 +10,8 @@ class ContactBanksController < ApplicationController
 
   def new2
     @chapter = Chapter.find(params[:chapter_id])
-    @contact_bank = ContactBank.new
-    @contact_bank.member_ids = params[:member_ids]
+    @contact_bank = ContactBank.new(chapter: @chapter)
+    @contact_bank.member_ids = params[:member_ids].split(/ /)
     render :new
   end
 

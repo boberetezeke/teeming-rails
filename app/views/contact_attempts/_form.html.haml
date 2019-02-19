@@ -1,0 +1,7 @@
+= semantic_form_for [@contactee, @contact_attempt] do |f|
+  = f.input :contactee_id, as: :hidden
+  = f.input :contact_type, as: :select, collection: ContactAttempt::CONTACT_TYPES_HASH
+  = f.input :direction_type, as: :select, collection: ContactAttempt::CONTACT_DIRECTIONS_HASH
+  = f.input :result_type, as: :select, collection: ContactAttempt::CONTACT_RESULTS_HASH
+  = f.input :notes, type: :text, input_html: { rows: 4 }
+  = f.submit

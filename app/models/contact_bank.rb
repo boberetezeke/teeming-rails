@@ -9,4 +9,8 @@ class ContactBank < ApplicationRecord
 
   accepts_nested_attributes_for :users
   accepts_nested_attributes_for :members
+
+  def contactees_contacted
+    contactees.contacted
+  end
 end

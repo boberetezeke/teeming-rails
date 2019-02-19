@@ -29,9 +29,15 @@ Rails.application.routes.draw do
 
   resources :roles, only: [:index, :show]
   resources :contact_banks  do
+    member do
+      put :next_contactee
+    end
     collection do
       post :new2
     end
+  end
+  resources :contactees, only: [:show] do
+    resources :contact_attempts, shallow: true, only: [:create]
   end
 
   resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]
