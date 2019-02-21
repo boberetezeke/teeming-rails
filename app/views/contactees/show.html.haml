@@ -2,6 +2,8 @@
 
 = render partial: 'members/user_details_show', locals: { member: @contactee.member }
 = link_to "Edit", edit_contactee_path(@contactee), class: "btn btn-sm btn-primary"
+= link_to "Next Contactee", next_contactee_contact_bank_path(@contactee.contact_bank), method: :put, class: 'btn btn-sm btn-success'
+
 %hr
 
 - if @contactee.contact_attempts.present?
