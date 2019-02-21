@@ -26,30 +26,7 @@
         - f.object.answers.each do |answer|
           = render partial: 'answers/show', locals: { answer: answer }
 
-.row
-  .col-md-3
-    %strong General Tags
-  .col-md-3
-    %strong Subcaucus
-  .col-md-3
-    %strong Sources
-  .col-md-3
-    %strong District
-.row
-  .col-md-3
-    = @member.general_tags.map(&:name).join(", ")
-  .col-md-3
-    = @member.subcaucuses.map(&:name).join(", ")
-  .col-md-3
-    = @member.sources.map(&:name).join(", ")
-  .col-md-3
-    = @member.districts.map(&:name).join(", ")
-.row
-  .col-md-12
-    %strong Notes
-.row
-  .col-md-12
-    = Kramdown::Document.new(@member.notes || "").to_html.html_safe
+= render partial: 'members/tags_and_notes', locals: { member: @member }
 %hr
 = render partial: 'members/actions', locals: { member: @member }
 

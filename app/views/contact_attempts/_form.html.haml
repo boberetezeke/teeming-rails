@@ -1,7 +1,21 @@
 = semantic_form_for [@contactee, @contact_attempt] do |f|
   = f.input :contactee_id, as: :hidden
-  = f.input :contact_type, as: :select, collection: ContactAttempt::CONTACT_TYPES_HASH
-  = f.input :direction_type, as: :select, collection: ContactAttempt::CONTACT_DIRECTIONS_HASH
-  = f.input :result_type, as: :select, collection: ContactAttempt::CONTACT_RESULTS_HASH
-  = f.input :notes, type: :text, input_html: { rows: 4 }
-  = f.submit
+  .row
+    .col-md-4
+      = f.input :attempted_at_date_str, label: "Attempted at date"
+    .col-md-4
+      = f.input :attempted_at_time_str, label: "Attempted at time"
+    .col-md-4
+  .row
+    .col-md-4
+      = f.input :contact_type, as: :select, collection: ContactAttempt::CONTACT_TYPES_HASH, include_blank: false
+    .col-md-4
+      = f.input :direction_type, as: :select, collection: ContactAttempt::CONTACT_DIRECTIONS_HASH, include_blank: false
+    .col-md-4
+      = f.input :result_type, as: :select, collection: ContactAttempt::CONTACT_RESULTS_HASH, include_blank: false
+  .row
+    .col-md-12
+      = f.input :notes, type: :text, input_html: { rows: 4, style: "width: 100%;"}
+  .row
+    .col-md-12
+      = f.submit class: 'btn btn-sm btn-primary btn-with-padding'

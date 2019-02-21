@@ -1,11 +1,12 @@
 %h2 Contactee
 
-= semantic_form_for @contactee.member do |f|
-  = render partial: 'members/user_details', locals: { f: f, disabled: true }
+= render partial: 'members/user_details_show', locals: { member: @contactee.member }
+= link_to "Edit", edit_contactee_path(@contactee), class: "btn btn-sm btn-primary"
+%hr
 
 - if @contactee.contact_attempts.present?
   %h3 Previous Attempts
-  %table
+  %table.table
     %tr
       %th Date
       %th Time
@@ -14,11 +15,12 @@
       %th Result
     - @contactee.contact_attempts.each do |contact_attempt|
       %tr
-        %td= contact_attempt.created_at.strftime("%m/%d/%Y")
-        %td= contact_attempt.created_at.strftime("%m/%d/%Y")
+        %td= contact_attempt.attempted_at.strftime("%m/%d/%Y")
+        %td= contact_attempt.attempted_at.strftime("%H:%M:%S")
         %td= contact_attempt.contact_type_str
         %td= contact_attempt.direction_type_str
         %td= contact_attempt.result_type_str
   %hr
 
+%h3 Tell us how it went
 = render partial: 'contact_attempts/form'

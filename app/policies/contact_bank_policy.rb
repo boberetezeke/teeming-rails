@@ -6,8 +6,11 @@ class ContactBankPolicy < ApplicationPolicy
   end
 
   def show?
-    Contactor.exists?(contact_bank_id: @record.id, user_id: @user.id) ||
-    @record.owner_id == @user.id
+    can_participate_in_contact_banks?
+  end
+
+  def next_contactee?
+    can_participate_in_contact_banks?
   end
 
   def new?
@@ -30,7 +33,13 @@ class ContactBankPolicy < ApplicationPolicy
     can_write_contact_banks?
   end
 
+
   private
+
+  def can_participate_in_contact_banks?
+    Contactor.exists?(contact_bank_id: @record.id, user_id: @user.id) ||
+      @record.owner_id == @user.id
+  end
 
   def can_write_contact_banks?
     can_for_scope?(@user.can_write_contact_banks?, context_params)

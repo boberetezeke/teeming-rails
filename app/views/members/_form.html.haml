@@ -1,37 +1,41 @@
-= semantic_form_for [chapter, member] do |f|
-  - disabled = (member.user && current_user.member != member)
-  = f.semantic_errors
-  - unless member.user
-    = f.input :email
-  = render partial: 'members/user_details', locals: { f: f, disabled: disabled }
-  - if f.object.message_controls.present?
-    %hr
-    = f.fields_for :message_controls do |ff|
-      = render partial: 'message_controls/form', locals: { f: ff, disabled: disabled }
-      = ff.input :id, as: :hidden
+- disabled = (f.object.user && current_user.member != f.object)
+= f.semantic_errors
+- unless f.object.user
+  = f.input :email
+= render partial: 'members/user_details', locals: { f: f, disabled: disabled }
+- if f.object.message_controls.present?
   %hr
-    = f.input :general_tags, hint: "Tags that don't fall into the folowing categories", as: :select, multiple: true, collection: Member.general_tag_counts.map{|tag| [tag.name, tag.id]}
-    = f.input :subcaucuses, hint: "Indicates who or what they support", as: :select, multiple: true, collection: Member.subcaucus_counts.map{|tag| [tag.name, tag.id]}
-    = f.input :districts, hint: "State Rep or Senate Districts", as: :select, multiple: true, collection: Member.district_counts.map{|tag| [tag.name, tag.id]}
-    = f.input :sources, hint: "What is the data source for this member", as: :select, multiple: true, collection: Member.source_counts.map{|tag| [tag.name, tag.id]}
-  %hr
-  = f.input :notes, as: :text
-  -#- if f.object.user
-  -#  %hr
-  -#  = f.fields_for :user do |ff|
-  -#    = ff.input :id, as: :hidden
-  -#    - if can?(current_user, :assign_officer, f.object)
-  -#      = ff.input :officers, as: :select, multiple: false, collection: member.chapter.officers
-  -#    - if can?(current_user, :assign_role, f.object)
-  -#      = ff.input :roles, as: :select, multiple: false, collection: Role.uncombined
-  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+  = f.fields_for :message_controls do |ff|
+    = render partial: 'message_controls/form', locals: { f: ff, disabled: disabled }
+    = ff.input :id, as: :hidden
+%hr
+  .row
+    .col-md-3
+      = f.input :general_tags, hint: "Tags that don't fall into the folowing categories", as: :select, multiple: true, collection: Member.general_tag_counts.map{|tag| [tag.name, tag.id]}
+    .col-md-3
+      = f.input :subcaucuses, hint: "Indicates who or what they support", as: :select, multiple: true, collection: Member.subcaucus_counts.map{|tag| [tag.name, tag.id]}
+    .col-md-3
+      = f.input :districts, hint: "State Rep or Senate Districts", as: :select, multiple: true, collection: Member.district_counts.map{|tag| [tag.name, tag.id]}
+    .col-md-3
+      = f.input :sources, hint: "What is the data source for this member", as: :select, multiple: true, collection: Member.source_counts.map{|tag| [tag.name, tag.id]}
+%hr
+= f.input :notes, as: :text, input_html: { rows: 4, style: "width: 100%;" }
+-#- if f.object.user
+-#  %hr
+-#  = f.fields_for :user do |ff|
+-#    = ff.input :id, as: :hidden
+-#    - if can?(current_user, :assign_officer, f.object)
+-#      = ff.input :officers, as: :select, multiple: false, collection: member.chapter.officers
+-#    - if can?(current_user, :assign_role, f.object)
+-#      = ff.input :roles, as: :select, multiple: false, collection: Role.uncombined
+= f.submit class: 'btn btn-sm btn-primary btn-with-padding'
 
 :javascript
   $(function() {
-    $("#member_general_tag_ids").select2({theme: "bootstrap", tags: true})
-    $("#member_subcaucus_ids").select2({theme: "bootstrap", tags: true})
-    $("#member_district_ids").select2({theme: "bootstrap", tags: true})
-    $("#member_source_ids").select2({theme: "bootstrap", tags: true})
+    $("##{field_prefix}_general_tag_ids").select2({theme: "bootstrap", tags: true})
+    $("##{field_prefix}_subcaucus_ids").select2({theme: "bootstrap", tags: true})
+    $("##{field_prefix}_district_ids").select2({theme: "bootstrap", tags: true})
+    $("##{field_prefix}_source_ids").select2({theme: "bootstrap", tags: true})
     //$("#member_user_attributes_role_ids").select2({theme: "bootstrap"})
     //$("#member_user_attributes_officer_ids").select2({theme: "bootstrap"})
   })

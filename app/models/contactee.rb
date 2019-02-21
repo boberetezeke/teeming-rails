@@ -3,5 +3,12 @@ class Contactee < ApplicationRecord
   belongs_to :contact_bank
   has_many   :contact_attempts
 
-  scope :contacted, ->{ where(arel_table[:contact_completed_at].eq(nil).not) }
+  accepts_nested_attributes_for :member
+
+  scope :contacted,   ->{ where(arel_table[:contact_completed_at].eq(nil).not) }
+  scope :uncontacted, ->{ where(arel_table[:contact_completed_at].eq(nil)) }
+  scope :unattempted, ->{ where(arel_table[:contact_started_at].eq(nil)) }
+  scope :contacted_by, ->(contactor){
+    joins(:contact_attempts).where(Contactee.arel_table[:contactor_id].eq(contactor.id)).distinct
+  }
 end

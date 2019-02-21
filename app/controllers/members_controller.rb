@@ -95,15 +95,19 @@ class MembersController < ApplicationController
   end
 
   def handle_tags(params)
+    self.class.handle_tags(@member, params)
+  end
+
+  def self.handle_tags(member, params)
     tag_attribute_names = [:general_tags, :subcaucuses, :districts, :sources]
     tag_attribute_names.each do |tag_attribute_name|
-      handle_tag(tag_attribute_name, params)
+      handle_tag(member, tag_attribute_name, params)
     end
   end
 
-  def handle_tag(tag_attribute_name, params)
+  def self.handle_tag(member, tag_attribute_name, params)
     singular_tag_name = tag_attribute_name.to_s.singularize
-    tags = @member.send(tag_attribute_name).map(&:name)
+    tags = member.send(tag_attribute_name).map(&:name)
     new_tags = params["#{singular_tag_name}_ids"].select(&:present?).map do |id|
       tag = ActsAsTaggableOn::Tag.find_by_id(id)
       tag ? tag.name : id
@@ -119,15 +123,15 @@ class MembersController < ApplicationController
 
     tags_to_remove.each do |tag_to_remove|
       puts "removing tag: #{tag_to_remove}"
-      @member.send("#{tag_attribute_name.to_s.singularize}_list").remove(tag_to_remove)
+      member.send("#{tag_attribute_name.to_s.singularize}_list").remove(tag_to_remove)
     end
 
     tags_to_insert.each do |tag_to_insert|
       puts "inserting tag: #{tag_to_insert}"
-      @member.send("#{tag_attribute_name.to_s.singularize}_list").add(tag_to_insert)
+      member.send("#{tag_attribute_name.to_s.singularize}_list").add(tag_to_insert)
     end
 
-    @member.save
+    member.save
   end
 
   def destroy
@@ -167,16 +171,24 @@ class MembersController < ApplicationController
   private
 
   def member_params
-    params.require(:member).permit(:email, :notes,
-                                   :first_name, :middle_initial, :last_name,
-                                   :mobile_phone, :work_phone, :home_phone,
-                                   :address_1, :address_2, :city, :state, :zip,
-                                   message_controls_attributes: [:id] + MessageControlsController.permitted_attributes,
-                                   user_attributes: [:id, {role_ids: [], officer_ids: []}])
+    params.require(:member).permit(*self.class.permitted_attributes)
   end
 
   def member_tag_params
-    params.require(:member).permit({general_tag_ids: [], subcaucus_ids: [], district_ids: [], source_ids: []})
+    params.require(:member).permit(self.class.permitted_tag_attributes)
+  end
+
+  def self.permitted_attributes
+    [ :email, :notes, :first_name, :middle_initial, :last_name,
+       :mobile_phone, :work_phone, :home_phone,
+       :address_1, :address_2, :city, :state, :zip,
+       message_controls_attributes: [:id] + MessageControlsController.permitted_attributes,
+       user_attributes: [:id, {role_ids: [], officer_ids: []}]
+    ]
+  end
+
+  def self.permitted_tag_attributes
+    {general_tag_ids: [], subcaucus_ids: [], district_ids: [], source_ids: []}
   end
 
   def set_member

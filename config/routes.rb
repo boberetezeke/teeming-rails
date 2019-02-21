@@ -36,7 +36,7 @@ Rails.application.routes.draw do
       post :new2
     end
   end
-  resources :contactees, only: [:show] do
+  resources :contactees, only: [:show, :edit, :update, :destroy] do
     resources :contact_attempts, shallow: true, only: [:create]
   end
 

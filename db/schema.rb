@@ -105,7 +105,7 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "direction_type"
     t.string "result_type"
     t.text "notes"
-    t.datetime "contact_completed_at"
+    t.datetime "attempted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["contactee_id"], name: "index_contact_attempts_on_contactee_id"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(version: 20190211034211) do
   create_table "contactees", force: :cascade do |t|
     t.bigint "contact_bank_id"
     t.bigint "member_id"
+    t.datetime "contact_started_at"
     t.datetime "contact_completed_at"
     t.index ["contact_bank_id"], name: "index_contactees_on_contact_bank_id"
     t.index ["member_id"], name: "index_contactees_on_member_id"

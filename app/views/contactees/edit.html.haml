@@ -1,0 +1,11 @@
+= semantic_form_for @contactee do |f|
+  = f.fields_for :member do |ff|
+    = render partial: 'members/form', locals: { f: ff, field_prefix: "contactee_member_attributes" }
+
+%p
+  General Tags to use
+  %ul
+    %li dont-contact-me - if they don't want to be contacted at all
+    %li dont-contact-me-by-phone - if they don't want to be contacted by phone
+    %li dont-contact-me-by-text - if they don't want to be contacted by text
+    %li delete-me - if they want to be deleted from our database

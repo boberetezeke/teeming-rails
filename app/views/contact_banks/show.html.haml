@@ -17,6 +17,10 @@
       %ul
         - @contact_bank.contactees.each do |contactee|
           %li= link_to(contactee.member.name, contactee)
+          - if contactee.contact_started_at && !contactee.contact_completed_at
+            Started (#{contactee.contact_attempts.size}): #{date_and_time_str(contactee.contact_started_at)}
+          - elsif contactee.contact_completed_at
+            Completed (#{contactee.contact_attempts.size}): #{date_and_time_str(contactee.contact_started_at)} - #{date_and_time_str(contactee.contact_completed_at)}
     - else
       %ul
         - @contact_bank.contactees.contacted_by(current_user).each do |contactee|

@@ -1,11 +1,13 @@
 class ContactBanksController < ApplicationController
-  before_action :set_contact_bank, only: [:show, :edit, :update]
+  before_action :set_contact_bank, only: [:show, :edit, :update, :next_contactee]
 
   def index
     @contact_banks = policy_scope(ContactBank)
+    breadcrumbs ["Home", root_path], "Contact Banks"
   end
 
   def show
+    breadcrumbs ["Contact Banks", contact_banks_path], @contact_bank.name
   end
 
   def new2
@@ -37,6 +39,19 @@ class ContactBanksController < ApplicationController
     respond_with @contact_bank
   end
 
+  def next_contactee
+    uncontacteds = @contact_bank.contactees.unattempted
+    if uncontacteds.present?
+      contactees = uncontacteds
+    else
+      contactees = @contact_bank.contactees.contacted_by(@contact_bank.contactor_for_user(current_user))
+    end
+
+    contactee = contactees.shuffle.first
+
+    redirect_to contactee
+  end
+
   private
 
   def set_contact_bank
@@ -45,6 +60,6 @@ class ContactBanksController < ApplicationController
   end
 
   def contact_bank_params
-    params.require(:contact_bank).permit(:member_ids_string, :notes, :script, :name, user_ids: [], member_ids: [])
+    params.require(:contact_bank).permit(:member_ids_string, :notes, :script, :name, :chapter_id, user_ids: [], member_ids: [])
   end
 end

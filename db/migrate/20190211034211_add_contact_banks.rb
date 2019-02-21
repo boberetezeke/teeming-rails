@@ -19,6 +19,7 @@ class AddContactBanks < ActiveRecord::Migration[5.1]
     create_table :contactees do |t|
       t.references :contact_bank, index: true
       t.references :member,       index: true
+      t.datetime   :contact_started_at
       t.datetime   :contact_completed_at
     end
 
@@ -29,7 +30,7 @@ class AddContactBanks < ActiveRecord::Migration[5.1]
       t.string    :direction_type
       t.string    :result_type
       t.text      :notes
-      t.datetime  :contact_completed_at
+      t.datetime  :attempted_at
 
       t.timestamps
     end
