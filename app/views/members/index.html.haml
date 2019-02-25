@@ -11,6 +11,9 @@
     By Subcaucus: #{dt.select_tag_options_for_select(:subcaucus,  ["Any"] + Member.tags_on(:subcaucuses).map(&:name))}
     By Source: #{dt.select_tag_options_for_select(:source,  ["Any"] + Member.tags_on(:sources).map(&:name))}
     By Tag: #{dt.select_tag_options_for_select(:general_tag,  ["Any"] + Member.tags_on(:general_tags).map(&:name))}
+  %hr
+  %div{dt.refreshable("member-count")}
+    Total: #{@members.count}
   %table.table
     %thead
       %tr.row
@@ -31,7 +34,7 @@
           %td= member.is_non_member ? "Non-member" : (member.user ? "User" : "Member")
           %td= member.user ? (member.user.interested_in_volunteering ? "Yes" : "No") : "No"
           %td= member.city
-          %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : member.chapter.name
+          %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : (member.chapter ? member.chapter.name : "")
           %td= member_index_tags(member)
           %td= truncate(member.notes, length: 25)
           %td= render partial: 'members/actions', locals: { member: member }

@@ -18,6 +18,77 @@ module ImportCds
     c.email.blank? && c.home.blank? && c.mobile.blank? && c.work.blank?
   end
 
+  def self.import_contacts_csv2(contacts_csv_string)
+    #import_contacts2(CSV.parse(contacts_csv_string)[1..-1])
+    import_contacts2(CSV.read(contacts_csv_string)[1..-1])
+  end
+
+  def self.import_contacts2(contacts)
+    puts "contacts.size = #{contacts.size}"
+    contacts = contacts.map do |r|
+      if r[1]
+        # SDnn (LM)?
+        # HDnna
+        # DNC - Democratic National Committee
+        # AL - At large
+        # ?
+        # BSW-15
+        # County Name
+        # St Louis-03
+        district = r[1].downcase.strip
+        case district
+        when /^sd(\d+)/i
+          district = "SD-#{$1}"
+        when /^cd(\d+)/i
+          district = "CD-#{$1}"
+        when /^hd(\d+\w)/
+          district = "HD-#{$1}"
+        when /^([\w\s]+)-(\d+)$/
+          county = $1
+          sub_unit = $2
+          county2 = county.gsub(/\s+/, '-').gsub(/\./, '')
+          district = "CTY-#{county2}-#{sub_unit}"
+        when /^dnc$/
+          district = "democratic-national-committee"
+        when /^al/
+          district = "at-large"
+        when /^\?/
+          district = nil
+        else
+          if district.present?
+            county = district.gsub(/\s+/, '-').gsub(/\./, '')
+            district = "CTY-#{county}"
+          else
+            district = nil
+          end
+        end
+      end
+
+      if r[2]
+        delegate = r[2].downcase.strip
+        if delegate =~ /scc delegate/
+          delegate = "delegate"
+        elsif delegate =~ /scc alternate/
+          delegate = "alternate"
+        else
+          delegate = nil
+        end
+      end
+
+      tags = []
+      tags << "district:#{district}" if district
+      tags << "delegate_type:#{delegate}" if delegate
+      tags << "source:scc-2-15-2019.csv"
+
+      OpenStruct.new(first:   r[3], last:   r[4],
+                     address: r[5], city:   r[6],   zip: r[7],
+                     home:    r[8], mobile: r[9],
+                     email: nil, tags: tags.join(' '))
+    end
+
+    import_contacts_as_members(contacts)
+  end
+
   def self.import_contacts_csv(contacts_csv_string)
     import_contacts(CSV.parse(contacts_csv_string)[1..-1])
   end
@@ -59,6 +130,10 @@ module ImportCds
                      is_bernie: is_bernie, is_hillary: is_hillary, tags: tags.join(' '))
     end
 
+    import_contacts_as_members(contacts)
+  end
+
+  def self.import_contacts_as_members(contacts)
     members = Member.all.to_a
     members_by_email = {}
     members.each{|m| members_by_email[m.email] = m}
@@ -89,6 +164,14 @@ module ImportCds
     end
     users = members_to_contact.map{|m_id, c| Member.find(m_id)}.select{|m| m.user_id.present?}
 
+    # contacts.each do |contact|
+    #   puts "#{contact.first}, #{contact.last}: #{contact.email} -  #{contact.tags}"
+    # end
+
+    contacts_with_no_matchable_info.each do |contact|
+      puts "#{contact.first}, #{contact.last}: #{contact.email} -  #{contact.tags}"
+    end
+
     puts "total contacts: #{contacts.size}"
     puts "total bernies: #{contacts.select(&:is_bernie).size}"
     puts "total hillaries: #{contacts.select(&:is_hillary).size}"
@@ -103,6 +186,8 @@ module ImportCds
 
     puts("-" * 60)
 
+    return
+
     # members_to_contact.each do |m, c|
     #   if c.is_bernie
     #     member = Member.find(m)
@@ -112,6 +197,7 @@ module ImportCds
     # end
     #
     # puts("-" * 60)
+    #
 
     members_to_contact.each do |m_id, cs|
       m = Member.find(m_id)
@@ -191,6 +277,7 @@ module ImportCds
         #  puts "Tags for #{c.first} #{c.last} - #{c.tags}"
       end
       if !m.save
+        binding.pry
         puts "unable to save #{m.first_name} #{m.last_name}  - #{m.email} because: #{m.errors.full_messages}"
         puts "#{m.mobile_phone}, #{m.home_phone}, #{m.work_phone}"
       end

@@ -79,6 +79,11 @@ namespace :members  do
     end
   end
 
+  desc "merge contacts2"
+  task :merge_contacts2 => :environment do
+    ImportCds.import_contacts_csv2("scc-2018.csv")
+  end
+
   desc "geocode members"
   task :geocode => :environment do
     Member.where("lower(state) = 'mn'").find_each do |member|
