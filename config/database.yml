@@ -26,7 +26,7 @@ development:
   # database: ourrevmn
   # database: ourrevmn_staging
   # database: teeming_development
-  database: teeming_production_11_24_2018
+  database: teeming_production_2_25_2019
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
