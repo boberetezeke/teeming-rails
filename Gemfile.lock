@@ -10,7 +10,8 @@ GIT
 
 GIT
   remote: https://github.com/boberetezeke/dynamic_table.git
-  revision: 03f5d5533cd309c8aec2e6b53b05be3a1e1b82ae
+  revision: 8379ddd39d256523f0e56b9ac9f2be8812f74fd4
+  branch: add_text_change_support_and_check_box
   specs:
     dynamic_table (0.0.0)
 

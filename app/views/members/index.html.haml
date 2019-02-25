@@ -11,6 +11,10 @@
     By Subcaucus: #{dt.select_tag_options_for_select(:subcaucus,  ["Any"] + Member.tags_on(:subcaucuses).map(&:name))}
     By Source: #{dt.select_tag_options_for_select(:source,  ["Any"] + Member.tags_on(:sources).map(&:name))}
     By Tag: #{dt.select_tag_options_for_select(:general_tag,  ["Any"] + Member.tags_on(:general_tags).map(&:name))}
+    - if @chapter.is_state_wide
+      %br
+      = dt.check_box_tag "restrict_by_chapter"
+      = label_tag "", "Restrict by chapter"
   %hr
   %div{dt.refreshable("member-count")}
     Total: #{@members.count}

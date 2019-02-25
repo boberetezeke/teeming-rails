@@ -116,7 +116,8 @@ class Member < ApplicationRecord
     # )
   }
 
-  scope :non_members, ->(chapter){ where(Member.arel_table[:is_non_member].eq(true).and(Member.arel_table[:potential_chapter_id].eq(chapter.id))) }
+  scope :non_members_with_chapter, ->(chapter){ where(Member.arel_table[:is_non_member].eq(true).and(Member.arel_table[:potential_chapter_id].eq(chapter.id))) }
+  scope :non_members, ->{ where(Member.arel_table[:is_non_member].eq(true)) }
   scope :non_user_members, ->{ where(Member.arel_table[:is_non_member].eq(nil).and(Member.arel_table[:user_id].eq(nil))) }
   scope :all_members, ->(chapter){ where(is_non_member: nil) }
   scope :all_users,   ->(chapter){ joins(:user) }
@@ -173,21 +174,24 @@ class Member < ApplicationRecord
     attr_type:    MEMBER_ATTRS_ALL,
     source:       "Any",
     subcaucus:    "Any",
-    general_tag:  "Any"
+    general_tag:  "Any",
+    restrict_by_chapter: true
   }
 
 
   MEMBER_TYPES_HASH = {
       "All" =>               MEMBER_TYPE_ALL,
-      "User Members" =>      MEMBER_TYPE_MEMBER,
+      "User Members" =>      MEMBER_TYPE_USER_MEMBER,
       "Non Members" =>  MEMBER_TYPE_NON_MEMBER,
       "Potential User Members" => MEMBER_TYPE_POTENTIAL
   }
 
   MEMBER_TYPES_STATE_WIDE_HASH = {
       "All" =>              MEMBER_TYPE_ALL,
+      "Members" =>          MEMBER_TYPE_MEMBER,
       "User Members" =>     MEMBER_TYPE_USER_MEMBER,
-      "Non-User Members" => MEMBER_TYPE_NON_USER_MEMBER
+      "Non-User Members" => MEMBER_TYPE_NON_USER_MEMBER,
+      "Non Members" =>      MEMBER_TYPE_NON_MEMBER,
   }
 
   MEMBER_ATTRS_HASH = {

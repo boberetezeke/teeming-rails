@@ -11,19 +11,35 @@ class MembersController < ApplicationController
 
     @members = policy_scope(Member).includes(:user).references(:user)
 
+    @restrict_by_chapter = (params[:restrict_by_chapter] == "true")
+
     @title = "Members"
-    if params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
-      @members = @members.potential_chapter_members(@chapter)
-    elsif params[:member_type] == Member::MEMBER_TYPE_MEMBER
-      @members = @members.chapter_members(@chapter)
-    elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
-      @members = @members.chapter_members(@chapter).with_user
-    elsif params[:member_type] == Member::MEMBER_TYPE_NON_MEMBER
-      @members = @members.chapter_members(@chapter).non_members(@chapter)
-    elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
-      @members = @members.chapter_members(@chapter).non_user_members
+    if !@chapter.is_state_wide || @restrict_by_chapter
+      if params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
+        @members = @members.potential_chapter_members(@chapter)
+      elsif params[:member_type] == Member::MEMBER_TYPE_MEMBER
+        @members = @members.chapter_members(@chapter)
+      elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
+        @members = @members.chapter_members(@chapter).with_user
+      elsif params[:member_type] == Member::MEMBER_TYPE_NON_MEMBER
+        @members = @members.non_members_with_chapter(@chapter)
+      elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
+        @members = @members.chapter_members(@chapter).non_user_members
+      else
+        @members = @members.all_chapter_members(@chapter)
+      end
     else
-      @members = @members.all_chapter_members(@chapter)
+      if params[:member_type] == Member::MEMBER_TYPE_MEMBER
+        @members = @members.without_user
+      elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
+        @members = @members.with_user
+      elsif params[:member_type] == Member::MEMBER_TYPE_NON_MEMBER
+        @members = @members.non_members
+      elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
+        @members = @members.non_user_members
+      else
+        # no filter needed here
+      end
     end
 
     if params[:source]
