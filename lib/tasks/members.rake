@@ -92,7 +92,7 @@ namespace :members  do
 
   desc "merge contacts2 local"
   task :merge_contacts2_local, [:curl_address] => :environment do |t, args|
-    ImportCds.import_contacts_csv2("scc-2018.csv")
+    ImportCds.import_contacts_csv2_local("scc-2018.csv")
   end
 
   desc "geocode members"

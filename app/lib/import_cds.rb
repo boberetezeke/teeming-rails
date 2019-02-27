@@ -18,8 +18,11 @@ module ImportCds
     c.email.blank? && c.home.blank? && c.mobile.blank? && c.work.blank?
   end
 
+  def self.import_contacts_csv2_local(contacts_csv_string)
+    import_contacts2(CSV.parse(contacts_csv_string)[1..-1])
+  end
+
   def self.import_contacts_csv2(contacts_csv_string)
-    #import_contacts2(CSV.parse(contacts_csv_string)[1..-1])
     import_contacts2(CSV.read(contacts_csv_string)[1..-1])
   end
 
