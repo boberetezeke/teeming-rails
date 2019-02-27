@@ -174,6 +174,7 @@ class Member < ApplicationRecord
     attr_type:    MEMBER_ATTRS_ALL,
     source:       "Any",
     subcaucus:    "Any",
+    district:     "Any",
     general_tag:  "Any",
     restrict_by_chapter: true
   }

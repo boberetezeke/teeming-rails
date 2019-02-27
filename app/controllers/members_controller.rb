@@ -50,6 +50,10 @@ class MembersController < ApplicationController
       @members = @members.tagged_with(params[:subcaucus], on: 'subcaucuses')
     end
 
+    if params[:district]
+      @members = @members.tagged_with(params[:district], on: 'districts')
+    end
+
     if params[:general_tag]
       @members = @members.tagged_with(params[:general_tag], on: 'general_tags')
     end
@@ -222,7 +226,11 @@ class MembersController < ApplicationController
 
   def members_breadcrumbs
     if @member
-      ["Members", @member.chapter ? chapter_members_path(@member.chapter) : chapter_members_path(@member.potential_chapter)]
+      ["Members", @member.chapter ? chapter_members_path(@member.chapter) :
+                    (@member.potential_chapter ?
+                       chapter_members_path(@member.potential_chapter) :
+                       chapter_members_path(Chapter.state_wide))
+      ]
     else
       [@chapter.name, chapter_path(@chapter)]
     end

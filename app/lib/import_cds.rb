@@ -26,6 +26,14 @@ module ImportCds
   def self.import_contacts2(contacts)
     puts "contacts.size = #{contacts.size}"
     contacts = contacts.map do |r|
+      districts = []
+      if r[0]
+        cd = r[0].strip
+        if cd
+          districts.push("CD-#{cd}")
+        end
+      end
+
       if r[1]
         # SDnn (LM)?
         # HDnna
@@ -41,6 +49,7 @@ module ImportCds
           district = "SD-#{$1}"
         when /^cd(\d+)/i
           district = "CD-#{$1}"
+          district = nil if districts.include?(district)
         when /^hd(\d+\w)/
           district = "HD-#{$1}"
         when /^([\w\s]+)-(\d+)$/
@@ -62,7 +71,9 @@ module ImportCds
             district = nil
           end
         end
+        districts.push(district) if district
       end
+
 
       if r[2]
         delegate = r[2].downcase.strip
@@ -76,7 +87,9 @@ module ImportCds
       end
 
       tags = []
-      tags << "district:#{district}" if district
+      districts.each do |district|
+        tags << "district:#{district}"
+      end
       tags << "delegate_type:#{delegate}" if delegate
       tags << "source:scc-2-15-2019.csv"
 
@@ -133,6 +146,33 @@ module ImportCds
     import_contacts_as_members(contacts)
   end
 
+  def self.add_tags(m, c)
+    added = false
+    if c.tags.present?
+      c.tags.split(/ /).each do |tag|
+        case tag
+        when /district:(.*)$/
+          m.district_list.add($1)
+          added = true
+        when /subcaucus:(.*)$/
+          m.subcaucus_list.add($1)
+          added = true
+        when /source:(.*)$/
+          m.source_list.add($1)
+          added = true
+        else
+          if /^(\w+):(.*)$/.match(tag)
+            m.general_tag_list.add(tag)
+            added = true
+          end
+        end
+      end
+
+      added
+      #  puts "Tags for #{c.first} #{c.last} - #{c.tags}"
+    end
+  end
+
   def self.import_contacts_as_members(contacts)
     members = Member.all.to_a
     members_by_email = {}
@@ -168,9 +208,11 @@ module ImportCds
     #   puts "#{contact.first}, #{contact.last}: #{contact.email} -  #{contact.tags}"
     # end
 
-    contacts_with_no_matchable_info.each do |contact|
-      puts "#{contact.first}, #{contact.last}: #{contact.email} -  #{contact.tags}"
-    end
+    # return
+
+    # contacts_with_no_matchable_info.each do |contact|
+    #   puts "#{contact.first}, #{contact.last}: #{contact.email} -  #{contact.tags}"
+    # end
 
     puts "total contacts: #{contacts.size}"
     puts "total bernies: #{contacts.select(&:is_bernie).size}"
@@ -207,11 +249,14 @@ module ImportCds
       # end
 
       cs.each do |c|
-        source = c.tags.split(/ /).select{|t| /source:/.match(t)}.map{|t|match = /source:([^\s]+)/.match(t); match ? match[1]: nil}.first
-        if !(m.source_list.include?(source))
-          m.source_list.add(source)
+        if add_tags(m, c)
           m.save
         end
+        # source = c.tags.split(/ /).select{|t| /source:/.match(t)}.map{|t|match = /source:([^\s]+)/.match(t); match ? match[1]: nil}.first
+        # if !(m.source_list.include?(source))
+        #   m.source_list.add(source)
+        #   m.save
+        # end
       end
 
       if m.user_id.nil?
@@ -262,19 +307,22 @@ module ImportCds
                      zip:           c.zip,
                      is_non_member: true)
       m.email = c.email if c.email
-      if c.tags.present?
-        c.tags.split(/ /).each do |tag|
-          case tag
-          when /district:(.*)$/
-            m.district_list.add($1)
-          when /subcaucus:(.*)$/
-            m.subcaucus_list.add($1)
-          when /source:(.*)$/
-            m.source_list.add($1)
-          end
-        end
-        #  puts "Tags for #{c.first} #{c.last} - #{c.tags}"
-      end
+      add_tags(m, c)
+      # if c.tags.present?
+      #   c.tags.split(/ /).each do |tag|
+      #     case tag
+      #     when /district:(.*)$/
+      #       m.district_list.add($1)
+      #     when /subcaucus:(.*)$/
+      #       m.subcaucus_list.add($1)
+      #     when /source:(.*)$/
+      #       m.source_list.add($1)
+      #     else
+      #       m.general_tag_list.add($1)
+      #     end
+      #   end
+      #   #  puts "Tags for #{c.first} #{c.last} - #{c.tags}"
+      # end
       if !m.save
         puts "unable to save #{m.first_name} #{m.last_name}  - #{m.email} because: #{m.errors.full_messages}"
         puts "#{m.mobile_phone}, #{m.home_phone}, #{m.work_phone}"

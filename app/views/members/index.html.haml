@@ -8,9 +8,11 @@
     - else
       By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_HASH)}
     By Attributes: #{dt.select_tag_options_for_select(:attr_type, Member::MEMBER_ATTRS_HASH)}
-    By Subcaucus: #{dt.select_tag_options_for_select(:subcaucus,  ["Any"] + Member.tags_on(:subcaucuses).map(&:name))}
-    By Source: #{dt.select_tag_options_for_select(:source,  ["Any"] + Member.tags_on(:sources).map(&:name))}
-    By Tag: #{dt.select_tag_options_for_select(:general_tag,  ["Any"] + Member.tags_on(:general_tags).map(&:name))}
+    By Subcaucus: #{dt.select_tag_options_for_select(:subcaucus,  ["Any"] + Member.tags_on(:subcaucuses).map(&:name).sort)}
+    %br
+    By District: #{dt.select_tag_options_for_select(:district,  ["Any"] + Member.tags_on(:districts).map(&:name).sort)}
+    By Source: #{dt.select_tag_options_for_select(:source,  ["Any"] + Member.tags_on(:sources).map(&:name).sort)}
+    By Tag: #{dt.select_tag_options_for_select(:general_tag,  ["Any"] + Member.tags_on(:general_tags).map(&:name).sort)}
     - if @chapter.is_state_wide
       %br
       = dt.check_box_tag "restrict_by_chapter"

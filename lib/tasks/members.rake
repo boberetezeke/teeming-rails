@@ -90,6 +90,11 @@ namespace :members  do
     end
   end
 
+  desc "merge contacts2 local"
+  task :merge_contacts2_local, [:curl_address] => :environment do |t, args|
+    ImportCds.import_contacts_csv2("scc-2018.csv")
+  end
+
   desc "geocode members"
   task :geocode => :environment do
     Member.where("lower(state) = 'mn'").find_each do |member|
