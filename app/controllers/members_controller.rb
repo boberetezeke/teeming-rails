@@ -63,10 +63,11 @@ class MembersController < ApplicationController
     @member_ids = @members.pluck(:id).uniq
 
     @members = @members.where(id: @member_ids)
-    @members = @members.paginate(page: params[:page], per_page: params[:per_page])
     @members = @members.order('city asc')
 
     @members_ids = @members.pluck(:id)
+
+    @members = @members.paginate(page: params[:page], per_page: params[:per_page])
 
     breadcrumbs members_breadcrumbs, @title
   end
