@@ -9,6 +9,6 @@ class Contactee < ApplicationRecord
   scope :uncontacted, ->{ where(arel_table[:contact_completed_at].eq(nil)) }
   scope :unattempted, ->{ where(arel_table[:contact_started_at].eq(nil)) }
   scope :contacted_by, ->(contactor){
-    joins(:contact_attempts).where(Contactee.arel_table[:contactor_id].eq(contactor.id)).distinct
+    joins(:contact_attempts).where(ContactAttempt.arel_table[:contactor_id].eq(contactor.id)).distinct
   }
 end
