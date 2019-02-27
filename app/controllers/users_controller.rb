@@ -42,12 +42,16 @@ class UsersController < ApplicationController
   def select2
     @chapter = Chapter.find(params[:chapter_id])
     if params[:term].present?
-      @users = @chapter.members.filtered_by_string(params[:term]).with_user.includes(:user).limit(50).map(&:user)
+      if @chapter.is_state_wide
+        @users = Member.all_members(@chapter).filtered_by_string(params[:term]).with_user.includes(:user).limit(50).map(&:user)
+      else
+        @users = @chapter.members.filtered_by_string(params[:term]).with_user.includes(:user).limit(50).map(&:user)
+      end
     else
       @users = []
     end
     respond_to do |format|
-      format.json { render(json: {results: @users.map{|user| {text: user.member.name, id: user.id}}}.to_json) }
+      format.json { render(json: {results: @users.map{|user| {text: "#{user.member.name} (#{user.email})", id: user.id}}}.to_json) }
     end
   end
 
