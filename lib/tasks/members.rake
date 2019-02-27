@@ -80,8 +80,14 @@ namespace :members  do
   end
 
   desc "merge contacts2"
-  task :merge_contacts2 => :environment do
-    ImportCds.import_contacts_csv2("scc-2018.csv")
+  task :merge_contacts2, [:curl_address] => :environment do |t, args|
+    if args[:curl_address].present?
+      system("curl #{args[:curl_address]} >/tmp/merge.csv")
+      contacts_str = File.read("/tmp/merge.csv")
+      ImportCds.import_contacts_csv2(contacts_str)
+    else
+      puts "curl_address argument missing"
+    end
   end
 
   desc "geocode members"

@@ -186,8 +186,6 @@ module ImportCds
 
     puts("-" * 60)
 
-    return
-
     # members_to_contact.each do |m, c|
     #   if c.is_bernie
     #     member = Member.find(m)
@@ -208,15 +206,16 @@ module ImportCds
       #   end
       # end
 
+      cs.each do |c|
+        source = c.tags.split(/ /).select{|t| /source:/.match(t)}.map{|t|match = /source:([^\s]+)/.match(t); match ? match[1]: nil}.first
+        if !(m.source_list.include?(source))
+          m.source_list.add(source)
+          m.save
+        end
+      end
+
       if m.user_id.nil?
         cs.each do |c|
-          source = c.tags.split(/ /).select{|t| /source:/.match(t)}.map{|t|match = /source:([^\s]+)/.match(t); match ? match[1]: nil}.first
-          if !(m.source_list.include?(source))
-            puts "Updating #{m.name} by adding #{source}"
-            m.source_list.add(source)
-            m.save
-          end
-
           if (c.address && m.address_1.blank?) ||
               (c.city && m.city.blank?) ||
               (c.zip && m.zip.blank?)
@@ -277,7 +276,6 @@ module ImportCds
         #  puts "Tags for #{c.first} #{c.last} - #{c.tags}"
       end
       if !m.save
-        binding.pry
         puts "unable to save #{m.first_name} #{m.last_name}  - #{m.email} because: #{m.errors.full_messages}"
         puts "#{m.mobile_phone}, #{m.home_phone}, #{m.work_phone}"
       end
