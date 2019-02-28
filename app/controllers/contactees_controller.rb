@@ -5,7 +5,7 @@ class ContacteesController < ApplicationController
     @contact_attempt = ContactAttempt.new(contactee: @contactee, attempted_at: Time.now,
                                           contact_type: ContactAttempt::CONTACT_TYPE_PHONE_CALL,
                                           direction_type: ContactAttempt::CONTACT_DIRECTION_OUT,
-                                          result_type: ContactAttempt::CONTACT_RESULT_NO_ANSWER)
+                                          result_type: ContactAttempt::CONTACT_RESULT_LEFT_MESSAGE)
     @contact_attempt.set_accessors
     breadcrumbs [@contactee.contact_bank.name, contact_bank_path(@contactee.contact_bank)], @contactee.member.name ? @contactee.member.name : @contactee.member.id.to_s
   end
