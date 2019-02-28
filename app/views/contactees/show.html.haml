@@ -15,6 +15,8 @@
       %th Contact Type
       %th Direction
       %th Result
+      %th Notes
+      %th
     - @contactee.contact_attempts.each do |contact_attempt|
       %tr
         %td= contact_attempt.attempted_at.strftime("%m/%d/%Y")
@@ -22,6 +24,10 @@
         %td= contact_attempt.contact_type_str
         %td= contact_attempt.direction_type_str
         %td= contact_attempt.result_type_str
+        %td= Kramdown::Document.new(contact_attempt.notes).to_html.html_safe
+        %td
+          = link_to("Edit", edit_contact_attempt_path(contact_attempt), class: 'btn btn-sm btn-primary')
+          = link_to("Delete", contact_attempt_path(contact_attempt), method: :delete, data: {confirm: 'Are you sure'}, class: 'btn btn-sm btn-danger')
   %hr
 
 %h3 Tell us how it went

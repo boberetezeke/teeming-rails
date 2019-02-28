@@ -14,7 +14,7 @@
   $(function() {
     $("#contact_bank_user_ids").select2({
       theme: "bootstrap",
-      tags: true,
+      //tags: true,
       ajax: {
         url: "#{select2_chapter_users_path(@contact_bank.chapter)}",
         dataType: 'json'
@@ -22,7 +22,7 @@
     })
     $("#contact_bank_member_ids").select2({
       theme: "bootstrap",
-      tags: true,
+      //tags: true,
       ajax: {
         url: "#{select2_chapter_members_path(@contact_bank.chapter)}",
         dataType: 'json'

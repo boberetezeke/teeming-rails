@@ -71,7 +71,7 @@ class ApplicationRecord < ActiveRecord::Base
       end
       return true
     else
-      errors.add(date_sym_str, "invalid date")
+      errors.add(date_str_sym, "invalid date")
       false
     end
   end

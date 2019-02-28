@@ -37,7 +37,7 @@ Rails.application.routes.draw do
     end
   end
   resources :contactees, only: [:show, :edit, :update, :destroy] do
-    resources :contact_attempts, shallow: true, only: [:create]
+    resources :contact_attempts, shallow: true, only: [:create, :edit, :update, :destroy]
   end
 
   resources :messages, only: [:index, :new, :create, :show, :edit, :update, :destroy]

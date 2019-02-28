@@ -5,6 +5,8 @@ class ContactAttempt < ApplicationRecord
   validate   :attempted_at_date_and_time_is_valid
   after_save :update_contactee
 
+  scope :contacted, ->{ where(result_type: CONTACT_RESULT_CONTACT_MADE) }
+
   attr_accessor :attempted_at_date_str, :attempted_at_time_str
 
   CONTACT_TYPE_PHONE_CALL   = 'phone_call'
@@ -40,6 +42,13 @@ class ContactAttempt < ApplicationRecord
     "Contact Made" => CONTACT_RESULT_CONTACT_MADE
   }
 
+  CONTACT_RESULT_SHORT = {
+    CONTACT_RESULT_SENT_MESSAGE => "SM",
+    CONTACT_RESULT_LEFT_MESSAGE => "LM",
+    CONTACT_RESULT_NO_ANSWER    => "NA",
+    CONTACT_RESULT_CONTACT_MADE => "CM"
+  }
+
   def set_accessors
     self.attempted_at_date_str = self.attempted_at.strftime("%m/%d/%Y")
     self.attempted_at_time_str = self.attempted_at.strftime("%I:%M%P")
@@ -55,6 +64,10 @@ class ContactAttempt < ApplicationRecord
 
   def result_type_str
     CONTACT_RESULTS_HASH.invert[result_type]
+  end
+
+  def short_result
+    CONTACT_RESULT_SHORT[result_type]
   end
 
   private

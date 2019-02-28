@@ -201,4 +201,8 @@ module ApplicationHelper
     non_empty_tag_groups = [["", general_tags], ["districts", district_tags], ["caucuses", subcaucus_tags], ["sources", source_tags]].reject{|title, tags| tags.empty?}
     non_empty_tag_groups.map{|title, tags| (title.empty? ? "" : "<strong>#{title}: </strong>".html_safe) + truncate(sanitize(tags.join(", "), length: 25))}.join("<br/>").html_safe
   end
+
+  def percent(part, whole)
+    "%.2f" % [(part.to_f / whole.to_f) * 100]
+  end
 end
