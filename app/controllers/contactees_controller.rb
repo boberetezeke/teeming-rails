@@ -1,4 +1,5 @@
 class ContacteesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_contactee, only: [:show, :edit, :update]
 
   def show

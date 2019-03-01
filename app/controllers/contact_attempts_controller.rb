@@ -1,4 +1,5 @@
 class ContactAttemptsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_contact_attempt, only: [:edit, :update, :destroy]
 
   def create

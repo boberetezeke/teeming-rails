@@ -1,4 +1,5 @@
 class ContactBanksController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_contact_bank, only: [:show, :edit, :update, :next_contactee]
 
   def index
