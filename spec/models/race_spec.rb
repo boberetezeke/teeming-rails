@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe Race do
   describe "#candidates_announced?" do
-    let(:candidacy_1)   { FactoryGirl.create(:candidacy) }
-    let(:candidacy_2)   { FactoryGirl.create(:candidacy) }
-    let(:candidacy_3)   { FactoryGirl.create(:candidacy) }
-    let(:race)          { FactoryGirl.create(:race, candidacies: [candidacy_1, candidacy_2, candidacy_3]) }
+    let(:candidacy_1)   { FactoryBot.create(:candidacy) }
+    let(:candidacy_2)   { FactoryBot.create(:candidacy) }
+    let(:candidacy_3)   { FactoryBot.create(:candidacy) }
+    let(:race)          { FactoryBot.create(:race, candidacies: [candidacy_1, candidacy_2, candidacy_3]) }
 
     it "says that no candidates announced if there is no annoucement date" do
       expect(race.candidates_announced?).to be_falsy
@@ -13,7 +13,7 @@ describe Race do
   end
 
   describe "#before_filing_deadline?" do
-    let(:race)         { FactoryGirl.create(:race, filing_deadline_date: Date.new(2017, 3, 10)) }
+    let(:race)         { FactoryBot.create(:race, filing_deadline_date: Date.new(2017, 3, 10)) }
 
     it "is true 1 second before the filing deadline" do
       expect(race.before_filing_deadline?(Time.zone.local(2017,3,10,23,59,59).utc)).to be_truthy
@@ -25,17 +25,17 @@ describe Race do
   end
 
   context "when tallying votes" do
-    let(:candidacy_1)   { FactoryGirl.create(:candidacy) }
-    let(:candidacy_2)   { FactoryGirl.create(:candidacy) }
-    let(:candidacy_3)   { FactoryGirl.create(:candidacy) }
-    let(:race)          { FactoryGirl.create(:race, candidacies: [candidacy_1, candidacy_2, candidacy_3]) }
+    let(:candidacy_1)   { FactoryBot.create(:candidacy) }
+    let(:candidacy_2)   { FactoryBot.create(:candidacy) }
+    let(:candidacy_3)   { FactoryBot.create(:candidacy) }
+    let(:race)          { FactoryBot.create(:race, candidacies: [candidacy_1, candidacy_2, candidacy_3]) }
 
-    let(:user_1) { FactoryGirl.create(:user) }
-    let(:user_2) { FactoryGirl.create(:user) }
+    let(:user_1) { FactoryBot.create(:user) }
+    let(:user_2) { FactoryBot.create(:user) }
 
-    let!(:vote_1) { FactoryGirl.create(:vote, user: user_1, candidacy: candidacy_1, race: race) }
-    let!(:vote_2) { FactoryGirl.create(:vote, user: user_2, candidacy: candidacy_1, race: race) }
-    let!(:vote_3) { FactoryGirl.create(:vote, user: user_1, candidacy: candidacy_2, race: race) }
+    let!(:vote_1) { FactoryBot.create(:vote, user: user_1, candidacy: candidacy_1, race: race) }
+    let!(:vote_2) { FactoryBot.create(:vote, user: user_2, candidacy: candidacy_1, race: race) }
+    let!(:vote_3) { FactoryBot.create(:vote, user: user_1, candidacy: candidacy_2, race: race) }
 
     describe "#tally_votes" do
       context "when there are votes only" do
@@ -48,8 +48,8 @@ describe Race do
       end
 
       context "when there are votes and vote tallies only" do
-        let!(:vote_tally_1)   { FactoryGirl.create(:vote_tally, race: race, candidacy: candidacy_1, vote_count: 3) }
-        let!(:vote_tally_3)   { FactoryGirl.create(:vote_tally, race: race, candidacy: candidacy_3, vote_count: 1) }
+        let!(:vote_tally_1)   { FactoryBot.create(:vote_tally, race: race, candidacy: candidacy_1, vote_count: 3) }
+        let!(:vote_tally_3)   { FactoryBot.create(:vote_tally, race: race, candidacy: candidacy_3, vote_count: 1) }
 
         it "counts votes based on vote tallies" do
           tallies = race.tally_votes

@@ -2,12 +2,42 @@
   %thead
     %tr.row
       %th Name
+      %th Type
       %th Number of Members
+      %th Number of Officers
+      - if show_actions
+        %th Actions
   %tbody
     - chapters.each do |chapter|
       %tr.row
-        %td= link_to(chapter.name, chapter)
-        %td= chapter.members.count
+        - if chapter.affiliate? || chapter.is_state_wide
+          %td= link_to(chapter.name, chapter)
+        - else
+          %td= chapter.name
+        %td= chapter.chapter_type_str
+        %td= chapter.members.with_user.count
+        - if chapter.affiliate?
+          %td= chapter.active_officer_assignments.count
+        - else
+          %td
+        - if show_actions
+          %td
+            - if can?(current_user, :edit, chapter)
+              = link_to "Edit", edit_chapter_path(chapter), class: 'btn btn-sm btn-primary'
+            - if can?(current_user, :destroy, chapter)
+              = link_to "Delete", chapter_path(chapter), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
+
     %tr.row
       %td Totals
-      %td= chapters.map{|c| c.members.count}.sum
+      %td
+      %td= chapters.map{|c| c.members.with_user.count}.sum
+      %td
+      - if show_actions
+        %td
+
+%p
+  Type -
+  %strong Affiliate
+  %span has signed a Memorandum of Understanding (MOU) with the State organization,
+  %strong Recognized
+  %span has been recognized by State and National, but hasn't signed an MOU with State

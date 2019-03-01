@@ -1,13 +1,15 @@
 %h2 Elections
 
-- if Pundit.policy(current_user, Election).new?
-  = link_to("New Election", new_election_path, class: 'btn btn-sm btn-success')
+%ul.nav.nav-tabs
+  %li.presentation{tab_class(@tab, 'external')}
+    = link_to "External", elections_path({tab: 'external'}.merge(@context_params))
+  %li.presentation{tab_class(@tab, 'internal')}
+    = link_to "Internal", elections_path({tab: 'internal'}.merge(@context_params))
 
-%h3 Internal (for Our Revolution MN)
-
-= render partial: 'elections/table', locals: { elections: @internal_elections, short_list_of_races: false, chapter: @chapter }
-
-%h3 External (for Minnesota offices)
-
-= render partial: 'elections/table', locals: { elections: @external_elections, short_list_of_races: false, chapter: @chapter }
+- if @tab == 'external'
+  = render partial: 'elections/table', locals: { elections: @external_elections, short_list_of_races: false, chapter: @chapter, on_dashboard: false }
+- else
+  = render partial: 'elections/table', locals: { elections: @internal_elections, short_list_of_races: false, chapter: @chapter, on_dashboard: false }
+  - if Pundit.policy(current_user, Election).new?
+    = link_to("New Election", new_election_path, class: 'btn btn-sm btn-success')
 

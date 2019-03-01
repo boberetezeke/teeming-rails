@@ -7,7 +7,7 @@ end
 
 # UI Gems
 gem 'jquery-rails'
-gem 'turbolinks', '~> 5'
+gem 'turbograft'
 gem 'devise'
 gem 'pundit'
 gem 'haml'
@@ -20,10 +20,11 @@ gem 'responders'
 gem 'kramdown'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
-gem 'sidekiq'
+gem 'select2-rails'
+gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.1'
+gem 'rails', '~> 5.1.6'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
@@ -40,9 +41,13 @@ gem 'jwt', '>= 1.5.6'
 gem 'kaminari'
 gem 'pry-rails'
 gem 'sendgrid-ruby'
+gem 'aws-sdk-s3', '~> 1'
 
 gem 'honeybadger'
-gem 'le'
+
+gem 'delayed_job_active_record'
+gem 'daemons'
+# gem 'sidekiq'
 
 gem 'dotenv-rails', groups: [:development, :test]
 
@@ -52,10 +57,14 @@ gem 'dotenv-rails', groups: [:development, :test]
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
 
+group :development, :production do
+  gem 'le'
+end
+
 group :test do
   gem 'rspec-rails'
   gem 'capybara'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'timecop'
   gem 'capybara-screenshot'
   gem 'capybara-webkit'

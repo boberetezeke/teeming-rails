@@ -1,20 +1,22 @@
 - if @user.setup_state.blank?
   .row
     .col-md-6
-      = render partial: 'elections/table', locals: {elections: Election.all, short_list_of_races: true, chapter: nil}
+      = render partial: 'elections/table', locals: {elections: @elections, short_list_of_races: true, chapter: nil, on_dashboard: true}
+      %hr
+      = link_to "View Past Elections", elections_path
     .col-md-6
       %h3= link_to("Chapters", chapters_path)
-      = render partial: 'chapters/stats_table', locals: {chapters: Chapter.all}
+      = render partial: 'chapters/stats_table', locals: {chapters: Chapter.in_order, show_actions: false, on_dashboard: true}
+      %h3 Upcoming Events
+      - if @events.blank?
+        There are no upcoming events scheduled at this time
+      - else
+        = render partial: 'events/table', locals: {events: @events, user: current_user, show_stats: true, on_dashboard: true}
+  .row
+    .col-md-6
       %h3 Donations
       %p Remember we are driven by your passion and your $'s
       = link_to 'Donate', "https://secure.actblue.com/contribute/page/our-revolution-mn-1?utf8=%E2%9C%93&amount=25&commit=Contribute", target: :_blank, class: 'btn btn-sm btn-success'
-  .row
-    .col-md-6
-      %h3 Upcoming Events
-      - if Event.future.blank?
-        There are no upcoming events scheduled at this time
-      - else
-        = render partial: 'events/table', locals: {events: Event.future, user: current_user, show_stats: true}
 - else
   = render partial: "#{@user.setup_state}"
 
@@ -35,7 +37,7 @@
             (after dismissing this window).
           = semantic_form_for @user do |f|
             = f.hidden_field :saw_introduction, value: 'true'
-            = f.submit "Ok", class: 'btn btn-sm btn-primary btn-with-padding'
+            = f.submit "Ok", class: 'btn btn-sm btn-primary btn-with-padding btn-wide'
 
 :javascript
   $(function() {

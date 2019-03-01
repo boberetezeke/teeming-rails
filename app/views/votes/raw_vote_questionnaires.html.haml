@@ -1,0 +1,14 @@
+%table.table
+  %tr.row
+    %th Email
+    %th Status
+  - @vote_completions.each do |vote_completion|
+    %tr.row
+      %td= link_to(vote_completion.user.email, raw_vote_questionnaire_vote_path(vote_completion, election_id: vote_completion.election_id))
+      %td
+        - if vote_completion.vote_type == VoteCompletion::VOTE_COMPLETION_TYPE_DISQUALIFIED
+          Disqualified
+        - elsif vote_completion.vote_type == VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE
+          Online
+        - else
+          Paper

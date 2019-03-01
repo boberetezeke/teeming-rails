@@ -23,5 +23,9 @@ db/backups/
 # More Members CSV
 /members/*
 
+# Util files
+/util
+
 .env
 .DS_Store
+import.csv

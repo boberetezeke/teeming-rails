@@ -1,12 +1,30 @@
-= semantic_form_for @user do |f|
-  = f.semantic_fields_for :member do |ff|
-    = render partial: 'members/user_details', locals: { f: ff, disabled: true }
+= semantic_form_for @member do |f|
+  - unless f.object.user
+    = f.input :email, input_html: { disabled: true }
+  - if is_current_user?(f.object, current_user) || current_user.can_view_members?
+    = render partial: 'members/user_details', locals: { f: f, disabled: true }
+    - if f.object.message_controls.present?
+      %hr
+      = f.fields_for :message_controls do |ff|
+        = render partial: 'message_controls/form', locals: { f: ff, disabled: true }
 
   %hr
-  %h2 Volunteering
-  = f.inputs do
-    .check_box_or_radio
-      = f.input :interested_in_volunteering, input_html: { disabled: true}
+  - if f.object.user
+    = render partial: 'users/officers', locals: { user: f.object.user }
+    = render partial: 'users/roles', locals: { user: f.object.user }
+  = render partial: 'members/bio', locals: { member: f.object }
 
-  - @user.member.answers.each do |answer|
-    = render partial: 'answers/show', locals: { answer: answer }
+  - if f.object.user
+    - if is_current_user?(f.object, current_user) || current_user.can_view_members?
+      = f.fields_for :user do |ff|
+        %hr
+        %h2 Volunteering
+        = ff.inputs do
+          .check_box_or_radio
+            = ff.input :interested_in_volunteering, input_html: { disabled: true}
+
+        - f.object.answers.each do |answer|
+          = render partial: 'answers/show', locals: { answer: answer }
+
+= render partial: 'members/actions', locals: { member: @member }
+

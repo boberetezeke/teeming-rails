@@ -1,15 +1,37 @@
 %h2 #{@message.subject}
 
 %h3 To
-%ul
-  - @message.message_recipients.each do |message_recipient|
-    - if message_recipient.candidacy
-      %li #{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}
-    - else
-      %li #{message_recipient.member.name} <#{message_recipient.member.email}>
+%div
+  %div
+    %strong Number of recipients total:
+    #{@message.num_recipients}
+  - unless @message.sent_at
+    %div
+      %strong Number shown:
+      #{[@message.message_recipients_for_show.count, MessagesController::EMAIL_LIMIT_FOR_PREVIEW].min}
+    %ul.message-to
+      - @message.message_recipients_for_show.each_with_index do |message_recipient, index|
+        - if message_recipient.candidacy
+          %li= "#{message_recipient.candidacy.name} - #{message_recipient.candidacy.email}"
+        - else
+          - if message_recipient.member
+            %li= "#{message_recipient.member.name} <#{message_recipient.member.email}>"
+          - else
+            %li= "<#{message_recipient.email}>"
+        - overflow = MessagesController::EMAIL_LIMIT_FOR_PREVIEW
+        - if index >= overflow
+          %li ....
+          - break
 
 %h3 Body
-%p #{@message.rendered_body(@message_recipient)}
+%div.message-body
+  %p #{@message.rendered_body(@message_recipient, @message_recipient ? message_control_path(@message_recipient.token) : '')}
 
 - unless @message.sent?
-  = link_to("Edit Draft", edit_message_path(@message, @context_params), class: 'btn btn-sm btn-primary')
+  %hr
+  = link_to("Edit Draft", edit_message_path(@message, @context_params), class: 'btn btn-sm btn-info')
+  |
+  = form_tag(preview_to_message_path(@message, @context_params), method: :put, style: 'display: inline;') do
+    = text_field_tag(:emails, "", placeholder: 'emails to preview to separated by commas', style: 'width: 40%;')
+    = submit_tag("Preview", class: 'btn btn-sm btn-warning btn-with-padding')
+  = link_to("Send", send_to_all_message_path(@message, @context_params), method: :put, class: 'btn btn-sm btn-primary', data: { confirm: 'Are you sure you want to send to all recipients' })

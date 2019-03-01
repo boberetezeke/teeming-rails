@@ -3,10 +3,10 @@ require 'rails_helper'
 describe MembersController do
   include Devise::Test::ControllerHelpers
 
-  let(:member_viewer_role)  { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'member', action: 'view')]) }
-  let(:user)                { FactoryGirl.create(:user) }
-  let(:member_viewer_user)  { FactoryGirl.create(:user, role: member_viewer_role) }
-  let(:chapter)             { FactoryGirl.create(:chapter) }
+  let(:member_viewer_role)  { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'member', action: 'view')]) }
+  let(:user)                { FactoryBot.create(:user) }
+  let(:member_viewer_user)  { FactoryBot.create(:user, role: member_viewer_role) }
+  let(:chapter)             { FactoryBot.create(:chapter) }
 
   context "when users is not signed in" do
     describe "index" do
@@ -33,6 +33,7 @@ describe MembersController do
 
   context "when user is signed in with member view privileges" do
     before do
+      FactoryBot.create(:chapter, is_state_wide: true)
       sign_in member_viewer_user
     end
 

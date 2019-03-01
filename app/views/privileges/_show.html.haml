@@ -1,0 +1,16 @@
+#{privilege.action.gsub(/_/, " ")} #{privilege.subject.pluralize}
+- if privilege.parsed_scope['chapter_id']
+  for
+  %strong #{Chapter.find(privilege.parsed_scope['chapter_id']).name}
+  chapter
+- else
+  - if privilege.role.combined
+    for
+    %strong All chapters
+  - descriptions = Role.descriptions_for(privilege)
+  - if descriptions.present?
+    %ul
+      %li
+        %strong Allows the user to:
+      - descriptions.each do |description|
+        %li= description

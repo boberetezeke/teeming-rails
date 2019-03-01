@@ -7,6 +7,9 @@ class Questionnaire < ApplicationRecord
   scope :with_name, ->{ where(arel_table[:name].not_eq(nil)) }
   scope :with_race, ->{ where(questionnairable_type: 'Race') }
 
+  USE_TYPE_ELECTION = 'election'
+  USE_TYPE_CANDIDACY = 'candidacy'
+
   def new_answers(user: nil)
     answers = questionnaire_sections.map{|qs| qs.questions.to_a}.flatten.map.with_index{|q, index| q.new_answer(index: index, user: user)}
     Answer.translate_choice_text(answers)
@@ -40,6 +43,7 @@ class Questionnaire < ApplicationRecord
     end
 
     new_questionnaire = self.dup
+    # new_questionnaire.name = name
     new_questionnaire.save
     self.questionnaire_sections.each do |questionnaire_section|
       new_questionnaire.questionnaire_sections << questionnaire_section.copy

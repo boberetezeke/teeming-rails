@@ -1,7 +1,11 @@
 class EventPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
-      @scope.all
+      if can_for_scope?(@user.can_write_events?, context_params)
+        @scope.all
+      else
+        @scope.published
+      end
     end
   end
 
@@ -10,11 +14,15 @@ class EventPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    if can_write_events?
+      true
+    else
+      @record.published?
+    end
   end
 
   def new?
-    can_for_scope?(@user.can_write_events?, context_params)
+    can_write_events?
   end
 
   def create?
@@ -22,6 +30,14 @@ class EventPolicy < ApplicationPolicy
   end
 
   def edit?
+    can_write_events?
+  end
+
+  def publish?
+    can_write_events?
+  end
+
+  def unpublish?
     can_write_events?
   end
 
@@ -40,6 +56,6 @@ class EventPolicy < ApplicationPolicy
   private
 
   def can_write_events?
-    can_for_scope?(@user.can_write_events?)
+    can_for_scope?(@user.can_write_events?, context_params)
   end
 end

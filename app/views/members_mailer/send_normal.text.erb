@@ -1,1 +1,1 @@
-<%= @message.rendered_body(@message_recipient) %>
+<%= @message.rendered_body(@message_recipient, message_control_url(@message_recipient.token)) %>

@@ -39,6 +39,14 @@ class ApplicationPolicy
   end
 
   def can_for_scope?(scope, context_params=nil)
+    self.class.can_for_scope?(@record, scope, context_params)
+  end
+
+  def context_params
+    self.class.context_params_for_user(@user)
+  end
+
+  def self.can_for_scope?(record, scope, context_params=nil)
     if scope.nil? || scope == false
       false
     else
@@ -46,8 +54,8 @@ class ApplicationPolicy
         if context_params
           context_params[:chapter_id].to_i == scope["chapter_id"]
         else
-          if @record.respond_to?(:chapter_id)
-            @record.chapter_id == scope['chapter_id']
+          if record.respond_to?(:chapter_id)
+            record.chapter_id == scope['chapter_id']
           else
             false
           end
@@ -58,8 +66,8 @@ class ApplicationPolicy
     end
   end
 
-  def context_params
-    @user.authorize_args ? @user.authorize_args.first : nil
+  def self.context_params_for_user(user)
+    user.authorize_args ? user.authorize_args.first : nil
   end
 
   class Scope
@@ -72,6 +80,14 @@ class ApplicationPolicy
 
     def resolve
       scope
+    end
+
+    def context_params
+      ApplicationPolicy.context_params_for_user(@user)
+    end
+
+    def can_for_scope?(scope, context_params=nil)
+      ApplicationPolicy.can_for_scope?(nil, scope, context_params)
     end
   end
 

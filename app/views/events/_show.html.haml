@@ -2,43 +2,88 @@
   .col-md-4
     %span.event-title What
     %br
-    %span.event-data= link_to(event.name, event)
+    %span.event-data
+      = link_to(event.name, event)
+      - if event.published? && can?(current_user, :edit, event)
+        = "- (Published)"
   .col-md-4
     %span.event-title Where
     %br
-    %span.event-data= event.location
+    - if event.online_only?
+      %span.event-data Online
+    - else
+      %span.event-data= event.location
   .col-md-4
     %span.event-title When
     %br
-    %span.event-data= event_date_and_time_str(event.occurs_at)
+    %span.event-data
+      - if event.occurs_at
+        = event_date_and_time_str(event.occurs_at)
+      - else
+        No Date Specified
 - if show_description
   .row
-    .col-md-12
+    .col-md-4
       .event-title Description
+    .col-md-4
+      .event-title Who
+    .col-md-4
+      .event-title Type
   .row
-    .col-md-12
-      = event.description
+    .col-md-4
+      = Kramdown::Document.new(event.description).to_html.html_safe
+    .col-md-4
+      = event.member_group.name
+    .col-md-4
+      = event.event_type_str
+      -
+  - display_online_details = !@event.offline_only? && @event.online_details.present?
+  - if @event.agenda.present? || display_online_details
+    .row
+      - if @event.agenda.present?
+        .col-md-8
+          .event-title Agenda
+      - if display_online_details
+        .col-md-4
+          .event-title Online Connection Details
+    .row
+      - if @event.agenda.present?
+        .col-md-8
+          = Kramdown::Document.new(event.agenda).to_html.html_safe
+      - if display_online_details
+        .col-md-4
+          = Kramdown::Document.new(event.online_details).to_html.html_safe
 - if show_stats
   .row
     .col-md-12
       .strong RSVP Stats:
-      In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
+      - if event.online_only? || event.offline_only?
+        #{event.event_rsvps.count} RSVPs
+      - else
+        In Person #{event.event_rsvps.in_person.count}, Online #{event.event_rsvps.online.count}
 
-- if can?(current_user, :edit, event)
-  = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
-  = link_to "Email Event", email_event_path(event, chapter_id: event.chapter.id, event_id: event.id), method: :put, class: 'btn btn-sm btn-warning'
-- if can?(current_user, :destroy, event)
-  = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger'
+- if show_actions
+  - if can?(current_user, :edit, event)
+    = link_to "Edit", edit_event_path(event), class: 'btn btn-sm btn-primary'
+    - if event.published?
+      = link_to "Unpublish", unpublish_event_path(event), method: :put, class: 'btn btn-sm btn-info'
+      = link_to "Email Event", email_event_path(event, chapter_id: event.chapter.id, event_id: event.id), method: :put, class: 'btn btn-sm btn-warning'
+    - else
+      = link_to "Publish", publish_event_path(event), method: :put, class: 'btn btn-sm btn-info'
+  - if can?(current_user, :destroy, event)
+    = link_to "Delete", event_path(event), method: :delete, class: 'btn btn-sm btn-danger', data: {confirm: 'Are you sure?'}
 
-- if show_rsvp && event_rsvp
+- if show_rsvp
   .row
     .col-md-12
       .event-title Your RSVP
   .row
     .col-md-12
-      = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
-      = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
-%hr
+      - if event_rsvp
+        = EventRsvp::RSVP_TYPES_DECLARATIVE[event_rsvp.rsvp_type]
+        = link_to "Edit", edit_event_rsvp_path(event_rsvp), class: 'btn btn-sm btn-primary'
+      - else
+        = link_to "Set Your RSVP", new_event_event_rsvp_path(event), class: 'btn btn-sm btn-primary'
 
 
 

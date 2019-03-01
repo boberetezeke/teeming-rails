@@ -1,5 +1,5 @@
 class ElectionsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   before_action :set_election, only: [:show, :edit, :update, :destroy, :unfreeze, :freeze, :email]
   before_action :set_chapter
@@ -8,7 +8,9 @@ class ElectionsController < ApplicationController
   def index
     authorize_with_args Election, @context_params
 
-    @internal_elections = Election.internal
+    @chapter = Chapter.find_by_id(params[:chapter_id])
+    @tab = params[:tab] || 'external'
+    @internal_elections = Election.internal.before_date(Time.now.to_date).for_chapter(@chapter)
     @external_elections = Election.external
 
     breadcrumbs *elections_breadcrumbs(include_link: false)
@@ -53,27 +55,12 @@ class ElectionsController < ApplicationController
   end
 
   def freeze
-    @election.update(is_frozen: true)
-
-    @election.voters.each do |member|
-      user = member.user
-      if user
-        VoteCompletion.create(election: @election, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
-      end
-    end
-
-    @election.questionnaire = Questionnaire.new
-    @election.issues.each do |issue|
-      @election.questionnaire.append_questionnaire_sections(issue.questionnaire)
-    end
-
+    @election.freeze_election
     redirect_to @election
   end
 
   def unfreeze
-    @election.update(is_frozen: false)
-    @election.vote_completions.destroy_all
-    @election.questionnaire.destroy
+    @election.unfreeze_election
     redirect_to @election
   end
 
@@ -102,7 +89,9 @@ class ElectionsController < ApplicationController
   end
 
   def election_params
-    params.require(:election).permit(:name, :chapter_id, :election_type, :election_method, :vote_date_str, :vote_start_time_str, :vote_end_time_str, :member_group_id)
+    params.require(:election).permit(:name, :chapter_id, :election_type, :election_method,
+                                     :vote_date_str, :vote_start_time_str, :vote_end_time_str,
+                                     :visibility, :member_group_id)
   end
 
   def elections_breadcrumbs(include_link: true)

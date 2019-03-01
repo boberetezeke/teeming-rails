@@ -1,0 +1,6 @@
+%h2 New Election Questionnaire
+
+= semantic_form_for @race, url: create_election_questionnaire_race_path(@race), method: :put do |f|
+  = f.input :election_candidacy_segregation_choice_id, as: :select, collection: @questionnaire_choices
+  = f.submit "Create Election Questionnaire", class: 'btn btn-sm btn-primary btn-with-padding'
+

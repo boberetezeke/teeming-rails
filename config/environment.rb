@@ -16,6 +16,6 @@ ActionMailer::Base.smtp_settings = {
 }
 =end
 
-if !Rails.env.development?
+if !Rails.env.development? && !Rails.env.test?
   Rails.logger = Le.new(ENV['LOGENTRIES_TOKEN'])
 end

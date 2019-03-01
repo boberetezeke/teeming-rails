@@ -4,7 +4,7 @@
   %h4 There are no races for this election, click Add Race to add one
 - else
   = render partial: 'elections/vote_date_and_time', locals: { election: election }
-  - if election.vote_date
+  - if Time.now.to_date >= election.vote_date
     - if election.vote_start_time
       - if Time.zone.now < election.vote_start_time
       - elsif Time.zone.now < election.vote_start_time

@@ -31,6 +31,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def policy_scope_with_args(object_or_class, *args)
+    current_user.authorize_args = args
+    policy_scope object_or_class
+  end
+
   def authorize_with_args(object_or_class, *args)
     current_user.authorize_args = args
     authorize object_or_class

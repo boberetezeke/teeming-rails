@@ -1,26 +1,26 @@
 - last_election_type = nil
-- elections.by_election_type.by_most_recent.each_with_index do |election, index|
-  - unless election.hide_on_dashboard
-    - if index != 0
-      %hr
-    - if election.election_type != last_election_type
-      %h3 #{election.election_type.capitalize} Elections
-      - last_election_type = election.election_type
-    - if election.internal?
-      - if (chapter && election.chapter == chapter) || (!chapter && election.chapter.is_state_wide)
-        - if can?(current_user, :show, election)
-          %div{ style: 'padding-top: 10px;'}
-            = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
-    - else
-      %h4
-        =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
-        (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})
+- election_index = 0
+- elections.by_election_type.by_most_recent.each do |election|
+  - if (election.election_type != last_election_type)
+    %h3 #{election.election_type.capitalize} Elections
+    - last_election_type = election.election_type
+    - election_index = 0
+  - if election.internal?
+    %div{ style: 'padding-top: 10px;'}
+      - if election_index != 0
+        %hr
+      = render partial: 'elections/show', locals: { election: election, show_actions: short_list_of_races }
+  - else
+    %h4
+      =link_to(election.name, election_races_path(election, chapter ? {chapter_id: chapter.id} : {}))
+      (#{election.races.for_chapter(chapter).count} #{'race'.pluralize(election.races.count)})
+  - election_index += 1
 
-    - if election.external?
-      - if short_list_of_races
-        %span.note Click on the link above to add races/candidacy in your area
-        - election.races.for_chapter(chapter).by_last_update.take(3).each do |race|
-          = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false, chapter: chapter, show_race_link: true }
-      - else
-        - election.races.for_chapter(chapter).each do |race|
-          = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false, chapter: chapter, show_race_link: true }
+  - if election.external?
+    - if short_list_of_races
+      %span.note Click on the link above to add races/candidacy in your area
+      - election.races.for_chapter(chapter).by_last_update.take(3).each do |race|
+        = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false, chapter: chapter, show_race_link: true }
+    - else
+      - election.races.for_chapter(chapter).each do |race|
+        = render partial: 'races/show', locals: { race: race, short_list_of_candidacies: true, show_all: false, chapter: chapter, show_race_link: true }

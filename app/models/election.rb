@@ -14,6 +14,28 @@ class Election < ApplicationRecord
   has_one :questionnaire, as: :questionnairable
   has_many :messages, dependent: :destroy
 
+  scope :show_on_dashboard, ->(chapter) {
+    where(
+      arel_table[:election_type].eq(ELECTION_TYPE_EXTERNAL).or(
+          chapter ? arel_table[:chapter_id].eq(chapter.id) : Arel::Nodes::True.new
+      )
+    )
+  }
+
+  scope :visible, ->(chapter) {
+    where(
+      (chapter ?
+           arel_table[:visibility].in([Visibility::VISIBILITY_SHOW_CHAPTER, Visibility::VISIBILITY_SHOW_ALL])
+           :
+           arel_table[:visibility].eq(Visibility::VISIBILITY_SHOW_ALL)
+      )
+    )
+  }
+
+  scope :for_chapter, ->(chapter) {
+    where(chapter ? arel_table[:chapter_id].eq(chapter.id) : Arel::Nodes::True.new)
+  }
+
   ELECTION_TYPE_INTERNAL = 'internal'
   ELECTION_TYPE_EXTERNAL = 'external'
 
@@ -31,6 +53,7 @@ class Election < ApplicationRecord
   scope :external, ->{ where(election_type: ELECTION_TYPE_EXTERNAL) }
   scope :by_election_type, ->{ order('election_type asc') }
   scope :by_most_recent,   ->{ order("vote_date desc") }
+  scope :before_date, ->(date){ where(arel_table[:vote_date].lt(date)) }
 
   attr_accessor :vote_date_str
   attr_accessor :vote_start_time_str, :vote_end_time_str
@@ -40,8 +63,8 @@ class Election < ApplicationRecord
 
   def set_accessors
     self.vote_date_str = self.vote_date.strftime("%m/%d/%Y")          if self.vote_date
-    self.vote_start_time_str = self.vote_start_time.strftime("%H:%M") if self.vote_start_time
-    self.vote_end_time_str = self.vote_end_time.strftime("%H:%M")     if self.vote_end_time
+    self.vote_start_time_str = self.vote_start_time.strftime("%I:%M%P") if self.vote_start_time
+    self.vote_end_time_str = self.vote_end_time.strftime("%I:%M%P")     if self.vote_end_time
   end
 
   def external?
@@ -70,6 +93,31 @@ class Election < ApplicationRecord
 
   def is_frozen?
     is_frozen
+  end
+
+  def freeze_election
+    update(is_frozen: true)
+
+    voters.each do |member|
+      user = member.user
+      if user
+        VoteCompletion.create(election: self, user: user, vote_type: VoteCompletion::VOTE_COMPLETION_TYPE_ONLINE)
+      end
+    end
+
+    self.questionnaire = Questionnaire.new
+    self.issues.each do |issue|
+      self.questionnaire.append_questionnaire_sections(issue.questionnaire)
+    end
+    self.races.each do |race|
+      self.questionnaire.append_questionnaire_sections(race.election_questionnaire)
+    end
+  end
+
+  def unfreeze_election
+    update(is_frozen: false)
+    vote_completions.destroy_all
+    questionnaire.destroy
   end
 
   def voters

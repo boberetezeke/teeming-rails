@@ -1,5 +1,5 @@
 class CandidaciesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   before_action :set_context
   before_action :set_context_params

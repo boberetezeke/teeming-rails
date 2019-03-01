@@ -16,6 +16,20 @@ module ApplicationHelper
     end
   end
 
+  def job_headline(job)
+    MembersMailer; Message; MessageRecipient
+    job_info = YAML.load(job.handler)
+    if job_info.is_a?(Delayed::PerformableMailer)
+      email, from, to = job_info.args
+      "email: #{email.subject} to '#{to.email}'"
+    elsif job_info.job_data['job_class'] == "ImportJob"
+      filename = job_info.job_data['arguments'][1]["original_filename"]
+      "Importing Members from file: #{filename}"
+    else
+      "Unknown Job"
+    end
+  end
+
   def candidacies_names_and_emails(candidacies)
     candidacies.map{|c| "#{c.name}<#{c.email}>"}.join(", ")
   end
@@ -64,6 +78,45 @@ module ApplicationHelper
     date_and_time_str(datetime)
   end
 
+  def officer_term_and_reasons(officer_assignment)
+    if officer_assignment.reason_for_start
+      reason_for_start =  OfficerAssignment::START_REASONS_HASH.invert[officer_assignment.reason_for_start]
+    else
+      reason_for_start = "reason for start not set"
+    end
+
+    if officer_assignment.reason_for_end
+      reason_for_end =  OfficerAssignment::END_REASONS_HASH.invert[officer_assignment.reason_for_end]
+    else
+      reason_for_end = "reason for end not set"
+    end
+
+    if officer_assignment.start_date
+      start_date = date_str(officer_assignment.start_date)
+    else
+      start_date = "start date not set"
+    end
+
+    if officer_assignment.start_date
+      start_date = date_str(officer_assignment.start_date)
+    else
+      start_date = "start date not set"
+    end
+
+    if officer_assignment.end_date
+      end_date = date_str(officer_assignment.end_date)
+    else
+      end_date = "end date not set"
+    end
+
+    "<strong>Starts</strong>: #{start_date} - (#{reason_for_start})<br/><strong>Ends</strong>: #{end_date} (#{reason_for_end})".html_safe
+  end
+
+  def date_str(date)
+    return "" unless date
+    date.strftime("%m/%d/%Y")
+  end
+
   def date_and_time_str(datetime)
     return "" unless datetime
     Time.zone.utc_to_local(datetime.utc).strftime("%m/%d/%Y %I:%M%P")
@@ -89,6 +142,14 @@ module ApplicationHelper
     sections.each { |section| yield section }
   end
 
+
+  def tab_class(active_tab, tab_name)
+    if active_tab == tab_name
+      {class: 'active'}
+    else
+      {}
+    end
+  end
 
   def empty_after_sections_for_question(question)
     return if question.order_index < question.questionnaire_section.questions.count

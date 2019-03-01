@@ -1,0 +1,6 @@
+%h2 Message Control for #{@message_control.unsubscribe_type.pluralize}
+%p.status
+  You have decided:
+  %strong #{MessageControl::CONTROL_TYPES.invert[@message_control.control_type]}
+
+= link_to "Edit", edit_message_control_path(@message_recipient.token), class: 'btn btn-sm btn-primary'

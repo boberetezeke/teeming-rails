@@ -1,0 +1,11 @@
+%h2 Vote Details
+
+- if @prev_vote_completion
+  = link_to("<<", raw_vote_questionnaire_vote_path(@prev_vote_completion, election_id: @vote_completion.election_id), class: 'btn btn-sm btn-primary')
+- if @next_vote_completion
+  = link_to(">>", raw_vote_questionnaire_vote_path(@next_vote_completion, election_id: @vote_completion.election_id), class: 'btn btn-sm btn-primary')
+= semantic_form_for @vote_completion, url: update_raw_vote_vote_path(@vote_completion, election_id: @election.id), method: :put do |f|
+  = f.input :vote_type, as: :select, collection: VoteCompletion::VOTE_TYPE_HASH, include_blank: false
+  = f.submit "Update", class: 'btn btn-sm btn-primary btn-with-padding'
+  = render partial: 'answers/form', locals: { f: f, edit_tools: false, read_only: true }
+

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :election do
     vote_date Date.new(2017, 3, 30)
     name "My great election"

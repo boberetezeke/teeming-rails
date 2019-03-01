@@ -1,0 +1,17 @@
+%table.table
+  %thead
+    %th Title
+    %th Published On
+    %th Last Updated On
+    - if show_actions
+      %th Actions
+  %tbody
+    - meeting_minutes.each do |meeting_minute|
+      %tr
+        %td= link_to(truncate(meeting_minute.title, length: 25) + (meeting_minute.is_draft? ? " (Draft)" : ""), meeting_minute)
+        %td= date_and_time_str(meeting_minute.published_at)
+        %td= date_and_time_str(meeting_minute.updated_at)
+        - if show_actions
+          %td
+            = link_to "Edit", edit_meeting_minute_path(meeting_minute), class: 'btn btn-sm btn-primary'
+            = link_to "Delete", meeting_minute_path(meeting_minute), method: :delete, class: 'btn btn-sm btn-danger'

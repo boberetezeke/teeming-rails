@@ -1,13 +1,24 @@
 %h2 Profile
 
-= render partial: 'shared/privacy_policy_notice'
-
 = semantic_form_for @user do |f|
-  = f.semantic_fields_for :member do |ff|
-    = render partial: 'members/user_details', locals: { f: ff, disabled: false }
-
+  = render partial: 'users/user_details', locals: { f: f, disabled: false, show_email: true, show_share_controls: true, show_contact_controls: true }
+  - if @user.officers.present?
+    %hr
+    %h3 Offices you occupy
+    = render partial: 'users/officers', locals: { user: @user }
+  - if @user.all_roles.present?
+    %hr
+    %h3 Roles you have
+    = render partial: 'users/roles', locals: { user: @user }
   %hr
-  %h2 Volunteering
+  %h3 Bio
+  %p Introduce yourself to others. This info will be displayed if you are an officer or committee member.
+  = f.semantic_fields_for :member do |ff|
+    = ff.input :bio, as: :text
+  %hr
+  %h3 Volunteering
+  %p.subtitle
+    We are a volunteer run orginization, your time and effort allows this organization to function.
   = f.inputs do
     .check_box_or_radio
       = f.input :interested_in_volunteering

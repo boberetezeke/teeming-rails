@@ -1,7 +1,11 @@
 class MessagePolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
-      @scope.all
+      if can_for_scope?(@user.can_send_messages?, context_params)
+        @scope.all
+      else
+        @scope.sent
+      end
     end
   end
 
@@ -10,7 +14,11 @@ class MessagePolicy < ApplicationPolicy
   end
 
   def show?
-    can_send_messages?
+    if @record.sent?
+      true
+    else
+      can_send_messages?
+    end
   end
 
   def new?

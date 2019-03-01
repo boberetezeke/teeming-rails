@@ -1,0 +1,21 @@
+%h2 Privacy and Contact Controls
+
+= render partial: 'shared/privacy_policy_notice', locals: { on_privacy_controls_page: true }
+
+= semantic_form_for @user do |f|
+  %h3 Privacy Controls
+  %p.subtitle
+    We value your privacy and we believe in privacy for ordinary users and
+    transparancy for officials within the organization.
+  = render partial: 'users/share_controls', locals: { f: f, disabled: false }
+  %hr
+
+  %h3 Contact Controls
+  %p.subtitle
+    Your attention is very valuable to you and we don't want to abuse it. You
+    can express your wishes, positive, negative or neutral to our contacts with
+    you. You are in in control.
+  = f.fields_for :member do |ff|
+    = render partial: 'members/contact_controls', locals: { member_f: ff, disabled: false }
+  %hr
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   STATES = ['step_setup_user_details', 'step_volunteer_or_donate']
 
@@ -13,24 +13,29 @@ class UsersController < ApplicationController
       @setup_states_total = STATES.size
 
       convert_answer_checkboxes_from_text
+
       # for user info page
-      @user.member = Member.new(email: @user.email) unless @user.member
-      @user.member.with_user_input = true
-
-      # for candidancies page
-      #@race = Race.find_by_name('Initial Board Election Race')
-      # HACK - delete existing candidacy to avoid save error - Couldn't find Answer with ID=346 for Candidacy with ID=
-      #if @user.candidacies.present?
-      #  @user.candidacies.destroy_all
-      #end
-      #@user.candidacies.build(race: @race, user: current_user, answers: @race.questionnaire.new_answers)
-
-      if @user.event_rsvps.present?
-        @user.event_rsvps.destroy_all
+      if @user.member
+        @display_found_member_modal = !@user.member.added_with_new_user
+      else
+        existing_member = Member.find_by_email(@user.email)
+        if existing_member
+          @user.member = existing_member
+          @display_found_member_modal = true
+        else
+          @user.member = Member.new(email: @user.email, added_with_new_user: true, message_controls: [
+              MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL,
+                                 control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
+              MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_TEXT,
+                                 control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
+          ])
+        end
       end
 
-      @initial_convention = Event.first
-      @user.event_rsvps.build(user: current_user, event: @initial_convention)
+      @user.member.with_user_input = true
+    else
+      @events = policy_scope(Event.future.visible(nil))
+      @elections = policy_scope(Election.show_on_dashboard(nil).visible(nil))
     end
   end
 
@@ -53,6 +58,12 @@ class UsersController < ApplicationController
     convert_answer_checkboxes_from_text
 
     breadcrumbs "My Profile"
+  end
+
+  def privacy
+    @user = current_user
+
+    breadcrumbs "My Privacy"
   end
 
   def account
@@ -156,6 +167,10 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 
+  def with_roles
+    @users = User.with_roles
+  end
+
   private
 
   def next_state
@@ -181,13 +196,15 @@ class UsersController < ApplicationController
   def user_params(params)
     params.require(:user).permit(:accepted_bylaws, :interested_in_volunteering, :run_for_state_board, :saw_introduction,
                                  :email, :password, :password_confirmation,
+                                 :share_name, :share_email, :share_phone, :share_address, :use_username,
                                  {event_rsvps_attributes: [:rsvp_type, :event_id] },
                                  {member_attributes: [
                                     :id,
                                     :email, :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
-                                    :with_user_input,
+                                    :with_user_input, :bio,
                                     {answers_attributes: CandidaciesController.answers_atributes},
+                                    {message_controls_attributes: [:unsubscribe_type, :control_type, :id]}
                                  ]},
                                  {candidacies_attributes: [CandidaciesController.candidacy_attributes]})
   end

@@ -1,12 +1,9 @@
 = render partial: 'step_title', locals: { step_title: 'Setup Your Member Details', step_sub_title: 'Setup your personal details' }
 
-= render partial: 'shared/privacy_policy_notice'
+= render partial: 'shared/privacy_policy_notice', locals: { on_privacy_controls_page: false }
 
 = semantic_form_for @user do |f|
-  = f.semantic_fields_for :member do |ff|
-    = ff.hidden_field :id
-    = ff.hidden_field :with_user_input
-    = render partial: 'members/user_details', locals: { f: ff, disabled: false }
+  = render partial: 'users/user_details', locals: { f: f, show_email: false, show_share_controls: true, show_contact_controls: true, disabled: false }
 
   .row
     .col-md-12
@@ -19,8 +16,27 @@
     .col-md-12
       = f.submit 'Next Step', class: 'btn btn-sm btn-primary btn-with-padding', disabled: !@user.accepted_bylaws, id: 'submit_button'
 
+- if @display_found_member_modal
+  .modal.fade#my-modal
+    .modal-dialog
+      .modal-content
+        .modal-header
+          .modal-title Member Information Found
+        .modal-body
+          %h3 It turns out that we already have your member information
+          %p
+            You must have filled out a signup sheet or something like it
+            from the 2016 Bernie campaign for President.
+          %p
+            = link_to "Ok", "#", id: 'modal-ok', class: 'btn btn-sm btn-primary btn-wide'
 :javascript
   $(function() {
+    $("#modal-ok").click(function() {
+      $("#my-modal").modal('toggle');
+      return false;
+    })
+
+    #{(@display_found_member_modal) ? '$("#my-modal").modal().show()'.html_safe : ''}
     $("#user_accepted_bylaws").change(function() {
       if ($("#user_accepted_bylaws").is(":checked")) {
         $("#submit_button").prop("disabled", false)

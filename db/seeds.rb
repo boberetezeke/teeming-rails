@@ -1,6 +1,6 @@
 require 'csv'
 
-VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i unless defined?(VALID_EMAIL_REGEX)
 
 if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
   members_text = File.read(Rails.root.join('db', 'data', 'ormn_roster.csv'))
@@ -22,10 +22,10 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
     m.email = row['Email']
     m.save!
 
-    puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
+    # puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
   end
 
-  puts "There are now #{Member.count} members"
+  # puts "There are now #{Member.count} members"
 
 
   blocked_emails = []
@@ -80,19 +80,19 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
     member = Member.find_by_email(email)
     member.update(status: 'block') if member
   end
-  puts "There are #{blocked_emails.count} blocked emails"
+  # puts "There are #{blocked_emails.count} blocked emails"
 
   bounced_emails.each do |email|
     member = Member.find_by_email(email)
     member.update(status: 'bounce') if member
   end
-  puts "There are #{bounced_emails.count} bounced emails"
+  # puts "There are #{bounced_emails.count} bounced emails"
 
   unsubscribed_emails.each do |email|
     member = Member.find_by_email(email)
     member.update(status: 'unsubscribe') if member
   end
-  puts "There are #{unsubscribed_emails.count} unsubscribed emails"
+  # puts "There are #{unsubscribed_emails.count} unsubscribed emails"
 
   invalid_emails.each do |email|
     member = Member.find_by_email(email)
@@ -104,7 +104,7 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
       member.update!(status: 'invalid')
     end
   end
-  puts "There are #{invalid_emails.count} invalid emails"
+  # puts "There are #{invalid_emails.count} invalid emails"
 
 
   repeated_emails = Member.valid_email.group(:email)
@@ -121,21 +121,21 @@ if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
       end
     end
   end
-  puts "There are #{duplicate_emails.count} duplicate emails"
+  # puts "There are #{duplicate_emails.count} duplicate emails"
 
 
   Member.where("status IS NULL").each do |member|
     member.update!(status: "active")
   end
 
-  puts "There are #{Member.active.count} active members!"
+  # puts "There are #{Member.active.count} active members!"
 end
 
 #======================== setup MN State Init ==========================
 
 state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
 ['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
-  Chapter.find_or_create_by(name: chapter, is_state_wide: false)
+  Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
 end
 
 # account = Account.find_or_create_by_name("Our Revolution Minnesota")
@@ -160,9 +160,7 @@ skills_questionnaire.destroy if skills_questionnaire
     Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 #end
 
-if MemberGroup.count == 0
-  MemberGroup.write_member_groups
-end
+MemberGroup.write_member_groups
 
 minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
 minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
@@ -195,6 +193,7 @@ initial_board_election = Election.find_or_create_by(name: 'Initial Board Electio
   %p.in-formtastic The board membership, when available, should be equally split between urban and rural areas as defined through congressional districts.
 =end
 
+=begin
 initial_board_race_notes = <<EOT
 Your voice is needed on the Statewide Board!
 
@@ -275,4 +274,4 @@ if !initial_board_questionnaire
     Question.create(questionnaire_section: leadership_section, order_index: 7, text: 'Why is holding a position on the Board of Our Revolution MN important to you? What\'s in it for you? ', question_type: Question::QUESTION_TYPE_LONG_TEXT)
     Question.create(questionnaire_section: leadership_section, order_index: 8, text: 'Is there anything else you would like the Our Revolution MN members to know about you?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 end
-
+=end

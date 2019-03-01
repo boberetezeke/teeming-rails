@@ -4,9 +4,10 @@ class ElectionPolicy < ApplicationPolicy
       if @user.can_manage_internal_elections?
         @scope.all
       else
-        @scope.joins(member_group: :member_group_membership).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_EXTERNAL).or(
+        @scope.includes(member_group: :member_group_memberships).references(:member_group_memberships).where(Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_EXTERNAL).or(
           Election.arel_table[:election_type].eq(Election::ELECTION_TYPE_INTERNAL).and(
-            MemberGroupMembership.arel_table[:member_id].eq(@user.member.id)
+            # you are in the member group who can vote on it or it is public
+            MemberGroupMembership.arel_table[:member_id].eq(@user.member.id).or(Election.arel_table[:is_public].eq(true))
           )
         ))
       end
@@ -33,8 +34,10 @@ class ElectionPolicy < ApplicationPolicy
   end
 
   def show?
-    can_manage_internal_elections? || @user.can_vote_in_election?(@record) || @user.voted_in_election?(@record) ||
-    (@record.chapter && @record.chapter.is_state_wide)
+    can_manage_internal_elections? ||
+        @user.can_vote_in_election?(@record) ||
+        @user.voted_in_election?(@record) ||
+        @record.is_public
   end
 
   def new?

@@ -1,16 +1,18 @@
 class MessagesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
   include ActionView::Helpers::TextHelper
 
   before_action :set_context
   before_action :set_context_params
 
+  EMAIL_LIMIT_FOR_PREVIEW = 20
+
   def index
     authorize_with_args Message, @context_params
     @chapter = Chapter.find(params[:chapter_id])
 
-    @messages = policy_scope(Message)
-    @messages = @messages.for_chapter(@chapter)
+    @messages = @chapter.messages.by_most_recent
+    @messages = policy_scope_with_args(@messages, @context_params)
 
     breadcrumbs [@chapter.name, @chapter], "Messages"
   end
@@ -23,8 +25,8 @@ class MessagesController < ApplicationController
     @election = @message.election
     @event = @message.event
 
-    @message.create_message_recipients if @message.message_recipients.blank?
-    @message_recipient = @message.message_recipients.first
+    @message.create_message_recipients(limit: EMAIL_LIMIT_FOR_PREVIEW) unless @message.sent_at
+    @message_recipient = @message.message_recipients.unqueued.first
 
     breadcrumbs messages_breadcrumbs, truncate(@message.subject, length: 25)
   end
@@ -40,8 +42,12 @@ class MessagesController < ApplicationController
       @chapter = @event.chapter
     else
       @chapters = Chapter.all
-      @member_groups = MemberGroup.all
       @chapter = Chapter.find(params[:chapter_id])
+      if @chapter.is_state_wide
+        @member_groups = MemberGroup.state_wide_groups
+      else
+        @member_groups = MemberGroup.chapter_groups
+      end
     end
     @message = Message.new(chapter: @chapter, race: @race, election: @election, event: @event)
     breadcrumbs messages_breadcrumbs, "New Message"
@@ -53,12 +59,7 @@ class MessagesController < ApplicationController
 
     @message.save
 
-    if params[:commit] == "Send"
-      if @message.valid?
-        send_email
-      end
-    end
-    respond_with @message, location: ->{ @message.chapter ? chapter_messages_path(@message, @context_params) : message_path(@message, @context_params) }
+    respond_with @message, location: ->{ params[:commit] == "Save Draft" ? chapter_messages_path(@message, @context_params) : message_path(@message, @context_params) }
   end
 
   def edit
@@ -74,15 +75,31 @@ class MessagesController < ApplicationController
     @message = Message.find(params[:id])
     authorize @message
 
-    if @message.update(message_params)
-      if params[:commit] == "Send"
-        send_email
-      end
-    end
+    @message.update(message_params)
 
     respond_with @message, location: ->{ message_path(@message, @context_params) }
   end
 
+  def send_to_all
+    @message = Message.find(params[:id])
+    MessageSendJob.perform_later(@message.id)
+    flash[:notice] = "Message sending has started, it may take a few minutes for the first emails to be sent"
+    redirect_to chapter_messages_path(@message.chapter)
+  end
+
+  def preview_to
+    @message = Message.find(params[:id])
+
+    emails = params[:emails].split(/\s*[;,]\s*/).map{|email| email.strip}
+    if emails.size == 0
+      flash[:alert] = "No emails supplied to preview to"
+    else
+      @message.message_recipients = emails.map{|email| MessageRecipient.new(email: email, queued_at: Time.now)}
+      send_email
+    end
+
+    redirect_to message_path(@message, @context_params)
+  end
 
   def destroy
     @message = Message.find(params[:id])
@@ -101,16 +118,8 @@ class MessagesController < ApplicationController
 
   private
 
-  def send_email
-    @message.create_message_recipients
-    @message.reload.message_recipients.each do |message_recipient|
-      if @message.race
-        MembersMailer.send_normal(@message, "endorsements@ourrevolutionmn.com", message_recipient).deliver # .deliver_later
-      else
-        MembersMailer.send_normal(@message, "communications@ourrevolutionmn.com", message_recipient).deliver # .deliver_later
-      end
-    end
-    @message.update(sent_at: Time.now)
+  def send_email(update_sent_at: false)
+    @message.send_email(update_sent_at: update_sent_at)
     flash[:notice] = "Message sent to #{@message.message_recipients.count} recipients"
   end
 

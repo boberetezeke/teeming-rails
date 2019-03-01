@@ -1,9 +1,26 @@
-= semantic_form_for member do |f|
-  - if f.object.user
-    = fields_for :user do |ff|
-      ff.input :role_assignments, as: :select, multiple: true, collection: Role.all
-      ff.input :officer_assignments, as: :select, multiple: true, collection: Officer.all
+= semantic_form_for [chapter, member] do |f|
+  - disabled = !can?(current_user, :edit, member)
+  = f.semantic_errors
+  - unless member.user
+    = f.input :email
+  = render partial: 'members/user_details', locals: { f: f, disabled: disabled }
+  - if f.object.message_controls.present?
     %hr
-    = render partial: :user_details, locals: { f: f, disabled: true }
-  - else
-    = render partial: :user_details, locals: { f: f, disabled: true }
+    = f.fields_for :message_controls do |ff|
+      = render partial: 'message_controls/form', locals: { f: ff, disabled: disabled }
+      = ff.input :id, as: :hidden
+  -#- if f.object.user
+  -#  %hr
+  -#  = f.fields_for :user do |ff|
+  -#    = ff.input :id, as: :hidden
+  -#    - if can?(current_user, :assign_officer, f.object)
+  -#      = ff.input :officers, as: :select, multiple: false, collection: member.chapter.officers
+  -#    - if can?(current_user, :assign_role, f.object)
+  -#      = ff.input :roles, as: :select, multiple: false, collection: Role.uncombined
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  //$(function() {
+  //  $("#member_user_attributes_role_ids").select2({theme: "bootstrap"})
+  //  $("#member_user_attributes_officer_ids").select2({theme: "bootstrap"})
+  //})

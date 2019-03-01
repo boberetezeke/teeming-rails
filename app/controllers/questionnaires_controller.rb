@@ -1,5 +1,5 @@
 class QuestionnairesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   before_action :set_questionnaire, only: [:show, :edit, :create, :destroy]
 

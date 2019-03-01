@@ -3,12 +3,13 @@ require 'rails_helper'
 describe MessagesController do
   include Devise::Test::ControllerHelpers
 
-  let(:messages_sender_role)  { FactoryGirl.create(:role, privileges: [FactoryGirl.create(:privilege, subject: 'message', action: 'send')]) }
-  let(:user)                  { FactoryGirl.create(:user) }
-  let(:message_sender_user)   { FactoryGirl.create(:user, role: messages_sender_role) }
-  let(:chapter)               { FactoryGirl.create(:chapter) }
-  # let(:chapter_member_group)  { FactoryGirl.create(:member_group, :chapter, members: []) }
-  let(:message)               { FactoryGirl.create(:message) }
+  let(:messages_sender_role)  { FactoryBot.create(:role, privileges: [FactoryBot.create(:privilege, subject: 'message', action: 'send')]) }
+  let(:user)                  { FactoryBot.create(:user) }
+  let(:message_sender_user)   { FactoryBot.create(:user, role: messages_sender_role) }
+  let(:chapter)               { FactoryBot.create(:chapter) }
+  # let(:chapter_member_group)  { FactoryBot.create(:member_group, :chapter, members: []) }
+  let(:message)               { FactoryBot.create(:message, chapter: chapter, member_group: MemberGroup.first) }
+  let(:sent_message)          { FactoryBot.create(:message, sent_at: Time.now, chapter: chapter, member_group: MemberGroup.first) }
 
   before do
     MemberGroup.write_member_groups
@@ -30,16 +31,22 @@ describe MessagesController do
     end
 
     describe "index" do
-      it "redirects to root path when accessing this endpoint" do
+      it "renders sent chapter messages when accessing this endpoint as a normal user" do
         get :index, params: { chapter_id: chapter.id }
         expect(response).to be_ok
+        expect(assigns(:messages)).to eq([sent_message])
       end
     end
 
     describe "show" do
-      it "redirects to root path when accessing this endpoint" do
-        get :show, params: { id: message.id }
+      it "doesn't allow users to view unsent messages" do
+        get :show, params: { id: message.id, chapter_id: chapter.id }
         expect(response).to redirect_to(root_path)
+      end
+
+      it "allows users to view sent messages" do
+        get :show, params: { id: sent_message.id, chapter_id: chapter.id }
+        expect(response).to be_ok
       end
     end
 
@@ -81,6 +88,7 @@ describe MessagesController do
       it "renders the index view" do
         get :index, params: { chapter_id: chapter.id }
         expect(response).to be_ok
+        expect(assigns(:messages)).to match_array([message, sent_message])
       end
     end
 

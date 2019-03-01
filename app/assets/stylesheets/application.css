@@ -15,6 +15,8 @@
  *= require_self
  *= require formtastic
  *= require bootstrap-datepicker
+ *= require select2
+ *= require select2-bootstrap
  */
 
 .event-title {
@@ -69,6 +71,10 @@ form.formtastic {
     font-weight: bold;
 }
 
+.status {
+    font-size: 12pt;
+}
+
 .vote-actions {
     margin-top: 10px;
 }
@@ -101,6 +107,10 @@ form.formtastic {
     width: 95%;
 }
 
+form.formtastic p.subtitle {
+    margin-bottom: 20px;
+}
+
 form.formtastic p.bylaws_link {
     padding: 15px;
     background-color: lightblue;
@@ -118,6 +128,31 @@ form.formtastic .stringish input {
 form.formtastic .check_box_or_radio label {
     padding-left: 25px;
     font-weight: bold;
+}
+
+form.formtastic .check_box_or_radio #user_use_username {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_email {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_name {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_address {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #user_share_phone {
+    margin-left: -20px;
+    margin-top: 5px;
 }
 
 form.formtastic .check_box_or_radio #race_is_official {
@@ -140,12 +175,27 @@ form.formtastic .check_box_or_radio #user_run_for_state_board {
     margin-top: 5px;
 }
 
+form.formtastic .check_box_or_radio #member_user_attributes_interested_in_volunteering {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
 form.formtastic .check_box_or_radio #user_interested_in_volunteering {
     margin-left: -20px;
     margin-top: 5px;
 }
 
 form.formtastic .check_box_or_radio #user_member_attributes_interested_in_starting_chapter {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #officer_is_board_member {
+    margin-left: -20px;
+    margin-top: 5px;
+}
+
+form.formtastic .check_box_or_radio #officer_is_executive_committee_member {
     margin-left: -20px;
     margin-top: 5px;
 }
@@ -278,4 +328,21 @@ form.formtastic select.form-control.narrow {
 
 .disqualified {
     text-color: red;
+}
+
+.btn-wide {
+    width: 100px;
+}
+
+.message-to {
+    height: 100px;
+    overflow: auto;
+    background-color: #fcfcfc;
+}
+
+.message-body {
+    height: 400px;
+    overflow: auto;
+    padding: 5px;
+    background-color: #fcfcfc;
 }

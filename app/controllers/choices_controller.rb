@@ -1,5 +1,5 @@
 class ChoicesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   # this should be def new_blank
   def show

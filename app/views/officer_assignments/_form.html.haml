@@ -1,0 +1,23 @@
+= semantic_form_for [@chapter, @officer_assignment] do |f|
+  = f.semantic_errors
+  - if @chapter
+    - if @chapter.is_state_wide
+      = f.input :user, as: :select, collection: Member.limit(2000).joins(:user).order('members.first_name asc, members.last_name asc').map(&:user)
+    - else
+      = f.input :user, as: :select, collection: @chapter.members.limit(2000).joins(:user).order('members.first_name asc, members.last_name asc').map(&:user)
+  - else
+    = f.input :user, as: :string, input_html: { disabled: true, value: f.object.user.name }
+  = f.input :start_date_str, label: 'Start Date', input_html: { autocomplete: 'off' }
+  = f.input :reason_for_start, as: :select, collection: OfficerAssignment::START_REASONS_HASH, include_blank: false
+  = f.input :end_date_str, label: 'End Date', input_html: { autocomplete: 'off' }
+  = f.input :reason_for_end, as: :select, collection: OfficerAssignment::END_REASONS_HASH, include_blank: false
+  = f.input :officer_id, as: :hidden
+
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+
+:javascript
+  $(function() {
+    $("#officer_assignment_start_date_str").datepicker({orientation: 'bottom'})
+    $("#officer_assignment_end_date_str").datepicker({orientation: 'bottom'})
+    $("#officer_assignment_user_id").select2({theme: "bootstrap"})
+  })

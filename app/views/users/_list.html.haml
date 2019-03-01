@@ -1,0 +1,5 @@
+- users.each do |user|
+  - if can?(current_user, :show, user.member)
+    = link_to(user.name, user.member)
+  - else
+    = user.name

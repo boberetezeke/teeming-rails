@@ -4,6 +4,7 @@ class MembersMailer < ApplicationMailer
   def send_normal(message, from, message_recipient)
     @message = message
     @message_recipient = message_recipient
+    @message_recipient.update(sent_at: Time.now)
     mail_options = {
         from: from,
         to: message_recipient.email,

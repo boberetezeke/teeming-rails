@@ -1,9 +1,10 @@
 %h2 Event RSVP
 
-%h3 Event
-= render partial: 'events/show', locals: {event: @event_rsvp.event, show_description: true, show_rsvp: false, show_stats: false}
 %h3 RSVP
 = semantic_form_for @event_rsvp do |f|
   = render partial: 'form', locals: {f: f}
   = f.hidden_field :user_id
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+%hr
+%h3 Event
+= render partial: 'events/show', locals: {event: @event_rsvp.event, show_description: true, show_actions: false, show_rsvp: false, show_stats: false}

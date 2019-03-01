@@ -1,0 +1,6 @@
+%h2 Unsubscribe
+%p This page allows you modify your settings for #{@message_control.unsubscribe_type.pluralize}, one of which is to unsubscribe.
+= semantic_form_for @message_control do |f|
+  = render partial: 'message_controls/form', locals: { f: f, disabled: false }
+  = hidden_field_tag(:message_recipient_id, @message_recipient.id)
+  = f.submit label: 'Submit', class: 'btn btn-sm btn-primary'

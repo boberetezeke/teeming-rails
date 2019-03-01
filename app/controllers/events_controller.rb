@@ -1,24 +1,30 @@
 class EventsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   before_action :set_chapter
   before_action :set_context_params
-  before_action :set_event, only: [:show, :edit, :update, :email, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :email, :publish, :unpublish, :destroy]
 
   def index
     @chapter = Chapter.find(params[:chapter_id])
-    @events = @chapter.events
+    @events = policy_scope_with_args(@chapter.events, @context_params)
     authorize_with_args Event, @context_params
 
     breadcrumbs [@chapter.name, @chapter], "Events"
   end
 
   def show
-    breadcrumbs event_breadcrumbs, @event.name
+    @event_rsvp = @event.event_rsvps.for_user(current_user).first
+    if params[:goto_rsvp]
+      @event_rsvp = EventRsvp.create(user: current_user, event: @event, during_initialization: true) unless @event_rsvp
+      redirect_to edit_event_rsvp_path(@event_rsvp)
+    else
+      breadcrumbs event_breadcrumbs, @event.name
+    end
   end
 
   def new
-    @event = Event.new(chapter_id: params[:chapter_id])
+    @event = Event.new(chapter_id: params[:chapter_id], event_type: Event::EVENT_TYPE_ONLINE_AND_OFFLINE)
     authorize_with_args @event, @context_params
     @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
 
@@ -30,15 +36,17 @@ class EventsController < ApplicationController
     authorize @event
 
     if @event.save
+      check_event_time
       redirect_to @event
     else
+      @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
       render :new
     end
   end
 
   def edit
-    @event.set_accessors
     @event = Event.find(params[:id])
+    @event.set_accessors
     @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
 
     breadcrumbs event_breadcrumbs, @event.name
@@ -46,10 +54,28 @@ class EventsController < ApplicationController
 
   def update
     if @event.update(event_params)
+      check_event_time
       redirect_to @event
     else
+      @member_groups = MemberGroupPolicy::Scope.new(current_user, MemberGroup).resolve
       render :edit
     end
+  end
+
+  def publish
+    if @event.published?
+      flash[:alert] = "Event is already published"
+    elsif @event.occurs_at.nil?
+      flash[:alert] = "Can't publish event without a time set"
+    else
+      @event.publish
+    end
+    redirect_to @event
+  end
+
+  def unpublish
+    @event.unpublish
+    redirect_to @event
   end
 
   def email
@@ -58,14 +84,19 @@ class EventsController < ApplicationController
 
   def destroy
     @event.destroy
-    redirect_to events_path
+    redirect_to chapter_events_path(@event.chapter)
   end
 
   private
 
+  def check_event_time
+    if @event.occurs_at && @event.occurs_at < Time.now
+      flash[:notice] = "Your event time is in the past"
+    end
+  end
   def set_event
     @event = Event.find(params[:id])
-    authorize @event
+    authorize_with_args @event, {chapter_id: @event.chapter.id}
   end
 
   def set_chapter
@@ -77,7 +108,9 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description, :location, :chapter_id, :member_group_id)
+    params.require(:event).permit(:name, :occurs_at_date_str, :occurs_at_time_str, :description,
+                                  :event_type, :online_details,
+                                  :location, :chapter_id, :member_group_id, :agenda, :election_id, :visibility)
   end
 
   def event_breadcrumbs(include_link: true)

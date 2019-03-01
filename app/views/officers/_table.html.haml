@@ -1,0 +1,25 @@
+%table.table
+  %thead
+    %tr
+      %th Office
+      %th Occupant
+      %th Roles
+      - if show_actions
+        %th Actions
+  %tbody
+    - officers.each do |officer|
+      %tr
+        %td
+          - if can?(current_user, :show, officer)
+            = link_to(officer.officer_type, officer_path(officer, chapter_id: officer.chapter_id))
+          - else
+            = officer.officer_type
+        %td
+          - if officer.users
+            = render partial: 'officer_assignments/list', locals: { officer_assignments: tab == 'inactive' ? officer.officer_assignments.inactive : officer.officer_assignments.active, context_params: @context_params, show_actions: false }
+        %td
+          - if officer.roles.present?
+            = render partial: 'roles/list', locals: { roles: officer.roles }
+        - if show_actions
+          %td
+            = render partial: 'officers/actions', locals: { officer: officer }

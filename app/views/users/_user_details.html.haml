@@ -1,0 +1,17 @@
+= f.fields_for :member do |ff|
+  = ff.hidden_field :id
+  = ff.hidden_field :with_user_input
+- if show_email
+  .row
+    .col-md-12
+      = f.fields_for :member do |ff|
+        = render partial: 'members/email', locals: { f: ff, disabled: disabled }
+= f.fields_for :member do |ff|
+  = render partial: 'members/user_details', locals: { f: ff, disabled: disabled }
+
+%h3 Chapters
+%p.subtitle
+  Our local chapters are our grassroots backbone. Please select one in your area or start one.
+= f.fields_for :member do |ff|
+  = render partial: 'members/chapter_controls', locals: { f: ff, disabled: disabled }
+

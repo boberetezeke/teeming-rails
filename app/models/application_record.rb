@@ -4,12 +4,18 @@ class ApplicationRecord < ActiveRecord::Base
   def validate_time(time_sym)
     time_str_sym = "#{time_sym}_str"
     time_str = self.send(time_str_sym)
+    time_str = time_str.strip if time_str
     return true if time_str.blank?
 
-    m = /(\d+):(\d+)/.match(time_str)
+    m = /^(\d+):(\d+)([APap][mM]?)?$/.match(time_str)
     if m
-      hour, minute = m.captures.map(&:to_i)
-      if hour < 0 || hour >= 24
+      hour, minute, am_pm = m.captures
+
+      hour = hour.to_i
+      minute = minute.to_i
+
+      if (am_pm &&  (hour < 1 || hour > 12)) ||
+         (!am_pm && (hour < 0 || hour >= 24))
         errors.add(time_str_sym, "invalid hour '#{hour}'")
         return false
       end
@@ -18,6 +24,8 @@ class ApplicationRecord < ActiveRecord::Base
         errors.add(time_str_sym, "invalid minute '#{minute}'")
         return false
       end
+
+      hour += 12 if am_pm && am_pm =~ /^[Pp]/ && hour != 12
 
       time_value = Time.zone.local(2017, 1, 1, hour, minute)
       if block_given?

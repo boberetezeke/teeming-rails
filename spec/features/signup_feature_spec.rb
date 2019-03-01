@@ -1,18 +1,7 @@
 require 'rails_helper'
 include Warden::Test::Helpers
 require 'capybara-screenshot/rspec'
-
-def sign_in(user)
-  visit user_session_path
-  fill_in "user_email", 		  with: user.email
-  fill_in "user_password",		with: user.password
-  click_button "Login"
-end
-
-def sign_out
-  visit root_path
-  click_link "Sign out"
-end
+require 'support/authentication'
 
 describe "Signup process" do
   def fill_in_member_info
@@ -26,9 +15,10 @@ describe "Signup process" do
   end
 
   context "when going through signup" do
-    let(:user) { FactoryGirl.create(:user) }
+    let(:user) { FactoryBot.create(:user) }
 
     before do
+      user.member.update(added_with_new_user: true)
       Rails.application.load_seed # loading seeds
       sign_in user
       visit home_users_path
