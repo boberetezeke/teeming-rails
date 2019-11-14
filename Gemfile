@@ -69,7 +69,7 @@ group :test do
   gem 'factory_bot_rails'
   gem 'timecop'
   gem 'capybara-screenshot'
-  gem 'capybara-webkit'
+  #gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'rails-controller-testing'
 end

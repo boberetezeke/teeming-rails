@@ -96,9 +96,6 @@ GEM
     capybara-screenshot (1.0.18)
       capybara (>= 1.0, < 3)
       launchy
-    capybara-webkit (1.15.0)
-      capybara (>= 2.3, < 4.0)
-      json
     case_transform (0.2)
       activesupport
     coderay (1.1.2)
@@ -160,7 +157,6 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
-    json (2.1.0)
     jsonapi-renderer (0.2.0)
     jwt (2.1.0)
     kaminari (1.1.1)
@@ -359,7 +355,6 @@ DEPENDENCIES
   byebug
   capybara
   capybara-screenshot
-  capybara-webkit
   daemons
   database_cleaner
   delayed_job_active_record
@@ -401,4 +396,4 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 BUNDLED WITH
-   1.16.0
+   1.16.6
