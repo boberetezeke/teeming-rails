@@ -1,0 +1,41 @@
+%h2 Contact Bank: #{@contact_bank.name}
+%h4 Setup by: #{@contact_bank.owner.name}
+
+.row
+  .col-md-6
+    %h3 Script
+    %p= Kramdown::Document.new(@contact_bank.script).to_html.html_safe
+  .col-md-6
+    %h3 Notes
+    %p= Kramdown::Document.new(@contact_bank.notes).to_html.html_safe
+.row
+  .col-md-6
+    %h3 Contactors
+    - if current_user == @contact_bank.owner
+      %ul
+        - @contact_bank.contactors.each do |contactor|
+          %li= contactor.user.name
+    - else
+      #{@contact_bank.contactors.size} contactors
+
+  .col-md-6
+    %h3 Contactees
+    - if current_user == @contact_bank.owner
+      %ul
+        - @contact_bank.contactees.each do |contactee|
+          = render partial: 'contactees/summary', locals: { contactee: contactee }
+    - else
+      %ul
+        - @contact_bank.contactees.contacted_by(current_user).each do |contactee|
+          = render partial: 'contactees/summary', locals: { contactee: contactee }
+    %hr
+    %h3 Stats
+    - attempted = @contact_bank.contactees_attempted.size
+    - contacted = @contact_bank.contactees_contacted.size
+    - total = @contact_bank.contactees.size
+    %div (#{attempted}, #{contacted}, #{total}) - Attempted / Contacted / Total
+    %div (#{percent(attempted, total)}%, #{percent(contacted, total)}%}) - Attempted, Contacted
+
+- if current_user == @contact_bank.owner
+  = link_to "Edit", edit_contact_bank_path(@contact_bank), class: 'btn btn-sm btn-primary'
+= link_to "Next Contactee", next_contactee_contact_bank_path(@contact_bank), method: :put, class: 'btn btn-sm btn-success'

@@ -17,9 +17,14 @@ class Member < ApplicationRecord
 
   has_many :message_recipients, dependent: :destroy
 
+  has_many :contact_attempts
+
   attr_accessor :with_user_input
 
-  validates :email, :uniqueness => true
+  geocoded_by :address
+  acts_as_taggable_on :districts, :subcaucuses, :sources, :general_tags
+
+  validates :email, :uniqueness => true, allow_nil: true, unless: ->{ email.blank? && user.blank? }
   validates :first_name, :last_name, presence: true, if: ->{ with_user_input }
   validates :address_1, presence: true,              if: ->{ with_user_input }
   validates :city, presence: true,                   if: ->{ with_user_input }
@@ -54,6 +59,7 @@ class Member < ApplicationRecord
   MEMBER_TYPE_MEMBER =          'member'
   MEMBER_TYPE_POTENTIAL =       'potential'
   MEMBER_TYPE_USER_MEMBER =     'user-member'
+  MEMBER_TYPE_NON_MEMBER =      'non-member'
   MEMBER_TYPE_NON_USER_MEMBER = 'non-user-member'
 
   scope :officers,                    ->(chapter) {
@@ -87,9 +93,10 @@ class Member < ApplicationRecord
   }
 
   scope :potential_chapter_members, ->(chapter) {
-    where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
-      Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
-    ))
+    where(Member.arel_table[:potential_chapter_id].eq(chapter.id))
+    # where(Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+    #   Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
+    # ))
   }
   scope :chapter_members,     ->(chapter) { where(chapter_id: chapter.id) }
   scope :chapter_users,       ->(chapter) { joins(:user).where(chapter_id: chapter.id) }
@@ -97,18 +104,26 @@ class Member < ApplicationRecord
   scope :all_chapter_members, ->(chapter) {
     where(
       Member.arel_table[:chapter_id].eq(chapter.id).or(
-        Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
-          Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
-        )
+        Member.arel_table[:potential_chapter_id].eq(chapter.id)
       )
     )
+    # where(
+    #   Member.arel_table[:chapter_id].eq(chapter.id).or(
+    #     Member.arel_table[:potential_chapter_id].eq(chapter.id).and(
+    #       Member.arel_table[:chapter_id].eq(Chapter.find_by_is_state_wide(true).id)
+    #     )
+    #   )
+    # )
   }
 
-  scope :all_members, ->(chapter){ all }
+  scope :non_members_with_chapter, ->(chapter){ where(Member.arel_table[:is_non_member].eq(true).and(Member.arel_table[:potential_chapter_id].eq(chapter.id))) }
+  scope :non_members, ->{ where(Member.arel_table[:is_non_member].eq(true)) }
+  scope :non_user_members, ->{ where(Member.arel_table[:is_non_member].eq(nil).and(Member.arel_table[:user_id].eq(nil))) }
+  scope :all_members, ->(chapter){ where(is_non_member: nil) }
   scope :all_users,   ->(chapter){ joins(:user) }
 
   scope :without_user, ->{ where(user_id: nil) }
-  scope :with_user, ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
+  scope :with_user,    ->{ where(Member.arel_table[:user_id].not_eq(nil)) }
 
   scope :valid_email, -> {
     where(
@@ -116,7 +131,20 @@ class Member < ApplicationRecord
       'invalid', 'bounce', 'block', 'unsubscribe'
     )
   }
-  scope :filtered_by_string, ->(search) { where("lower((first_name || ' ' || last_name || ' ' || members.email)) like lower('%#{connection.quote(search)[1..-2]}%')") }
+  scope :tagged_by_string, ->(search, members) {
+    if search.size >= 3
+      tags = ActsAsTaggableOn::Tag.where("lower(name) like lower('%#{connection.quote(search)[1..-2]}%')")
+      if tags.present?
+        members.tagged_with(tags)
+      else
+        members
+      end
+    else
+      members
+    end
+  }
+
+  scope :filtered_by_string, ->(search) { where("lower(concat(first_name,  ' ', last_name, ' ', members.email, ' ', members.notes)) like lower('%#{connection.quote(search)[1..-2]}%')") }
   scope :filtered_by_attrs, ->(member_type) {
     if member_type == Member::MEMBER_ATTRS_VOLUNTEER
       where(User.arel_table[:interested_in_volunteering].eq(true))
@@ -143,21 +171,28 @@ class Member < ApplicationRecord
   MEMBER_FILTERS = {
     search:       '',
     member_type:  MEMBER_TYPE_ALL,
-    attr_type:    MEMBER_ATTRS_ALL
+    attr_type:    MEMBER_ATTRS_ALL,
+    source:       "Any",
+    subcaucus:    "Any",
+    district:     "Any",
+    general_tag:  "Any",
+    restrict_by_chapter: true
   }
 
 
   MEMBER_TYPES_HASH = {
       "All" =>               MEMBER_TYPE_ALL,
-      "User Members" =>      MEMBER_TYPE_MEMBER,
-      "Non-User Members" =>  MEMBER_TYPE_NON_USER_MEMBER,
+      "User Members" =>      MEMBER_TYPE_USER_MEMBER,
+      "Non Members" =>  MEMBER_TYPE_NON_MEMBER,
       "Potential User Members" => MEMBER_TYPE_POTENTIAL
   }
 
   MEMBER_TYPES_STATE_WIDE_HASH = {
       "All" =>              MEMBER_TYPE_ALL,
+      "Members" =>          MEMBER_TYPE_MEMBER,
       "User Members" =>     MEMBER_TYPE_USER_MEMBER,
-      "Non-User Members" => MEMBER_TYPE_NON_USER_MEMBER
+      "Non-User Members" => MEMBER_TYPE_NON_USER_MEMBER,
+      "Non Members" =>      MEMBER_TYPE_NON_MEMBER,
   }
 
   MEMBER_ATTRS_HASH = {
@@ -201,7 +236,15 @@ class Member < ApplicationRecord
   end
 
   def name
-    "#{first_name} #{last_name}"
+    if first_name || last_name
+      "#{first_name} #{last_name}"
+    else
+      email
+    end
+  end
+
+  def address
+    [([address_1, address_2].reject(&:nil?).join(' ')), city, state, "United States"].compact.join(', ')
   end
 
   def message_control_for(unsubscribe_type)

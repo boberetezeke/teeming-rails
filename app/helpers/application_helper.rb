@@ -191,4 +191,18 @@ module ApplicationHelper
   def is_current_user?(member, current_user)
     member.user && member.user == current_user
   end
+
+  def member_index_tags(member)
+    general_tags = member.general_tags.map(&:name)
+    subcaucus_tags = member.subcaucuses.map(&:name)
+    source_tags = member.sources.map(&:name)
+    district_tags = member.districts.map(&:name)
+
+    non_empty_tag_groups = [["", general_tags], ["districts", district_tags], ["caucuses", subcaucus_tags], ["sources", source_tags]].reject{|title, tags| tags.empty?}
+    non_empty_tag_groups.map{|title, tags| (title.empty? ? "" : "<strong>#{title}: </strong>".html_safe) + truncate(sanitize(tags.join(", "), length: 25))}.join("<br/>").html_safe
+  end
+
+  def percent(part, whole)
+    "%.2f" % [(part.to_f / whole.to_f) * 100]
+  end
 end

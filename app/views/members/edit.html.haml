@@ -1,1 +1,2 @@
-= render partial: 'members/form', locals: { chapter: nil, member: @member }
+= semantic_form_for [nil, @member] do |f|
+  = render partial: 'members/form', locals: { f: f, field_prefix: "member" }

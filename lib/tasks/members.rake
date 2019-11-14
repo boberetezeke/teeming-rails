@@ -66,4 +66,95 @@ namespace :members  do
   task :remove_non_user_members => :environment do
     Member.where(user_id: nil).destroy_all
   end
+
+
+  desc "merge contacts"
+  task :merge_contacts, [:curl_address] => :environment do |t, args|
+    if args[:curl_address].present?
+      system("curl #{args[:curl_address]} >/tmp/merge.csv")
+      contacts_str = File.read("/tmp/merge.csv")
+      ImportCds.import_contacts_csv(contacts_str)
+    else
+      puts "curl_address argument missing"
+    end
+  end
+
+  desc "merge contacts2"
+  task :merge_contacts2, [:curl_address] => :environment do |t, args|
+    if args[:curl_address].present?
+      system("curl #{args[:curl_address]} >/tmp/merge.csv")
+      contacts_str = File.read("/tmp/merge.csv")
+      ImportCds.import_contacts_csv2(contacts_str)
+    else
+      puts "curl_address argument missing"
+    end
+  end
+
+  desc "merge contacts2 local"
+  task :merge_contacts2_local, [:curl_address] => :environment do |t, args|
+    ImportCds.import_contacts_csv2_local("scc-2018.csv")
+  end
+
+  desc "geocode members"
+  task :geocode => :environment do
+    Member.where("lower(state) = 'mn'").find_each do |member|
+      Geocoding.update_lat_lon_for_member(member)
+
+      puts "updating #{member.email} - city:#{member.city} - latitude: #{member.latitude} - longitude: #{member.longitude}"
+
+      member.save if member.changed?
+    end
+  end
+
+  desc "set chapter boundaries YAML"
+  task :set_chapter_boundaries_yml, [:chapter_boundaries_yml_file] => :environment do |t, args|
+    yml = YAML.load(File.open(args[:chapter_boundaries_yml_file]))
+    chapter_hash = Chapter.all.map{|c| [c.name.downcase.strip, c.id]}.to_h
+
+    yml.each do |chapter_and_boundaries|
+      puts "chapter_and_boundaries: #{chapter_and_boundaries}"
+      chapter_name = chapter_and_boundaries[:name]
+      if chapter_hash[chapter_name.downcase.strip].nil?
+        puts "Chapter not found: #{chapter_name}"
+        exit
+      end
+    end
+
+    yml.each do |chapter_and_boundaries|
+      chapter_name = chapter_and_boundaries[:name].downcase.strip
+      chapter = Chapter.find(chapter_hash[chapter_name])
+      chapter.boundaries_description_yml = chapter_and_boundaries[:boundaries].to_yaml
+      chapter.save
+    end
+  end
+
+  desc "set potential chapter id"
+  task :set_potential_chapter => :environment do |t, args|
+    state_chapter = Chapter.find_by(is_state_wide: true)
+    member = Member.arel_table
+    members_to_check = Member.where(
+      member[:chapter_id].eq(state_chapter.id).or(member[:chapter_id].eq(nil)).and(
+          member[:city].not_eq(nil)
+      ))
+    chapters = Chapter.all.reject(&:is_state_wide)
+    cities_to_chapter = {}
+    chapters.each{|c| c.cities.each{|city| cities_to_chapter[city] = c}}
+
+    potential_chapter_ids_set = 0
+    members_to_check.find_each do |member|
+      if member.city.present?
+        city = Geocoding.clean_city(member.city)
+        chapter = cities_to_chapter[city]
+        if chapter
+          puts "for #{member.first_name} #{member.last_name} in #{member.city} setting chapter to #{chapter.name}"
+          member.potential_chapter_id = chapter.id
+          member.save
+          potential_chapter_ids_set += 1
+        end
+      end
+    end
+
+    puts "Members to check #{members_to_check.size}"
+    puts "Updated #{potential_chapter_ids_set} potential chapter ids"
+  end
 end

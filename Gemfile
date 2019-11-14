@@ -21,7 +21,7 @@ gem 'kramdown'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'select2-rails'
-gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git'
+gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git', branch: 'add_text_change_support_and_check_box'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.1.6'
@@ -35,6 +35,8 @@ gem 'puma', '~> 3.0'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
+gem 'geocoder'
+gem 'acts-as-taggable-on', '~> 6.0'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'jwt', '>= 1.5.6'
@@ -67,7 +69,7 @@ group :test do
   gem 'factory_bot_rails'
   gem 'timecop'
   gem 'capybara-screenshot'
-  gem 'capybara-webkit'
+  #gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'rails-controller-testing'
 end

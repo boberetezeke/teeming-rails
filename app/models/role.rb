@@ -101,6 +101,12 @@ class Role < ApplicationRecord
        ]
       ],
 
+      ['write',                 'contact_bank', nil,
+       [
+         "manage (add/edit/delete) contact banks"
+       ]
+      ],
+
       ['show_tallies',          'vote',         'show_vote_tallies',
        [
          "view vote tallies"

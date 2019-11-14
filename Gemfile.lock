@@ -10,7 +10,8 @@ GIT
 
 GIT
   remote: https://github.com/boberetezeke/dynamic_table.git
-  revision: 03f5d5533cd309c8aec2e6b53b05be3a1e1b82ae
+  revision: 8379ddd39d256523f0e56b9ac9f2be8812f74fd4
+  branch: add_text_change_support_and_check_box
   specs:
     dynamic_table (0.0.0)
 
@@ -59,6 +60,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts-as-taggable-on (6.0.0)
+      activerecord (~> 5.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
@@ -93,9 +96,6 @@ GEM
     capybara-screenshot (1.0.18)
       capybara (>= 1.0, < 3)
       launchy
-    capybara-webkit (1.15.0)
-      capybara (>= 2.3, < 4.0)
-      json
     case_transform (0.2)
       activesupport
     coderay (1.1.2)
@@ -141,6 +141,7 @@ GEM
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
       formtastic (>= 3.0)
+    geocoder (1.5.0)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     haml (5.0.4)
@@ -156,7 +157,6 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
-    json (2.1.0)
     jsonapi-renderer (0.2.0)
     jwt (2.1.0)
     kaminari (1.1.1)
@@ -348,13 +348,13 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
+  acts-as-taggable-on (~> 6.0)
   aws-sdk-s3 (~> 1)
   bcrypt (~> 3.1.7)
   bootstrap-datepicker-rails
   byebug
   capybara
   capybara-screenshot
-  capybara-webkit
   daemons
   database_cleaner
   delayed_job_active_record
@@ -364,6 +364,7 @@ DEPENDENCIES
   factory_bot_rails
   formtastic (~> 3.0)
   formtastic-bootstrap
+  geocoder
   haml
   honeybadger
   jquery-rails
@@ -395,4 +396,4 @@ DEPENDENCIES
   will_paginate-bootstrap
 
 BUNDLED WITH
-   1.16.0
+   1.16.6

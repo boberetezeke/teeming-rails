@@ -1,0 +1,31 @@
+= semantic_form_for contact_bank, url: contact_bank.persisted? ? contact_bank_path(contact_bank) : contact_banks_path, method: contact_bank.persisted? ? :put : :post do |f|
+  = f.input :name
+  /= f.input :users, as: :select, multiple: true, collection: User.for_chapter(@chapter), label: 'Contacters'
+  /= f.input :members, as: :select, multiple: true, label: 'Contactees', collection: @chapter.members
+  = f.input :users, as: :select, multiple: true, label: 'Contacters',   collection: f.object.users
+  = f.input :members, as: :select, multiple: true, label: 'Contactees', collection: f.object.members
+  = f.input :notes, as: :text, input_html: { rows: 4 }
+  = f.input :script, as: :text, input_html: { rows: 4 }
+  = f.input :chapter_id, as: :hidden
+  = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
+
+
+:javascript
+  $(function() {
+    $("#contact_bank_user_ids").select2({
+      theme: "bootstrap",
+      //tags: true,
+      ajax: {
+        url: "#{select2_chapter_users_path(@contact_bank.chapter)}",
+        dataType: 'json'
+      }
+    })
+    $("#contact_bank_member_ids").select2({
+      theme: "bootstrap",
+      //tags: true,
+      ajax: {
+        url: "#{select2_chapter_members_path(@contact_bank.chapter)}",
+        dataType: 'json'
+      }
+    })
+  });

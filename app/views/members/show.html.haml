@@ -26,5 +26,7 @@
         - f.object.answers.each do |answer|
           = render partial: 'answers/show', locals: { answer: answer }
 
+= render partial: 'members/tags_and_notes', locals: { member: @member }
+%hr
 = render partial: 'members/actions', locals: { member: @member }
 

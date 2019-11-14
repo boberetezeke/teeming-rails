@@ -1,9 +1,11 @@
 class Chapter < ApplicationRecord
+  CHAPTER_TYPE_IN_FORMATION = 'formation'
   CHAPTER_TYPE_AFFILIATE = 'affiliate'
   CHAPTER_TYPE_RECOGNIZED = 'recognized'
   CHAPTER_TYPE_INDEPENDENT = 'independent'
 
   CHAPTER_TYPES_HASH = {
+     'In Formation' => CHAPTER_TYPE_IN_FORMATION,
      'Affiliate' => CHAPTER_TYPE_AFFILIATE,
      'Recognized' => CHAPTER_TYPE_RECOGNIZED,
      "Independent" => CHAPTER_TYPE_INDEPENDENT
@@ -42,10 +44,40 @@ class Chapter < ApplicationRecord
   end
 
   def affiliate?
-    chapter_type == CHAPTER_TYPE_AFFILIATE
+    chapter_type == CHAPTER_TYPE_AFFILIATE || chapter_type == CHAPTER_TYPE_IN_FORMATION
   end
 
   def active_officer_assignments
     officers.joins(:officer_assignments).merge(OfficerAssignment.active)
+  end
+
+  def boundaries
+    return nil unless boundaries_description_yml
+
+    ChapterBoundaries.new(YAML.load(StringIO.new(boundaries_description_yml)).map do |boundary_hash|
+      boundary_type = boundary_hash[:type]
+      if ChapterBoundary::EAST_WEST_BOUNDARIES.include?(boundary_type)
+        ChapterBoundary.new(boundary_type, x: boundary_hash[:x])
+      else
+        ChapterBoundary.new(boundary_type,
+                            x1: boundary_hash[:x1],
+                            y1: boundary_hash[:y1],
+                            x2: boundary_hash[:x2],
+                            y2: boundary_hash[:y2])
+      end
+    end)
+  end
+
+  def cities
+    return [] unless boundaries
+    return @cities if @cities
+
+    @cities = []
+    Geocoding::CITIES.to_a.each do |name, values|
+      if boundaries.within_boundaries?(values[:lon], values[:lat])
+        @cities.push(name)
+      end
+    end
+    @cities
   end
 end

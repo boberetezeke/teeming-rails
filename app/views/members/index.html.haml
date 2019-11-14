@@ -2,35 +2,59 @@
 
 = DynamicTable::Table.new(view: self, base_path: chapter_members_path(@chapter), filters: Member::MEMBER_FILTERS, params: params).generate do |dt|
   Search: #{dt.text_field_tag :search}
-  - if @chapter.is_state_wide
-    By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_STATE_WIDE_HASH)}
-  - else
-    By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_HASH)}
-  By Attributes: #{dt.select_tag_options_for_select(:attr_type, Member::MEMBER_ATTRS_HASH)}
+  %div
+    - if @chapter.is_state_wide
+      By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_STATE_WIDE_HASH)}
+    - else
+      By Type: #{dt.select_tag_options_for_select(:member_type, Member::MEMBER_TYPES_HASH)}
+    By Attributes: #{dt.select_tag_options_for_select(:attr_type, Member::MEMBER_ATTRS_HASH)}
+    By Subcaucus: #{dt.select_tag_options_for_select(:subcaucus,  ["Any"] + Member.tags_on(:subcaucuses).map(&:name).sort)}
+    %br
+    By District: #{dt.select_tag_options_for_select(:district,  ["Any"] + Member.tags_on(:districts).map(&:name).sort)}
+    By Source: #{dt.select_tag_options_for_select(:source,  ["Any"] + Member.tags_on(:sources).map(&:name).sort)}
+    By Tag: #{dt.select_tag_options_for_select(:general_tag,  ["Any"] + Member.tags_on(:general_tags).map(&:name).sort)}
+    - if @chapter.is_state_wide
+      %br
+      = dt.check_box_tag "restrict_by_chapter"
+      = label_tag "", "Restrict by chapter"
+  %hr
+  %div{dt.refreshable("member-count")}
+    Total: #{@members.count}
   %table.table
     %thead
       %tr.row
         %th Name
         %th Email
+        %th Type
         %th Volunteer?
         %th City
         %th Chapter / (Potential)
+        %th Tags
+        %th Notes
         %th Action
     %tbody{dt.refreshable("table-body")}
       - @members.each do |member|
         %tr.row
           %td= link_to(member.name, member)
           %td= member.user ? member.user.email : member.email
+          %td= member.is_non_member ? "Non-member" : (member.user ? "User" : "Member")
           %td= member.user ? (member.user.interested_in_volunteering ? "Yes" : "No") : "No"
           %td= member.city
-          %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : member.chapter.name
+          %td= member.potential_chapter ? "(#{member.potential_chapter.name})" : (member.chapter ? member.chapter.name : "")
+          %td= member_index_tags(member)
+          %td= truncate(member.notes, length: 25)
           %td= render partial: 'members/actions', locals: { member: member }
   %div{dt.refreshable("pagination")}
     = will_paginate @users, renderer: BootstrapPagination::Rails
 
-- if can?(current_user, :new, :member)
-  = link_to "Add Member", new_chapter_member_path(chapter: @chapter), class: 'btn btn-sm btn-success'
-- if can?(current_user, :import, :member)
-  = form_tag(import_chapter_members_path(@chapter), multipart: true, style: 'display: inline') do
-    = submit_tag 'Import', class: 'btn btn-sm btn-primary btn-with-padding', id: 'import-members'
-    = file_field_tag 'import_file', style: 'display: inline;'
+  = form_tag(new2_contact_banks_path, method: :post, style: 'display: inline') do
+    = hidden_field_tag(:chapter_id, @chapter.id)
+    %div{dt.refreshable("member_ids")}
+      = hidden_field_tag(:member_ids, @members_ids)
+    = submit_tag 'Create Contact Bank', class: 'btn btn-sm btn-primary btn-with-padding', id: 'new-contact-bank'
+  - if can?(current_user, :new, :member)
+    = link_to "Add Member", new_chapter_member_path(chapter: @chapter), class: 'btn btn-sm btn-success'
+  - if can?(current_user, :import, :member)
+    = form_tag(import_chapter_members_path(@chapter), multipart: true, style: 'display: inline') do
+      = submit_tag 'Import', class: 'btn btn-sm btn-primary btn-with-padding', id: 'import-members'
+      = file_field_tag 'import_file', style: 'display: inline;'

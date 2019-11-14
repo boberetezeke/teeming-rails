@@ -55,7 +55,15 @@ class ApplicationPolicy
           context_params[:chapter_id].to_i == scope["chapter_id"]
         else
           if record.respond_to?(:chapter_id)
-            record.chapter_id == scope['chapter_id']
+            if record.chapter_id == scope['chapter_id']
+              true
+            else
+              if record.respond_to?(:potential_chapter_id)
+                record.potential_chapter_id == scope['chapter_id']
+              else
+                false
+              end
+            end
           else
             false
           end
