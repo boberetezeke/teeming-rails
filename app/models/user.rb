@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  belongs_to :selected_account, class_name: 'Account', foreign_key: :selected_account_id
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -25,6 +27,8 @@ class User < ApplicationRecord
 
   has_many :votes
   has_many :vote_completions
+
+  has_many :user_account_memberships
 
   belongs_to :role
 
@@ -99,6 +103,19 @@ class User < ApplicationRecord
 
   def in_race?(race)
     candidacies.map(&:race).include?(race)
+  end
+
+  def select_account(account)
+    update(selected_account_id: account.id)
+  end
+
+  def owner_of_account(account)
+    membership = user_account_memberships.find_by_account_id(account.id)
+    membership && membership.owner?
+  end
+
+  def member_of_account(account)
+    user_account_memberships.find_by_account_id(account.id)
   end
 
   def all_roles

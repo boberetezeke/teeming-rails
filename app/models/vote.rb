@@ -1,4 +1,6 @@
 class Vote < ApplicationRecord
+  belongs_to :account
+
   belongs_to :user
   belongs_to :candidacy
   belongs_to :race

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190211034211) do
+ActiveRecord::Schema.define(version: 20191208190305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "user_id"
     t.string "answerable_type"
     t.integer "answerable_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_answers_on_account_id"
     t.index ["answerable_id"], name: "index_answers_on_answerable_id"
     t.index ["candidacy_id"], name: "index_answers_on_candidacy_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
@@ -49,6 +51,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "token"
     t.datetime "questionnaire_submitted_at"
     t.datetime "unlock_requested_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_candidacies_on_account_id"
     t.index ["created_by_user_id"], name: "index_candidacies_on_created_by_user_id"
     t.index ["race_id"], name: "index_candidacies_on_race_id"
     t.index ["updated_by_user_id"], name: "index_candidacies_on_updated_by_user_id"
@@ -71,6 +75,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "visibility"
     t.string "chapter_type"
     t.text "boundaries_description_yml"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_chapters_on_account_id"
   end
 
   create_table "choice_tallies", id: :serial, force: :cascade do |t|
@@ -79,6 +85,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "count"
     t.integer "round"
     t.integer "questionnaire_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_choice_tallies_on_account_id"
     t.index ["question_id"], name: "index_choice_tallies_on_question_id"
     t.index ["questionnaire_id"], name: "index_choice_tallies_on_questionnaire_id"
   end
@@ -95,6 +103,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "order_index"
     t.string "title"
     t.string "value"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_choices_on_account_id"
     t.index ["question_id"], name: "index_choices_on_question_id"
   end
 
@@ -108,6 +118,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.datetime "attempted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_contact_attempts_on_account_id"
     t.index ["contactee_id"], name: "index_contact_attempts_on_contactee_id"
     t.index ["contactor_id"], name: "index_contact_attempts_on_contactor_id"
   end
@@ -120,6 +132,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.bigint "chapter_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_contact_banks_on_account_id"
     t.index ["chapter_id"], name: "index_contact_banks_on_chapter_id"
     t.index ["owner_id"], name: "index_contact_banks_on_owner_id"
   end
@@ -129,6 +143,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.bigint "member_id"
     t.datetime "contact_started_at"
     t.datetime "contact_completed_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_contactees_on_account_id"
     t.index ["contact_bank_id"], name: "index_contactees_on_contact_bank_id"
     t.index ["member_id"], name: "index_contactees_on_member_id"
   end
@@ -136,6 +152,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
   create_table "contactors", force: :cascade do |t|
     t.bigint "contact_bank_id"
     t.bigint "user_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_contactors_on_account_id"
     t.index ["contact_bank_id"], name: "index_contactors_on_contact_bank_id"
     t.index ["user_id"], name: "index_contactors_on_user_id"
   end
@@ -171,6 +189,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "visibility"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_elections_on_account_id"
     t.index ["chapter_id"], name: "index_elections_on_chapter_id"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id"
   end
@@ -179,6 +199,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "user_id"
     t.integer "event_id"
     t.string "rsvp_type"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_event_rsvps_on_account_id"
     t.index ["event_id"], name: "index_event_rsvps_on_event_id"
     t.index ["user_id"], name: "index_event_rsvps_on_user_id"
   end
@@ -187,6 +209,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "event_id"
     t.integer "memeber_id"
     t.string "sign_in_type"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_event_sign_ins_on_account_id"
     t.index ["event_id"], name: "index_event_sign_ins_on_event_id"
     t.index ["memeber_id"], name: "index_event_sign_ins_on_memeber_id"
   end
@@ -207,6 +231,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.text "online_details"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_events_on_account_id"
     t.index ["chapter_id"], name: "index_events_on_chapter_id"
     t.index ["member_group_id"], name: "index_events_on_member_group_id"
   end
@@ -219,6 +245,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "chapter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_issues_on_account_id"
     t.index ["chapter_id"], name: "index_issues_on_chapter_id"
     t.index ["created_by_user_id"], name: "index_issues_on_created_by_user_id"
     t.index ["election_id"], name: "index_issues_on_election_id"
@@ -228,6 +256,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
   create_table "member_group_memberships", id: :serial, force: :cascade do |t|
     t.integer "member_id"
     t.integer "member_group_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_member_group_memberships_on_account_id"
     t.index ["member_group_id"], name: "index_member_group_memberships_on_member_group_id"
     t.index ["member_id"], name: "index_member_group_memberships_on_member_id"
   end
@@ -236,6 +266,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "name"
     t.string "group_type"
     t.string "scope_type"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_member_groups_on_account_id"
   end
 
   create_table "members", id: :serial, force: :cascade do |t|
@@ -266,6 +298,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.float "longitude"
     t.boolean "is_non_member"
     t.text "notes"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_members_on_account_id"
     t.index ["chapter_id"], name: "index_members_on_chapter_id"
     t.index ["databank_id"], name: "index_members_on_databank_id", unique: true
     t.index ["latitude", "longitude"], name: "index_members_on_latitude_and_longitude"
@@ -282,6 +316,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "control_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_message_controls_on_account_id"
     t.index ["member_id"], name: "index_message_controls_on_member_id"
     t.index ["unsubscribed_from_message_id"], name: "index_message_controls_on_unsubscribed_from_message_id"
   end
@@ -294,6 +330,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "email"
     t.datetime "queued_at"
     t.datetime "sent_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_message_recipients_on_account_id"
     t.index ["candidacy_id"], name: "index_message_recipients_on_candidacy_id"
     t.index ["member_id"], name: "index_message_recipients_on_member_id"
     t.index ["message_id"], name: "index_message_recipients_on_message_id"
@@ -314,6 +352,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.datetime "sent_at"
     t.integer "event_id"
     t.string "visibility"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_messages_on_account_id"
     t.index ["chapter_id"], name: "index_messages_on_chapter_id"
     t.index ["election_id"], name: "index_messages_on_election_id"
     t.index ["event_id"], name: "index_messages_on_event_id"
@@ -331,6 +371,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "title"
     t.text "body"
     t.datetime "published_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_notes_on_account_id"
     t.index ["chapter_id"], name: "index_notes_on_chapter_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
@@ -342,6 +384,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.date "end_date"
     t.string "reason_for_start"
     t.string "reason_for_end"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_officer_assignments_on_account_id"
     t.index ["officer_id"], name: "index_officer_assignments_on_officer_id"
     t.index ["user_id"], name: "index_officer_assignments_on_user_id"
   end
@@ -357,6 +401,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.boolean "is_executive_committee_member"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_officers_on_account_id"
     t.index ["chapter_id"], name: "index_officers_on_chapter_id"
     t.index ["member_id"], name: "index_officers_on_member_id"
   end
@@ -366,6 +412,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "subject"
     t.string "action"
     t.string "scope"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_privileges_on_account_id"
     t.index ["role_id"], name: "index_privileges_on_role_id"
   end
 
@@ -373,6 +421,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "questionnaire_id"
     t.string "title"
     t.integer "order_index"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_questionnaire_sections_on_account_id"
     t.index ["questionnaire_id"], name: "index_questionnaire_sections_on_questionnaire_id"
   end
 
@@ -382,6 +432,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "questionnairable_type"
     t.integer "questionnairable_id"
     t.string "use_type"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_questionnaires_on_account_id"
     t.index ["race_id"], name: "index_questionnaires_on_race_id"
   end
 
@@ -391,6 +443,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "question_type"
     t.integer "order_index"
     t.integer "questionnaire_section_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_questions_on_account_id"
     t.index ["questionnaire_id"], name: "index_questions_on_questionnaire_id"
     t.index ["questionnaire_section_id"], name: "index_questions_on_questionnaire_section_id"
   end
@@ -415,6 +469,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.boolean "is_official"
     t.boolean "endorsement_complete"
     t.integer "election_candidacy_segregation_choice_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_races_on_account_id"
     t.index ["chapter_id"], name: "index_races_on_chapter_id"
     t.index ["created_by_user_id"], name: "index_races_on_created_by_user_id"
     t.index ["election_id"], name: "index_races_on_election_id"
@@ -426,6 +482,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "user_id"
     t.integer "role_id"
     t.integer "officer_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_role_assignments_on_account_id"
     t.index ["officer_id"], name: "index_role_assignments_on_officer_id"
     t.index ["role_id"], name: "index_role_assignments_on_role_id"
     t.index ["user_id"], name: "index_role_assignments_on_user_id"
@@ -436,6 +494,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.boolean "combined"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_roles_on_account_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -461,6 +521,14 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "name"
     t.integer "taggings_count", default: 0
     t.index ["name"], name: "index_tags_on_name", unique: true
+  end
+
+  create_table "user_account_memberships", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "account_id"
+    t.string "role"
+    t.index ["account_id"], name: "index_user_account_memberships_on_account_id"
+    t.index ["user_id"], name: "index_user_account_memberships_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -494,8 +562,12 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.boolean "share_name"
     t.boolean "use_username"
     t.string "fixed_role"
+    t.bigint "account_id"
+    t.integer "selected_account_id"
+    t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role_id"], name: "index_users_on_role_id"
+    t.index ["selected_account_id"], name: "index_users_on_selected_account_id"
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
@@ -510,6 +582,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "ballot_identifier"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_vote_completions_on_account_id"
     t.index ["election_id"], name: "index_vote_completions_on_election_id"
     t.index ["race_id"], name: "index_vote_completions_on_race_id"
     t.index ["token"], name: "index_vote_completions_on_token"
@@ -520,6 +594,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "race_id"
     t.integer "candidacy_id"
     t.integer "vote_count"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_vote_tallies_on_account_id"
     t.index ["candidacy_id"], name: "index_vote_tallies_on_candidacy_id"
     t.index ["race_id"], name: "index_vote_tallies_on_race_id"
   end
@@ -528,6 +604,8 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.integer "user_id"
     t.integer "candidacy_id"
     t.integer "race_id"
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_votes_on_account_id"
     t.index ["candidacy_id"], name: "index_votes_on_candidacy_id"
     t.index ["race_id"], name: "index_votes_on_race_id"
     t.index ["user_id"], name: "index_votes_on_user_id"

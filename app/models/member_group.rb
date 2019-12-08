@@ -1,4 +1,6 @@
 class MemberGroup < ApplicationRecord
+  belongs_to :account
+
   has_many :member_group_memberships
   has_many :members, through: :member_group_memberships
 

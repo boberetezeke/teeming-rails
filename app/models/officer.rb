@@ -1,4 +1,6 @@
 class Officer < ApplicationRecord
+  belongs_to :account
+
   belongs_to :chapter
   has_many :officer_assignments, dependent: :destroy
   has_many :users, through: :officer_assignments

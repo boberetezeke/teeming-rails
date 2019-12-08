@@ -1,4 +1,6 @@
 class Questionnaire < ApplicationRecord
+  belongs_to :account
+
   # belongs_to :race
   belongs_to :questionnairable, polymorphic: true
   has_many :questionnaire_sections, dependent: :destroy

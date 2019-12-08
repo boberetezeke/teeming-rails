@@ -1,4 +1,6 @@
 class Chapter < ApplicationRecord
+  belongs_to :account
+
   CHAPTER_TYPE_IN_FORMATION = 'formation'
   CHAPTER_TYPE_AFFILIATE = 'affiliate'
   CHAPTER_TYPE_RECOGNIZED = 'recognized'

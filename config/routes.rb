@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
     collection do
       get :home
+      get :select_account
       get :profile
       get :privacy
       get :account
@@ -27,6 +28,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :accounts do
+    member do
+      put :enter
+      put :join
+    end
+  end
   resources :roles, only: [:index, :show]
   resources :contact_banks  do
     member do

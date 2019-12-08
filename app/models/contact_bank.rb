@@ -1,4 +1,6 @@
 class ContactBank < ApplicationRecord
+  belongs_to :account
+
   has_many :contactors
   has_many :users, through: :contactors
   has_many :contactees

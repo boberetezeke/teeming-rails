@@ -1,4 +1,6 @@
 class MeetingMinute < Note
+  belongs_to :account
+
   belongs_to :chapter
 
   scope :published, ->{ where(arel_table[:published_at].not_eq(nil)) }

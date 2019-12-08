@@ -5,6 +5,10 @@ class UsersController < ApplicationController
 
   def home
     @user = current_user
+    if @user.selected_account.nil?
+      return redirect_to select_account_users_path
+    end
+
     @title = "Our Revolution MN Membership"
 
     @setup_state = @user.setup_state
@@ -37,6 +41,10 @@ class UsersController < ApplicationController
       @events = policy_scope(Event.future.visible(nil))
       @elections = policy_scope(Election.show_on_dashboard(nil).visible(nil))
     end
+  end
+
+  def select_account
+    @accounts = Account.all
   end
 
   def select2
@@ -234,6 +242,8 @@ class UsersController < ApplicationController
   end
 
   def convert_answer_checkboxes_from_text
+    return unless Chapter.state_wide && Chapter.state_wide.skills_questionnaire
+
     if @user.member
       if @user.member.answers.empty?
         @user.member.answers = Chapter.state_wide.skills_questionnaire.new_answers(user: @user)

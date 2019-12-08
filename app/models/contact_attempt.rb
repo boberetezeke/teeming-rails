@@ -1,4 +1,6 @@
 class ContactAttempt < ApplicationRecord
+  belongs_to :account
+
   belongs_to :contactee
   belongs_to :contactor
 

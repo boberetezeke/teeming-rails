@@ -1,4 +1,6 @@
 class Issue < ApplicationRecord
+  belongs_to :account
+
   belongs_to :election
   belongs_to :chapter
 

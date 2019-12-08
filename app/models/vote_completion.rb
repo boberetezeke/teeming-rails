@@ -1,4 +1,6 @@
 class VoteCompletion < ApplicationRecord
+  belongs_to :account
+
   belongs_to :election
   accepts_nested_attributes_for :election
 

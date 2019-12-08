@@ -1,4 +1,6 @@
 class Election < ApplicationRecord
+  belongs_to :account
+
   belongs_to :chapter
   belongs_to :member_group
 

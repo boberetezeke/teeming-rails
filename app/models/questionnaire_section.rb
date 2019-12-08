@@ -1,4 +1,6 @@
 class QuestionnaireSection < ApplicationRecord
+  belongs_to :account
+
   belongs_to :questionnaire
   has_many :questions, dependent: :destroy
 

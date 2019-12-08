@@ -1,4 +1,5 @@
 class Candidacy < ApplicationRecord
+  belongs_to :account
   has_many :answers, dependent: :destroy
   belongs_to :user
   belongs_to :race, touch: true

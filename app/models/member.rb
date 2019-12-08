@@ -1,4 +1,6 @@
 class Member < ApplicationRecord
+  belongs_to :account
+
   # validates :databank_id, presence: true, uniqueness: true
   belongs_to :user
   accepts_nested_attributes_for :user

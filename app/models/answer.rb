@@ -1,4 +1,5 @@
 class Answer < ApplicationRecord
+  belongs_to :account
   belongs_to :question
   belongs_to :candidacy
   belongs_to :user

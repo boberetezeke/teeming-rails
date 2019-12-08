@@ -17,6 +17,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  username: stevetuckner
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -26,7 +27,8 @@ development:
   # database: ourrevmn
   # database: ourrevmn_staging
   # database: teeming_development
-  database: teeming_production_2_25_2019
+  database: teeming_generic_development
+  # database: teeming_production_2_25_2019
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
