@@ -74,7 +74,7 @@ class OfficersController < ApplicationController
 
   def update_users(users)
     users.each do |user|
-      user.update_role_from_roles
+      user.update_role_from_roles(current_user.selected_account)
     end
   end
 

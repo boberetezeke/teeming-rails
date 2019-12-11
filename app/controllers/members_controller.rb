@@ -111,7 +111,7 @@ class MembersController < ApplicationController
   def update
     @member.update(member_params)
     handle_tags(member_tag_params)
-    @member.user.update_role_from_roles if @member.user
+    @member.user.update_role_from_roles(current_user.selected_account) if @member.user
     respond_with(@member)
   end
 

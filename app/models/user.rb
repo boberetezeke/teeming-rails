@@ -135,12 +135,13 @@ class User < ApplicationRecord
     vote_completions.for_election(election).completed.first
   end
 
-  def update_role_from_roles
+  def update_role_from_roles(account)
     privileges = []
     roles.each do |role|
       role.privileges.each do |privilege|
         unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
           dup_privilege = privilege.dup
+          privilege.account = account
           privileges.push(dup_privilege)
         end
       end
@@ -153,6 +154,7 @@ class User < ApplicationRecord
           role.privileges.each do |privilege|
             unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
               dup_privilege = privilege.dup
+              dup_privilege.account = account
               dup_privilege.scope =  {chapter_id: officer.chapter.id}.to_json if officer.chapter
               privileges.push(dup_privilege)
             end
@@ -161,7 +163,7 @@ class User < ApplicationRecord
       end
     end
 
-    new_role = Role.new(combined: true, name: 'combined')
+    new_role = Role.new(combined: true, name: 'combined', account: account)
 
     # if apply_chapter_scope
     #   dup_privilege.scope =  {chapter_id: (chapter && chapter.id) || member.chapter.id}.to_json
