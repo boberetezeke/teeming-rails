@@ -24,7 +24,7 @@ gem 'select2-rails'
 gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git', branch: 'add_text_change_support_and_check_box'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.6'
+gem 'rails', '~> 5.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
