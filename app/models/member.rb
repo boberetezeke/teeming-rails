@@ -203,10 +203,12 @@ class Member < ApplicationRecord
       "Wants to start chapter" => MEMBER_ATTRS_START_CHAPTER
   }
 
-  def self.import_file(filename)
+  def self.import_file(user, importer)
+    csv_string = StringIO.new(importer.import_file.download)
+
     state_chapter_id = Chapter.state_wide.id
     index = 0
-    CSV.foreach(filename) do |row|
+    CSV.parse(csv_string) do |row|
       if index > 0
         email = row[DATABANK_COL_TO_INDEX[:email]]
         if Member.find_by_email(email).blank?

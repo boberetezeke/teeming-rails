@@ -51,6 +51,8 @@ gem 'delayed_job_active_record'
 gem 'daemons'
 # gem 'sidekiq'
 
+gem 'figaro'
+
 gem 'dotenv-rails', groups: [:development, :test]
 
 # Use Capistrano for deployment

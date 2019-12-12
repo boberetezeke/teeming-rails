@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191208190305) do
+ActiveRecord::Schema.define(version: 2019_12_12_035551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,27 @@ ActiveRecord::Schema.define(version: 20191208190305) do
     t.string "name"
     t.boolean "registration_disabled"
     t.string "registration_disabled_reason"
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "answers", id: :serial, force: :cascade do |t|
@@ -235,6 +256,16 @@ ActiveRecord::Schema.define(version: 20191208190305) do
     t.index ["account_id"], name: "index_events_on_account_id"
     t.index ["chapter_id"], name: "index_events_on_chapter_id"
     t.index ["member_group_id"], name: "index_events_on_member_group_id"
+  end
+
+  create_table "importers", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "filename"
+    t.string "original_filename"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_importers_on_user_id"
   end
 
   create_table "issues", id: :serial, force: :cascade do |t|
@@ -611,6 +642,7 @@ ActiveRecord::Schema.define(version: 20191208190305) do
     t.index ["user_id"], name: "index_votes_on_user_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "candidacies"
   add_foreign_key "answers", "questions"
   add_foreign_key "candidacies", "races"

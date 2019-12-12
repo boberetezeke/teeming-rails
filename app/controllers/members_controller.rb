@@ -165,6 +165,11 @@ class MembersController < ApplicationController
     authorize Member, :import?
 
     if params[:import_file]
+      importer = Importer.create(filename:params[:import_file].tempfile.path,
+                                 original_filename: params[:import_file].original_filename,
+                                 content_type: params[:import_file].content_type,
+                                 import_file: params[:import_file])
+
       title_line = CSV.open(params[:import_file].tempfile.path).first
       title_line = title_line.map(&:strip)
       if title_line == Member::DATABANK_EXPORT_COLUMNS
@@ -172,12 +177,7 @@ class MembersController < ApplicationController
         t = Tempfile.new("import-file")
         File.open(params[:import_file].tempfile.path) {|f| data = f.read; t.write(data) }
         t.close
-        ImportJob.perform_later(current_user.id, {
-            # tempfile: params[:import_file].tempfile.path,
-            tempfile: t.path,
-            original_filename: params[:import_file].original_filename,
-            content_type: params[:import_file].content_type}
-        )
+        ImportJob.perform_later(current_user.id, importer.id)
         flash[:notice] = "User import started, you will be notified by email when it is finished: '#{data}'"
       else
         flash[:alert] = "import file not in correct format"

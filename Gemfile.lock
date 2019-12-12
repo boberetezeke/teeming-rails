@@ -145,6 +145,8 @@ GEM
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
     ffi (1.11.3)
+    figaro (1.1.1)
+      thor (~> 0.14)
     formtastic (3.1.5)
       actionpack (>= 3.2.13)
     formtastic-bootstrap (3.1.1)
@@ -361,6 +363,7 @@ DEPENDENCIES
   dotenv-rails
   dynamic_table!
   factory_bot_rails
+  figaro
   formtastic (~> 3.0)
   formtastic-bootstrap
   geocoder
