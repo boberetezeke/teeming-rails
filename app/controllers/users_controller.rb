@@ -12,6 +12,9 @@ class UsersController < ApplicationController
     # @title = "Our Revolution MN Membership"
     @title = "Membership"
 
+    @contact_banks = policy_scope(ContactBank)
+    @contact_banks = @contact_banks.joins(:contactors).where(Contactor.arel_table[:user_id].eq(current_user.id))
+
     @setup_state = @user.setup_state
     if @setup_state.present?
       @setup_states_index = STATES.index(@setup_state) + 1
