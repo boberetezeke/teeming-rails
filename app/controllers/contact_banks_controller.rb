@@ -4,6 +4,7 @@ class ContactBanksController < ApplicationController
 
   def index
     @contact_banks = policy_scope(ContactBank)
+    @contact_banks = @contact_banks.joins(:contactors).where(Contactor.arel_table[:user_id].eq(current_user.id))
     breadcrumbs ["Home", root_path], "Contact Banks"
   end
 
