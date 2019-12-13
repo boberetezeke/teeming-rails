@@ -92,6 +92,8 @@ class AccountsController < ApplicationController
         { action: 'view',                 subject: 'questionnaire' },
         { action: 'write',                subject: 'questionnaire' },
 
+        { action: 'write',                subject: 'contact_bank' },
+
         { action: 'enter',                subject: 'vote' },
         { action: 'delete',               subject: 'vote' },
         { action: 'download',             subject: 'vote' },
