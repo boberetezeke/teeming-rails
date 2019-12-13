@@ -20,7 +20,7 @@
 - else
   = render partial: "#{@user.setup_state}"
 
-- if !@user.saw_introduction
+- if false #!@user.saw_introduction
   .modal.fade#my-modal
     .modal-dialog
       .modal-content
@@ -41,5 +41,5 @@
 
 :javascript
   $(function() {
-    #{(@user.setup_state.blank? && !@user.saw_introduction) ? '$("#my-modal").modal().show()'.html_safe : ''}
+    // #{(@user.setup_state.blank? && !@user.saw_introduction) ? '$("#my-modal").modal().show()'.html_safe : ''}
   })

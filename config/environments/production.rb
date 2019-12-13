@@ -56,9 +56,9 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
   if ENV['STAGING']
-    config.action_mailer.default_url_options = { :host => 'https://ourrevolutionmn-staging.herokuapp.com' }
+    config.action_mailer.default_url_options = { :host => 'https://open-org.herokuapp.com' }
   else
-    config.action_mailer.default_url_options = { :host => 'https://ourrevolutionmn.herokuapp.com' }
+    config.action_mailer.default_url_options = { :host => 'https://open-org.herokuapp.com' }
   end
 
   ActionMailer::Base.smtp_settings = {

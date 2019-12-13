@@ -15,6 +15,6 @@
             - if can?(current_user, :destroy, account)
               = link_to "Destroy", account_path(account), method: :delete, class: 'btn btn-sm btn-danger'
           - if !current_user || !current_user.member_of_account(account)
-            = link_to "Join", join_account_path(account), class: 'btn btn-sm btn-success'
+            = link_to "Join", join_account_path(account), method: :put, class: 'btn btn-sm btn-success'
 - else
   %p No Accounts available to join

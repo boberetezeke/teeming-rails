@@ -9,7 +9,8 @@ class UsersController < ApplicationController
       return redirect_to select_account_users_path
     end
 
-    @title = "Our Revolution MN Membership"
+    # @title = "Our Revolution MN Membership"
+    @title = "Membership"
 
     @setup_state = @user.setup_state
     if @setup_state.present?

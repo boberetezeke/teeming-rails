@@ -52,6 +52,8 @@ class AccountsController < ApplicationController
 
   def join
     @account = Account.find(params[:id])
+    current_user.select_account(@account)
+    redirect_to root_path
   end
 
   def enter
