@@ -211,7 +211,7 @@ class Member < ApplicationRecord
     CSV.parse(csv_string) do |row|
       if index > 0
         email = row[DATABANK_COL_TO_INDEX[:email]]
-        if Member.find_by_email(email).blank?
+        if email.blank? || Member.find_by_email(email).blank?
           member = Member.new
           message_control_for_member = nil
           row.each_with_index do |column_value, index|
