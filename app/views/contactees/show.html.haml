@@ -29,6 +29,20 @@
           = link_to("Edit", edit_contact_attempt_path(contact_attempt), class: 'btn btn-sm btn-primary')
           = link_to("Delete", contact_attempt_path(contact_attempt), method: :delete, data: {confirm: 'Are you sure'}, class: 'btn btn-sm btn-danger')
   %hr
-
 %h3 Tell us how it went
 = render partial: 'contact_attempts/form'
+%hr
+%h3 Script
+%p= Kramdown::Document.new(@contactee.contact_bank.script).to_html.html_safe
+- if @contactee.contact_bank.sms_script
+  %hr
+  %h4
+    - if @contactee.contact_bank.email_script
+      Text Message Script
+    - else
+      Email or Text Message Script
+  = @contactee.contact_bank.sms_script
+- if @contactee.contact_bank.email_script
+  %hr
+  %h4 Email Message Script
+  = @contactee.contact_bank.email_script

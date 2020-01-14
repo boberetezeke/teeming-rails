@@ -183,6 +183,12 @@ Rails.application.routes.draw do
       root 'brochure#home', as: :unauthenticated_root
       resources :candidate_questionnaires, only: [:edit, :update]
       resources :message_controls, only: [:edit, :update, :show, :create]
+      resources :help, only: [] do
+        collection do
+          get :sign_up
+          get :contact_banks
+        end
+      end
     end
   end
 

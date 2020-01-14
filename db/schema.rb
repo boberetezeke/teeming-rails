@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_12_035551) do
+ActiveRecord::Schema.define(version: 2020_01_14_012721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,6 +154,8 @@ ActiveRecord::Schema.define(version: 2019_12_12_035551) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "account_id"
+    t.text "email_script"
+    t.text "sms_script"
     t.index ["account_id"], name: "index_contact_banks_on_account_id"
     t.index ["chapter_id"], name: "index_contact_banks_on_chapter_id"
     t.index ["owner_id"], name: "index_contact_banks_on_owner_id"

@@ -6,6 +6,8 @@
   = f.input :members, as: :select, multiple: true, label: 'Contactees', collection: f.object.members
   = f.input :notes, as: :text, input_html: { rows: 4 }
   = f.input :script, as: :text, input_html: { rows: 4 }
+  = f.input :sms_script, as: :text, hint: 'used when sending a text to people', input_html: { rows: 4 }
+  = f.input :email_script, as: :text, hint: 'if different from SMS script', input_html: { rows: 4 }
   = f.input :chapter_id, as: :hidden
   = f.submit class: 'btn btn-sm btn-primary btn-with-padding'
 

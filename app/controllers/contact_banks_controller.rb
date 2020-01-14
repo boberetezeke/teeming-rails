@@ -62,6 +62,8 @@ class ContactBanksController < ApplicationController
   end
 
   def contact_bank_params
-    params.require(:contact_bank).permit(:member_ids_string, :notes, :script, :name, :chapter_id, user_ids: [], member_ids: [])
+    params.require(:contact_bank).permit(:member_ids_string, :notes,
+                                         :script, :sms_script, :email_script,
+                                         :name, :chapter_id, user_ids: [], member_ids: [])
   end
 end
