@@ -178,6 +178,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :help, only: [] do
+    collection do
+      get :sign_up
+      get :contact_banks
+    end
+  end
+
   unauthenticated :user do
     devise_scope :user do
       root 'brochure#home', as: :unauthenticated_root
