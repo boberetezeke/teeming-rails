@@ -1,5 +1,6 @@
 = semantic_form_for [@contactee, @contact_attempt] do |f|
   = f.input :contactee_id, as: :hidden
+  = f.input :contactor_id, as: :hidden
   .row
     .col-md-4
       = f.input :attempted_at_date_str, label: "Attempted at date"
