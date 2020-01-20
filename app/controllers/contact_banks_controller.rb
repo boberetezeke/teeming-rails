@@ -49,9 +49,14 @@ class ContactBanksController < ApplicationController
       contactees = @contact_bank.contactees.contacted_by(@contact_bank.contactor_for_user(current_user))
     end
 
-    contactee = contactees.shuffle.first
+    if contactees.present?
+      contactee = contactees.shuffle.first
 
-    redirect_to contactee
+      redirect_to contactee
+    else
+      flash[:notice] = "There is no one else to contact."
+      redirect_to @contact_bank
+    end
   end
 
   private

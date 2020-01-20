@@ -3,7 +3,9 @@ class ContacteesController < ApplicationController
   before_action :set_contactee, only: [:show, :edit, :update]
 
   def show
-    @contact_attempt = ContactAttempt.new(contactee: @contactee, attempted_at: Time.now,
+    @contact_attempt = ContactAttempt.new(contactee: @contactee,
+                                          contactor: @contactee.contact_bank.contactor_for_user(current_user),
+                                          attempted_at: Time.now,
                                           contact_type: ContactAttempt::CONTACT_TYPE_PHONE_CALL,
                                           direction_type: ContactAttempt::CONTACT_DIRECTION_OUT,
                                           result_type: ContactAttempt::CONTACT_RESULT_LEFT_MESSAGE)
