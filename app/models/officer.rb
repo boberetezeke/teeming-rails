@@ -1,7 +1,7 @@
 class Officer < ApplicationRecord
   belongs_to :account
 
-  belongs_to :chapter
+  belongs_to :chapter, foreign_key: 'member_group_id'
   has_many :officer_assignments, dependent: :destroy
   has_many :users, through: :officer_assignments
 

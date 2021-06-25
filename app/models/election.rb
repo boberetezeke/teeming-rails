@@ -1,7 +1,7 @@
 class Election < ApplicationRecord
   belongs_to :account
 
-  belongs_to :chapter
+  # belongs_to :chapter
   belongs_to :member_group
 
   has_many :races, dependent: :destroy
@@ -19,7 +19,7 @@ class Election < ApplicationRecord
   scope :show_on_dashboard, ->(chapter) {
     where(
       arel_table[:election_type].eq(ELECTION_TYPE_EXTERNAL).or(
-          chapter ? arel_table[:chapter_id].eq(chapter.id) : Arel::Nodes::True.new
+          chapter ? arel_table[:member_group_id].eq(chapter.id) : Arel::Nodes::True.new
       )
     )
   }
@@ -35,7 +35,7 @@ class Election < ApplicationRecord
   }
 
   scope :for_chapter, ->(chapter) {
-    where(chapter ? arel_table[:chapter_id].eq(chapter.id) : Arel::Nodes::True.new)
+    where(chapter ? arel_table[:member_group_id].eq(chapter.id) : Arel::Nodes::True.new)
   }
 
   ELECTION_TYPE_INTERNAL = 'internal'

@@ -4,6 +4,12 @@ class MemberGroup < ApplicationRecord
   has_many :member_group_memberships
   has_many :members, through: :member_group_memberships
 
+  has_many :elections, dependent: :destroy
+  has_many :events, dependent: :destroy
+  has_many :messages, dependent: :destroy
+  has_many :officers, dependent: :destroy
+  has_many :meeting_minutes, dependent: :destroy
+
   GROUP_TYPE_SCOPE = 'scope'
   GROUP_TYPE_COMMITTEE = 'committee'
   GROUP_TYPES = [GROUP_TYPE_SCOPE, GROUP_TYPE_COMMITTEE]

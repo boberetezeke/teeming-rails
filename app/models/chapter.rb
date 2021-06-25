@@ -1,4 +1,4 @@
-class Chapter < ApplicationRecord
+class Chapter < MemberGroup
   belongs_to :account
 
   CHAPTER_TYPE_IN_FORMATION = 'formation'
@@ -12,13 +12,6 @@ class Chapter < ApplicationRecord
      'Recognized' => CHAPTER_TYPE_RECOGNIZED,
      "Independent" => CHAPTER_TYPE_INDEPENDENT
   }
-
-  has_many :elections, dependent: :destroy
-  has_many :members, dependent: :destroy
-  has_many :events, dependent: :destroy
-  has_many :messages, dependent: :destroy
-  has_many :officers, dependent: :destroy
-  has_many :meeting_minutes, dependent: :destroy
 
   has_one :skills_questionnaire, as: :questionnairable, class_name: 'Questionnaire'
 

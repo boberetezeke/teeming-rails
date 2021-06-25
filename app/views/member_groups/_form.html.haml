@@ -1,0 +1,4 @@
+= semantic_form_for member_group do |f|
+  = f.input :name
+  = f.input :account_id, as: :hidden
+  = f.input :members, as: :select, multiple: true, label: 'Members', collection: f.object.members

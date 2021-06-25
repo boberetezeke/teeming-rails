@@ -41,6 +41,10 @@ class ApplicationController < ActionController::Base
     authorize object_or_class
   end
 
+  def selected_account
+    current_user.selected_account
+  end
+
   private
 
   def set_time_from_params

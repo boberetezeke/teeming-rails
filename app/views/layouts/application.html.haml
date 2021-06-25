@@ -79,7 +79,7 @@
         .alert.alert-danger= flash[:alert]
       - if flash[:notice]
         .alert.alert-info= flash[:notice]
-      - if Rails.env.development?
+      - if false && Rails.env.development?
         = link_to("-day", url_for(request.params.merge(time: (Time.zone.now - 1.day).strftime("%m_%d_%YT%H_%M"))))
         = link_to("-hour", url_for(request.params.merge(time: (Time.zone.now - 1.hour).strftime("%m_%d_%YT%H_%M"))))
         = link_to("-5min", url_for(request.params.merge(time: (Time.zone.now - 5.minutes).strftime("%m_%d_%YT%H_%M"))))

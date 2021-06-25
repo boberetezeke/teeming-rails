@@ -38,6 +38,23 @@ namespace :roles  do
           { action: 'view', subject: 'member' },
           { action: 'write', subject: 'member' },
       ]},
+      { name: 'admin', privileges: [
+        { action: 'write', subject: 'chapter' },
+        { action: 'manage_internal', subject: 'election' },
+        { action: 'write', subject: 'event' },
+        { action: 'write', subject: 'meeting_minute' },
+        { action: 'send', subject: 'message' },
+        { action: 'view', subject: 'member' },
+        { action: 'write', subject: 'member' },
+        { action: 'write', subject: 'officer' },
+        { action: 'view', subject: 'questionnaire' },
+        { action: 'write', subject: 'questionnaire' },
+        { action: 'enter', subject: 'vote' },
+        { action: 'delete', subject: 'vote' },
+        { action: 'download', subject: 'vote' },
+        { action: 'show_tallies', subject: 'vote' },
+        { action: 'generate_tallies_for', subject: 'vote' },
+      ]},
     ]
 
     roles.each do |role|
