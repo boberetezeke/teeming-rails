@@ -138,7 +138,7 @@ state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
   Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
 end
 
-# account = Account.find_or_create_by_name("Our Revolution Minnesota")
+account = Account.find_or_create_by(name: "Our Revolution Minnesota")
 
 skills_questionnaire = Questionnaire.where(questionnairable_type: 'Chapter', questionnairable_id: state_chapter.id).first
 skills_questionnaire.destroy if skills_questionnaire
