@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190211034211) do
+ActiveRecord::Schema.define(version: 2021_05_07_040127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,10 +117,10 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.text "script"
     t.text "notes"
     t.bigint "owner_id"
-    t.bigint "chapter_id"
+    t.bigint "member_group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["chapter_id"], name: "index_contact_banks_on_chapter_id"
+    t.index ["member_group_id"], name: "index_contact_banks_on_member_group_id"
     t.index ["owner_id"], name: "index_contact_banks_on_owner_id"
   end
 
@@ -156,7 +156,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
   end
 
   create_table "elections", id: :serial, force: :cascade do |t|
-    t.integer "chapter_id"
     t.string "name"
     t.text "description"
     t.date "vote_date"
@@ -171,7 +170,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "visibility"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["chapter_id"], name: "index_elections_on_chapter_id"
     t.index ["member_group_id"], name: "index_elections_on_member_group_id"
   end
 
@@ -198,7 +196,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "location"
     t.float "longitude"
     t.float "latitude"
-    t.integer "chapter_id"
     t.integer "member_group_id"
     t.datetime "published_at"
     t.text "agenda"
@@ -207,7 +204,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.text "online_details"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["chapter_id"], name: "index_events_on_chapter_id"
     t.index ["member_group_id"], name: "index_events_on_member_group_id"
   end
 
@@ -236,6 +232,12 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "name"
     t.string "group_type"
     t.string "scope_type"
+    t.string "type", default: "MemberGroup"
+    t.boolean "is_state_wide"
+    t.string "description"
+    t.string "visibility"
+    t.string "chapter_type"
+    t.text "boundaries_description_yml"
   end
 
   create_table "members", id: :serial, force: :cascade do |t|
@@ -306,7 +308,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.string "to"
     t.string "message_type"
     t.integer "member_group_id"
-    t.integer "chapter_id"
     t.integer "election_id"
     t.integer "race_id"
     t.datetime "created_at"
@@ -314,7 +315,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.datetime "sent_at"
     t.integer "event_id"
     t.string "visibility"
-    t.index ["chapter_id"], name: "index_messages_on_chapter_id"
     t.index ["election_id"], name: "index_messages_on_election_id"
     t.index ["event_id"], name: "index_messages_on_event_id"
     t.index ["member_group_id"], name: "index_messages_on_member_group_id"
@@ -327,11 +327,11 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.datetime "updated_at", null: false
     t.string "type"
     t.bigint "user_id"
-    t.bigint "chapter_id"
+    t.bigint "member_group_id"
     t.string "title"
     t.text "body"
     t.datetime "published_at"
-    t.index ["chapter_id"], name: "index_notes_on_chapter_id"
+    t.index ["member_group_id"], name: "index_notes_on_member_group_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
@@ -351,13 +351,13 @@ ActiveRecord::Schema.define(version: 20190211034211) do
     t.date "start_date"
     t.date "end_date"
     t.integer "member_id"
-    t.integer "chapter_id"
+    t.integer "member_group_id"
     t.text "responsibilities"
     t.boolean "is_board_member"
     t.boolean "is_executive_committee_member"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["chapter_id"], name: "index_officers_on_chapter_id"
+    t.index ["member_group_id"], name: "index_officers_on_member_group_id"
     t.index ["member_id"], name: "index_officers_on_member_id"
   end
 
@@ -539,7 +539,6 @@ ActiveRecord::Schema.define(version: 20190211034211) do
   add_foreign_key "candidacies", "users"
   add_foreign_key "candidate_assignments", "answers", column: "answers_id"
   add_foreign_key "candidate_assignments", "users"
-  add_foreign_key "elections", "chapters"
   add_foreign_key "questionnaires", "races"
   add_foreign_key "questions", "questionnaires"
   add_foreign_key "races", "elections"
