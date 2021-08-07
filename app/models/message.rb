@@ -117,7 +117,7 @@ class Message < ApplicationRecord
       directive = $1
       case directive
         when /logo/
-          "<div style=\"text-align: center;\"><a href=\"https://ourrevolutionmn.com\"><img width=\"250px\" height=\"250px\" src=\"https://ourrevolutionmn.herokuapp.com/images/logo-450.jpg\"></a></div>"
+          "<div style=\"text-align: center;\"><a href=\"https://ourrevolutionmn.com\"><img width=\"250px\" height=\"250px\" src=\"https://ourrevolutionmn.herokuapp.com/images/logo-organize-mn-450.jpg\"></a></div>"
         when /recipient_first_name/
           if message_recipient
             message_recipient.first_name
