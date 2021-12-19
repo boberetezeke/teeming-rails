@@ -19,7 +19,12 @@ class Chapter < MemberGroup
   scope :in_order, ->{ order('name asc')}
 
   def self.state_wide
-    Chapter.find_by_is_state_wide(true)
+    # Chapter.find_by_is_state_wide(true)
+    Chapter.first
+  end
+
+  def is_state_wide
+    true
   end
 
   def chapter_hash_for_profile

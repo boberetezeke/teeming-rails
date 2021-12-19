@@ -20,7 +20,7 @@ class AccountsController < ApplicationController
     @account = Account.new(accounts_params)
     @account.user_account_memberships << UserAccountMembership.new(user: current_user, role: UserAccountMembership::ROLE_OWNER)
 
-    chapter = Chapter.new(name: "Main", is_state_wide: true, account: @account)
+    chapter = Chapter.new(name: "Main", account: @account)
     @account.chapters = [chapter]
 
     create_default_roles(@account)
