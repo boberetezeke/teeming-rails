@@ -54,6 +54,9 @@
     = submit_tag 'Create Contact Bank', class: 'btn btn-sm btn-primary btn-with-padding', id: 'new-contact-bank'
   - if can?(current_user, :new, :member)
     = link_to "Add Member", new_chapter_member_path(chapter: @chapter), class: 'btn btn-sm btn-success'
+  %span{dt.refreshable("export")}
+    - if can?(current_user, :export, :member)
+      = link_to "Export", export_chapter_members_path(@export_params), class: 'btn btn-sm btn-success'
   - if can?(current_user, :import, :member)
     = form_tag(import_chapter_members_path(@chapter), multipart: true, style: 'display: inline') do
       = submit_tag 'Import', class: 'btn btn-sm btn-primary btn-with-padding', id: 'import-members'

@@ -17,6 +17,10 @@ class MemberPolicy < ApplicationPolicy
     can_for_scope?(@user.can_write_members?, context_params)
   end
 
+  def export?
+    true
+  end
+
   def show?
     can_view_members? || (@record.user && @record.user.officers.present?)
   end
