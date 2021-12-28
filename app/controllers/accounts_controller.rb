@@ -20,6 +20,8 @@ class AccountsController < ApplicationController
     @account = Account.new(accounts_params)
     @account.user_account_memberships << UserAccountMembership.new(user: current_user, role: UserAccountMembership::ROLE_OWNER)
 
+    MemberGroup.write_member_groups(@account)
+
     chapter = Chapter.new(name: "Main", account: @account)
     @account.chapters = [chapter]
 

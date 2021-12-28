@@ -72,6 +72,8 @@ GEM
       activerecord (>= 5.0, < 6.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    ancestry (3.2.1)
+      activerecord (>= 4.2.0)
     arel (9.0.0)
     aws-eventstream (1.0.3)
     aws-partitions (1.253.0)
@@ -352,6 +354,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
   acts-as-taggable-on (~> 6.0)
+  ancestry
   aws-sdk-s3 (~> 1)
   bcrypt (~> 3.1.7)
   bootstrap-datepicker-rails

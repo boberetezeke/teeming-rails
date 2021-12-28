@@ -24,7 +24,7 @@ class Chapter < MemberGroup
   end
 
   def is_state_wide
-    true
+    parent.nil?
   end
 
   def chapter_hash_for_profile

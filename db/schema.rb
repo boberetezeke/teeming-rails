@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_31_023602) do
+ActiveRecord::Schema.define(version: 2021_12_27_203415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,7 +301,14 @@ ActiveRecord::Schema.define(version: 2021_03_31_023602) do
     t.string "scope_type"
     t.bigint "account_id"
     t.integer "organization_id"
+    t.string "ancestry"
+    t.string "chapter_type"
+    t.string "type"
+    t.string "description"
+    t.string "visibility"
+    t.text "boundaries_description_yml"
     t.index ["account_id"], name: "index_member_groups_on_account_id"
+    t.index ["ancestry"], name: "index_member_groups_on_ancestry"
     t.index ["organization_id"], name: "index_member_groups_on_organization_id"
   end
 
@@ -407,8 +414,10 @@ ActiveRecord::Schema.define(version: 2021_03_31_023602) do
     t.text "body"
     t.datetime "published_at"
     t.bigint "account_id"
+    t.bigint "member_group_id"
     t.index ["account_id"], name: "index_notes_on_account_id"
     t.index ["chapter_id"], name: "index_notes_on_chapter_id"
+    t.index ["member_group_id"], name: "index_notes_on_member_group_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
@@ -437,8 +446,10 @@ ActiveRecord::Schema.define(version: 2021_03_31_023602) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.bigint "account_id"
+    t.bigint "member_group_id"
     t.index ["account_id"], name: "index_officers_on_account_id"
     t.index ["chapter_id"], name: "index_officers_on_chapter_id"
+    t.index ["member_group_id"], name: "index_officers_on_member_group_id"
     t.index ["member_id"], name: "index_officers_on_member_id"
   end
 

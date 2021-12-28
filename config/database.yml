@@ -59,6 +59,7 @@ development:
 
   # Docker
   username: stevetuckner
+  password: asdfasdf
   host: localhost
 
 # Warning: The database defined as "test" will be erased and

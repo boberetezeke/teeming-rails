@@ -44,6 +44,7 @@ gem 'kaminari'
 gem 'pry-rails'
 gem 'sendgrid-ruby'
 gem 'aws-sdk-s3', '~> 1'
+gem 'ancestry'
 
 gem 'honeybadger'
 
