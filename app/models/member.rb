@@ -241,7 +241,8 @@ class Member < ApplicationRecord
               "Home phone", "Mobile phone", "Work phone",
               "Address #1", "Address #2", "City", "Zip",
               "Company", "User Type", "Chapter",
-              "Source", "Subcaucus", "District", "General Tags"]
+              "Source", "Subcaucus", "District", "General Tags",
+              "Email Unsubscribe"]
       members.
         includes(:potential_chapter).
         includes(:chapter).
@@ -249,6 +250,7 @@ class Member < ApplicationRecord
         includes(:subcaucuses).
         includes(:districts).
         includes(:general_tags).
+        includes(:message_controls).
         each do |member|
         csv << [
           member.email, member.first_name, member.middle_initial, member.last_name,
@@ -256,7 +258,8 @@ class Member < ApplicationRecord
           member.address_1, member.address_2, member.city, member.zip,
           member.company, member.user_type, member.chapter_for_type,
           member.sources.join(";"), member.subcaucuses.join(";"),
-          member.districts.join(";"), member.general_tags.join(";")
+          member.districts.join(";"), member.general_tags.join(";"),
+          member.email_unsubscribe
         ]
       end
     end
@@ -382,5 +385,11 @@ class Member < ApplicationRecord
     else
       ""
     end
+  end
+
+  def email_unsubscribe
+    (message_controls.all.select do |mc|
+        mc.unsubscribe_type == 'email' && mc.control_type == 'unsubscribe'
+      end.present?) ? "true" : "false"
   end
 end
