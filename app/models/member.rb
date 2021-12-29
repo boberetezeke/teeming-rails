@@ -240,13 +240,23 @@ class Member < ApplicationRecord
       csv << ["Email", "First name", "Middle initial", "Last name",
               "Home phone", "Mobile phone", "Work phone",
               "Address #1", "Address #2", "City", "Zip",
-              "Company"]
-      members.each do |member|
+              "Company", "User Type", "Chapter",
+              "Source", "Subcaucus", "District", "General Tags"]
+      members.
+        includes(:potential_chapter).
+        includes(:chapter).
+        includes(:sources).
+        includes(:subcaucuses).
+        includes(:districts).
+        includes(:general_tags).
+        each do |member|
         csv << [
           member.email, member.first_name, member.middle_initial, member.last_name,
           member.home_phone, member.mobile_phone, member.work_phone,
           member.address_1, member.address_2, member.city, member.zip,
-          member.company
+          member.company, member.user_type, member.chapter_for_type,
+          member.sources.join(";"), member.subcaucuses.join(";"),
+          member.districts.join(";"), member.general_tags.join(";")
         ]
       end
     end
@@ -346,5 +356,31 @@ class Member < ApplicationRecord
 
     message_control = message_control_for(medium_type)
     !message_control || message_control.control_type != MessageControl::CONTROL_TYPE_UNSUBSCRIBE
+  end
+
+  def user_type
+    if user
+      'user'
+    else
+      if is_non_member
+        if potential_chapter_id.present?
+          "potential_chapter_member"
+        else
+          'non_member'
+        end
+      else
+        'member'
+      end
+    end
+  end
+
+  def chapter_for_type
+    if user
+      chapter&.name
+    elsif potential_chapter
+      potential_chapter&.name
+    else
+      ""
+    end
   end
 end
