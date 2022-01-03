@@ -252,17 +252,25 @@ class Member < ApplicationRecord
         includes(:general_tags).
         includes(:message_controls).
         each do |member|
-        csv << [
-          member.email, member.first_name, member.middle_initial, member.last_name,
+        data = [
+          member.email, member.first_name, member.middle_initial,
+          member.last_name,
           member.home_phone, member.mobile_phone, member.work_phone,
           member.address_1, member.address_2, member.city, member.zip,
           member.company, member.user_type, member.chapter_for_type,
-          member.sources.join(";"), member.subcaucuses.join(";"),
-          member.districts.join(";"), member.general_tags.join(";"),
+          tags_for_export(member, :sources),
+          tags_for_export(member, :subcaucuses),
+          tags_for_export(member, :districts),
+          tags_for_export(member, :general_tags),
           member.email_unsubscribe
         ]
+        csv << data.map{|d| d || ""}
       end
     end
+  end
+
+  def self.tags_for_export(member, sym)
+    member.send(sym).join(":")
   end
 
   def self.filtered(chapter, members, restrict_by_chapter,
