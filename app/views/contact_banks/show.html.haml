@@ -5,6 +5,18 @@
   .col-md-6
     %h3 Script
     %p= Kramdown::Document.new(@contact_bank.script).to_html.html_safe
+    - if @contact_bank.sms_script.present?
+      %hr
+      %h4
+        - if @contact_bank.email_script.present?
+          SMS Script
+        - else
+          SMS or Email Script
+      %p= @contact_bank.sms_script
+    - if @contact_bank.email_script.present?
+      %hr
+      %h4 Email Script
+      %p= Kramdown::Document.new(@contact_bank.email_script).to_html.html_safe
   .col-md-6
     %h3 Notes
     %p= Kramdown::Document.new(@contact_bank.notes).to_html.html_safe
@@ -26,7 +38,7 @@
           = render partial: 'contactees/summary', locals: { contactee: contactee }
     - else
       %ul
-        - @contact_bank.contactees.contacted_by(current_user).each do |contactee|
+        - @contact_bank.contactees.contacted_by(@contact_bank.contactor_for_user(current_user)).each do |contactee|
           = render partial: 'contactees/summary', locals: { contactee: contactee }
     %hr
     %h3 Stats

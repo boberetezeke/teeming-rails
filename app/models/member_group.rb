@@ -1,6 +1,16 @@
 class MemberGroup < ApplicationRecord
+  has_ancestry
+
+  belongs_to :account
+
   has_many :member_group_memberships
   has_many :members, through: :member_group_memberships
+
+  has_many :elections, dependent: :destroy
+  has_many :events, dependent: :destroy
+  has_many :messages, dependent: :destroy
+  has_many :officers, dependent: :destroy
+  has_many :meeting_minutes, dependent: :destroy
 
   GROUP_TYPE_SCOPE = 'scope'
   GROUP_TYPE_COMMITTEE = 'committee'
@@ -8,7 +18,7 @@ class MemberGroup < ApplicationRecord
 
   default_scope ->{ order('name asc') }
 
-  def self.write_member_groups
+  def self.write_member_groups(account)
     Member::SCOPE_TYPES.each do |scope_type, scope_name|
       unless MemberGroup.find_by_name(scope_name)
         MemberGroup.create(name: scope_name, group_type: GROUP_TYPE_SCOPE, scope_type: scope_type)

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
     collection do
       get :home
+      get :select_account
       get :profile
       get :privacy
       get :account
@@ -27,6 +28,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :accounts do
+    member do
+      put :enter
+      put :join
+    end
+  end
   resources :roles, only: [:index, :show]
   resources :contact_banks  do
     member do
@@ -69,9 +76,11 @@ Rails.application.routes.draw do
   resources :message_controls, only: [:edit, :update, :show, :create]
 
   resources :chapters do
+    resources :member_groups
     resources :members, only: [:index, :new, :create, :show, :edit, :update, :destroy], shallow: true do
       collection do
         post :import
+        get :export
         get :select2
       end
     end
@@ -171,11 +180,24 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :help, only: [] do
+    collection do
+      get :sign_up
+      get :contact_banks
+    end
+  end
+
   unauthenticated :user do
     devise_scope :user do
       root 'brochure#home', as: :unauthenticated_root
       resources :candidate_questionnaires, only: [:edit, :update]
       resources :message_controls, only: [:edit, :update, :show, :create]
+      resources :help, only: [] do
+        collection do
+          get :sign_up
+          get :contact_banks
+        end
+      end
     end
   end
 

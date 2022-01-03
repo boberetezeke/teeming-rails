@@ -17,6 +17,7 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  username: stevetuckner
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -25,7 +26,8 @@ development:
   <<: *default
   # database: ourrevmn
   # database: ourrevmn_staging
-  database: teeming_development
+  # database: teeming_development
+  database: teeming_generic_development
   # database: teeming_production_2_25_2019
 
   # The specified database role being used to connect to postgres.
@@ -57,6 +59,7 @@ development:
 
   # Docker
   username: stevetuckner
+  password: asdfasdf
   host: localhost
 
 # Warning: The database defined as "test" will be erased and

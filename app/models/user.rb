@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  belongs_to :selected_account, class_name: 'Account', foreign_key: :selected_account_id
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -25,6 +27,8 @@ class User < ApplicationRecord
 
   has_many :votes
   has_many :vote_completions
+
+  has_many :user_account_memberships
 
   belongs_to :role
 
@@ -101,6 +105,19 @@ class User < ApplicationRecord
     candidacies.map(&:race).include?(race)
   end
 
+  def select_account(account)
+    update(selected_account_id: account.id)
+  end
+
+  def owner_of_account(account)
+    membership = user_account_memberships.find_by_account_id(account.id)
+    membership && membership.owner?
+  end
+
+  def member_of_account(account)
+    user_account_memberships.find_by_account_id(account.id)
+  end
+
   def all_roles
     officers.map{|officer| officer.roles}.flatten + self.roles
   end
@@ -118,12 +135,13 @@ class User < ApplicationRecord
     vote_completions.for_election(election).completed.first
   end
 
-  def update_role_from_roles
+  def update_role_from_roles(account)
     privileges = []
     roles.each do |role|
       role.privileges.each do |privilege|
         unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
           dup_privilege = privilege.dup
+          privilege.account = account
           privileges.push(dup_privilege)
         end
       end
@@ -136,6 +154,7 @@ class User < ApplicationRecord
           role.privileges.each do |privilege|
             unless privileges.select{|p| p.is_identical_to?(privilege)}.present?
               dup_privilege = privilege.dup
+              dup_privilege.account = account
               dup_privilege.scope =  {chapter_id: officer.chapter.id}.to_json if officer.chapter
               privileges.push(dup_privilege)
             end
@@ -144,7 +163,7 @@ class User < ApplicationRecord
       end
     end
 
-    new_role = Role.new(combined: true, name: 'combined')
+    new_role = Role.new(combined: true, name: 'combined', account: account)
 
     # if apply_chapter_scope
     #   dup_privilege.scope =  {chapter_id: (chapter && chapter.id) || member.chapter.id}.to_json

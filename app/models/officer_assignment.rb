@@ -1,4 +1,6 @@
 class OfficerAssignment < ApplicationRecord
+  belongs_to :account
+
   belongs_to :officer
   belongs_to :user
 
@@ -7,7 +9,7 @@ class OfficerAssignment < ApplicationRecord
   scope :active,    ->{ where(arel_table[:end_date].eq(nil).or(arel_table[:end_date].gteq(Time.now))) }
   scope :inactive,  ->{ where(arel_table[:end_date].lt(Time.now))}
 
-  after_save ->{ user.update_role_from_roles }
+  after_save ->{ user.update_role_from_roles(account) }
 
   START_REASONS_HASH = {
     "Election by membership" => 'election-by-membership',

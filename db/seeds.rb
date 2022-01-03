@@ -138,7 +138,7 @@ state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
   Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
 end
 
-account = Account.find_or_create_by(name: "Our Revolution Minnesota")
+# account = Account.find_or_create_by_name("Our Revolution Minnesota")
 
 skills_questionnaire = Questionnaire.where(questionnairable_type: 'Chapter', questionnairable_id: state_chapter.id).first
 skills_questionnaire.destroy if skills_questionnaire
@@ -160,11 +160,9 @@ skills_questionnaire.destroy if skills_questionnaire
     Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
 #end
 
-MemberGroup.write_member_groups
-
-# minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
-# minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
-# initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', member_group: MemberGroup.find_by_scope_type("chapter_members"),  chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), vote_start_time: Time.zone.local(2017, 9, 16, 16, 00), vote_end_time: Time.zone.local(2017, 9, 16, 16, 30), election_type: Election::ELECTION_TYPE_INTERNAL)
+minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
+minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
+initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', member_group: MemberGroup.find_by_scope_type("chapter_members"),  chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), vote_start_time: Time.zone.local(2017, 9, 16, 16, 00), vote_end_time: Time.zone.local(2017, 9, 16, 16, 30), election_type: Election::ELECTION_TYPE_INTERNAL)
 
 =begin
   %p.in-formtastic

@@ -1,10 +1,4 @@
 %h2 Contact Banks
 
-%table.table
-  %tr
-    %th Name
-    %th Created
-  - @contact_banks.each do |contact_bank|
-    %tr
-      %td= link_to(contact_bank.name, contact_bank)
-      %td= contact_bank.created_at.strftime("%m/%d/%Y")
+= render partial: 'contact_banks/table', locals: { contact_banks: @contact_banks }
+

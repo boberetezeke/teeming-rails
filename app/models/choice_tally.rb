@@ -1,4 +1,6 @@
 class ChoiceTally < ApplicationRecord
+  belongs_to :account
+
   belongs_to  :questionnaire
   belongs_to  :question
   has_many    :choice_tally_answers

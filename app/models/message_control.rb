@@ -1,4 +1,6 @@
 class MessageControl < ApplicationRecord
+  belongs_to :account
+
   belongs_to :member
 
   CONTROL_SUBSCRIPTION_TYPE_EMAIL = 'email'

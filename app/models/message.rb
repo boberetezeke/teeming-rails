@@ -1,4 +1,6 @@
 class Message < ApplicationRecord
+  belongs_to :account
+
   belongs_to :user
   belongs_to :chapter
   belongs_to :race

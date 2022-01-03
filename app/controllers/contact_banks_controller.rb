@@ -4,6 +4,7 @@ class ContactBanksController < ApplicationController
 
   def index
     @contact_banks = policy_scope(ContactBank)
+    @contact_banks = @contact_banks.joins(:contactors).where(Contactor.arel_table[:user_id].eq(current_user.id))
     breadcrumbs ["Home", root_path], "Contact Banks"
   end
 
@@ -48,9 +49,14 @@ class ContactBanksController < ApplicationController
       contactees = @contact_bank.contactees.contacted_by(@contact_bank.contactor_for_user(current_user))
     end
 
-    contactee = contactees.shuffle.first
+    if contactees.present?
+      contactee = contactees.shuffle.first
 
-    redirect_to contactee
+      redirect_to contactee
+    else
+      flash[:notice] = "There is no one else to contact."
+      redirect_to @contact_bank
+    end
   end
 
   private
@@ -61,6 +67,8 @@ class ContactBanksController < ApplicationController
   end
 
   def contact_bank_params
-    params.require(:contact_bank).permit(:member_ids_string, :notes, :script, :name, :chapter_id, user_ids: [], member_ids: [])
+    params.require(:contact_bank).permit(:member_ids_string, :notes,
+                                         :script, :sms_script, :email_script,
+                                         :name, :chapter_id, user_ids: [], member_ids: [])
   end
 end

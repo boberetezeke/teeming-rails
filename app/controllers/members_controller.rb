@@ -14,60 +14,29 @@ class MembersController < ApplicationController
     @restrict_by_chapter = (params[:restrict_by_chapter] == "true")
 
     @title = "Members"
-    if !@chapter.is_state_wide || @restrict_by_chapter
-      if params[:member_type] == Member::MEMBER_TYPE_POTENTIAL
-        @members = @members.potential_chapter_members(@chapter)
-      elsif params[:member_type] == Member::MEMBER_TYPE_MEMBER
-        @members = @members.chapter_members(@chapter)
-      elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
-        @members = @members.chapter_members(@chapter).with_user
-      elsif params[:member_type] == Member::MEMBER_TYPE_NON_MEMBER
-        @members = @members.non_members_with_chapter(@chapter)
-      elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
-        @members = @members.chapter_members(@chapter).non_user_members
-      else
-        @members = @members.all_chapter_members(@chapter)
-      end
-    else
-      if params[:member_type] == Member::MEMBER_TYPE_MEMBER
-        @members = @members.without_user
-      elsif params[:member_type] == Member::MEMBER_TYPE_USER_MEMBER
-        @members = @members.with_user
-      elsif params[:member_type] == Member::MEMBER_TYPE_NON_MEMBER
-        @members = @members.non_members
-      elsif params[:member_type] == Member::MEMBER_TYPE_NON_USER_MEMBER
-        @members = @members.non_user_members
-      else
-        # no filter needed here
-      end
-    end
 
-    if params[:source]
-      @members = @members.tagged_with(params[:source], on: 'sources')
-    end
+    @member_type = params[:member_type]
+    @source = params[:source]
+    @subcaucus = params[:subcaucus]
+    @district = params[:district]
+    @general_tag = params[:general_tag]
+    @search = params[:search]
+    @attr_type = params[:attr_type]
 
-    if params[:subcaucus]
-      @members = @members.tagged_with(params[:subcaucus], on: 'subcaucuses')
-    end
-
-    if params[:district]
-      @members = @members.tagged_with(params[:district], on: 'districts')
-    end
-
-    if params[:general_tag]
-      @members = @members.tagged_with(params[:general_tag], on: 'general_tags')
-    end
-
-    @members = @members.filtered_by_string(params[:search]) if params[:search]
-    @members = @members.filtered_by_attrs(params[:attr_type]) if params[:attr_type]
-    @member_ids = @members.pluck(:id).uniq
-
-    @members = @members.where(id: @member_ids)
-    @members = @members.order('city asc')
+    @members = Member.filtered(@chapter, @members, @restrict_by_chapter,
+                               @member_type, @source, @subcaucus, @district,
+                               @general_tag, @search, @attr_type)
 
     @members_ids = @members.pluck(:id)
 
     @members = @members.paginate(page: params[:page], per_page: params[:per_page])
+
+    @export_params = {
+      chapter: @chapter
+    }
+    [:member_type, :source, :subcaucus, :district, :general_tag, :search, :attr_type].each do |sym|
+      @export_params[sym] = instance_variable_get("@#{sym}")
+    end
 
     breadcrumbs members_breadcrumbs, @title
   end
@@ -111,8 +80,21 @@ class MembersController < ApplicationController
   def update
     @member.update(member_params)
     handle_tags(member_tag_params)
-    @member.user.update_role_from_roles if @member.user
+    @member.user.update_role_from_roles(current_user.selected_account) if @member.user
     respond_with(@member)
+  end
+
+  def export
+    authorize_with_args Member, @context_params
+
+    chapter = Chapter.find(params[:chapter_id])
+    members = policy_scope(Member).includes(:user).references(:user)
+    restrict_by_chapter = (params[:restrict_by_chapter] == "true")
+
+    members = Member.filtered(chapter, members, restrict_by_chapter,
+                              params[:member_type], params[:source], params[:subcaucus], params[:district],
+                              params[:general_tag], params[:search], params[:attr_type])
+    send_data Member.export(members)
   end
 
   def handle_tags(params)
@@ -165,6 +147,11 @@ class MembersController < ApplicationController
     authorize Member, :import?
 
     if params[:import_file]
+      importer = Importer.create(filename:params[:import_file].tempfile.path,
+                                 original_filename: params[:import_file].original_filename,
+                                 content_type: params[:import_file].content_type,
+                                 import_file: params[:import_file])
+
       title_line = CSV.open(params[:import_file].tempfile.path).first
       title_line = title_line.map(&:strip)
       if title_line == Member::DATABANK_EXPORT_COLUMNS
@@ -172,12 +159,7 @@ class MembersController < ApplicationController
         t = Tempfile.new("import-file")
         File.open(params[:import_file].tempfile.path) {|f| data = f.read; t.write(data) }
         t.close
-        ImportJob.perform_later(current_user.id, {
-            # tempfile: params[:import_file].tempfile.path,
-            tempfile: t.path,
-            original_filename: params[:import_file].original_filename,
-            content_type: params[:import_file].content_type}
-        )
+        ImportJob.perform_later(current_user.id, importer.id)
         flash[:notice] = "User import started, you will be notified by email when it is finished: '#{data}'"
       else
         flash[:alert] = "import file not in correct format"

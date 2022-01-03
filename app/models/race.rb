@@ -1,4 +1,6 @@
 class Race < ApplicationRecord
+  belongs_to :account
+
   belongs_to :election
   has_many :candidacies, dependent: :destroy
   has_many :votes, dependent: :destroy

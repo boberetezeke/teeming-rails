@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  belongs_to :account
+
   belongs_to :questionnaire_section
   has_many   :choices, dependent: :destroy
   has_many   :answers, dependent: :destroy

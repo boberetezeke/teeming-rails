@@ -37,7 +37,7 @@ class ContactAttemptsController < ApplicationController
 
   def contact_attempt_params
     params.require(:contact_attempt).permit(:contact_type, :direction_type, :result_type,
-                                            :notes, :contactee_id,
+                                            :notes, :contactee_id, :contactor_id,
                                             :attempted_at_time_str, :attempted_at_date_str)
   end
 end

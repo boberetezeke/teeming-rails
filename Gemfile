@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-ruby "2.6.6"
-
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
@@ -26,11 +24,11 @@ gem 'select2-rails'
 gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git', branch: 'add_text_change_support_and_check_box'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.6'
+gem 'rails', '~> 5.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 0.18'
 # Use Puma as the app server
-gem 'puma', '~> 5.2'
+gem 'puma', '~> 3.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -46,12 +44,15 @@ gem 'kaminari'
 gem 'pry-rails'
 gem 'sendgrid-ruby'
 gem 'aws-sdk-s3', '~> 1'
+gem 'ancestry'
 
 gem 'honeybadger'
 
 gem 'delayed_job_active_record'
 gem 'daemons'
 # gem 'sidekiq'
+
+gem 'figaro'
 
 gem 'dotenv-rails', groups: [:development, :test]
 

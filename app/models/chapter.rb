@@ -1,4 +1,6 @@
-class Chapter < ApplicationRecord
+class Chapter < MemberGroup
+  belongs_to :account
+
   CHAPTER_TYPE_IN_FORMATION = 'formation'
   CHAPTER_TYPE_AFFILIATE = 'affiliate'
   CHAPTER_TYPE_RECOGNIZED = 'recognized'
@@ -11,20 +13,18 @@ class Chapter < ApplicationRecord
      "Independent" => CHAPTER_TYPE_INDEPENDENT
   }
 
-  has_many :elections, dependent: :destroy
-  has_many :members, dependent: :destroy
-  has_many :events, dependent: :destroy
-  has_many :messages, dependent: :destroy
-  has_many :officers, dependent: :destroy
-  has_many :meeting_minutes, dependent: :destroy
-
   has_one :skills_questionnaire, as: :questionnairable, class_name: 'Questionnaire'
 
   scope :local_chapters, ->{ where(is_state_wide: false) }
   scope :in_order, ->{ order('name asc')}
 
   def self.state_wide
-    Chapter.find_by_is_state_wide(true)
+    # Chapter.find_by_is_state_wide(true)
+    Chapter.first
+  end
+
+  def is_state_wide
+    parent.nil?
   end
 
   def chapter_hash_for_profile

@@ -1,4 +1,6 @@
 class Privilege < ApplicationRecord
+  belongs_to :account
+
   belongs_to :role
 
   def is_identical_to?(other)

@@ -1,0 +1,5 @@
+%h2 Member Group #{@member_group.name}
+
+%ul
+  - @member_group.members.each do |member|
+    %li= member.name
