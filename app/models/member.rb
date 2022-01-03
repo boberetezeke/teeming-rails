@@ -239,6 +239,101 @@ class Member < ApplicationRecord
     end
   end
 
+  def self.export(members)
+    CSV.generate(headers: true) do |csv|
+      csv << ["Email", "First name", "Middle initial", "Last name",
+              "Home phone", "Mobile phone", "Work phone",
+              "Address #1", "Address #2", "City", "Zip",
+              "Company", "User Type", "Chapter",
+              "Source", "Subcaucus", "District", "General Tags",
+              "Email Unsubscribe"]
+      members.
+        includes(:potential_chapter).
+        includes(:chapter).
+        includes(:sources).
+        includes(:subcaucuses).
+        includes(:districts).
+        includes(:general_tags).
+        includes(:message_controls).
+        each do |member|
+        data = [
+          member.email, member.first_name, member.middle_initial,
+          member.last_name,
+          member.home_phone, member.mobile_phone, member.work_phone,
+          member.address_1, member.address_2, member.city, member.zip,
+          member.company, member.user_type, member.chapter_for_type,
+          tags_for_export(member, :sources),
+          tags_for_export(member, :subcaucuses),
+          tags_for_export(member, :districts),
+          tags_for_export(member, :general_tags),
+          member.email_unsubscribe
+        ]
+        csv << data.map{|d| d || ""}
+      end
+    end
+  end
+
+  def self.tags_for_export(member, sym)
+    member.send(sym).join(":")
+  end
+
+  def self.filtered(chapter, members, restrict_by_chapter,
+                              member_type, source, subcaucus, district,
+                              general_tag, search, attr_type)
+    if !chapter.is_state_wide || restrict_by_chapter
+      if member_type == Member::MEMBER_TYPE_POTENTIAL
+        members = members.potential_chapter_members(chapter)
+      elsif member_type == Member::MEMBER_TYPE_MEMBER
+        members = members.chapter_members(chapter)
+      elsif :member_type == Member::MEMBER_TYPE_USER_MEMBER
+        members = members.chapter_members(chapter).with_user
+      elsif :member_type == Member::MEMBER_TYPE_NON_MEMBER
+        members = members.non_members_with_chapter(chapter)
+      elsif :member_type == Member::MEMBER_TYPE_NON_USER_MEMBER
+        members = members.chapter_members(chapter).non_user_members
+      else
+        members = members.all_chapter_members(chapter)
+      end
+    else
+      if :member_type == Member::MEMBER_TYPE_MEMBER
+        members = members.without_user
+      elsif :member_type == Member::MEMBER_TYPE_USER_MEMBER
+        members = members.with_user
+      elsif :member_type == Member::MEMBER_TYPE_NON_MEMBER
+        members = members.non_members
+      elsif :member_type == Member::MEMBER_TYPE_NON_USER_MEMBER
+        members = members.non_user_members
+      else
+        # no filter needed here
+      end
+    end
+
+    if source
+      members = members.tagged_with(source, on: 'sources')
+    end
+
+    if subcaucus
+      members = members.tagged_with(subcaucus, on: 'subcaucuses')
+    end
+
+    if district
+      members = members.tagged_with(district, on: 'districts')
+    end
+
+    if general_tag
+      members = members.tagged_with(general_tag, on: 'general_tags')
+    end
+
+    members = members.filtered_by_string(search) if search
+    members = members.filtered_by_attrs(attr_type) if attr_type
+    member_ids = members.pluck(:id).uniq
+
+    members = members.where(id: member_ids)
+    members = members.order('city asc')
+
+    members
+  end
+
   def name
     if first_name || last_name
       "#{first_name} #{last_name}"
@@ -276,5 +371,37 @@ class Member < ApplicationRecord
 
     message_control = message_control_for(medium_type)
     !message_control || message_control.control_type != MessageControl::CONTROL_TYPE_UNSUBSCRIBE
+  end
+
+  def user_type
+    if user
+      'user'
+    else
+      if is_non_member
+        if potential_chapter_id.present?
+          "potential_chapter_member"
+        else
+          'non_member'
+        end
+      else
+        'member'
+      end
+    end
+  end
+
+  def chapter_for_type
+    if user
+      chapter&.name
+    elsif potential_chapter
+      potential_chapter&.name
+    else
+      ""
+    end
+  end
+
+  def email_unsubscribe
+    (message_controls.all.select do |mc|
+        mc.unsubscribe_type == 'email' && mc.control_type == 'unsubscribe'
+      end.present?) ? "true" : "false"
   end
 end
