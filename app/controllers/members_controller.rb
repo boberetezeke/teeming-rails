@@ -177,7 +177,7 @@ class MembersController < ApplicationController
         t = Tempfile.new("import-file")
         File.open(params[:import_file].tempfile.path) {|f| data = f.read; t.write(data) }
         t.close
-        ImportJob.perform_later(current_user.id, importer.id)
+        ImportJob.perform_later(current_user.id, current_user.selected_account.id, importer.id)
         flash[:notice] = "User import started, you will be notified by email when it is finished: '#{data}'"
       else
         flash[:alert] = "import file not in correct format"

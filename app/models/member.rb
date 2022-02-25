@@ -35,8 +35,10 @@ class Member < ApplicationRecord
 
   DATABANK_EXPORT_COLUMNS = [
     "id",
-    "databank_id", "address_1", "address_2", "city", "company", "email", "first_name", "home_phone", "last_name", "middle_initial",
-    "mobile_phone", "state", "status", "work_phone", "zip", "created_at", "updated_at", "unsubscribe"
+    "email", "first_name", "middle_initial", "last_name",
+    "mobile_phone", "home_phone", "work_phone",
+    "address_1", "address_2", "city", "state", "zip",
+    "company",  "status", "created_at", "updated_at", "unsubscribe"
   ]
   DATABANK_COL_TO_INDEX = Hash[DATABANK_EXPORT_COLUMNS.map.with_index{|col, index| [col.to_sym, index]}]
   DATABANK_INDEX_TO_COL = DATABANK_COL_TO_INDEX.invert
@@ -203,15 +205,18 @@ class Member < ApplicationRecord
       "Wants to start chapter" => MEMBER_ATTRS_START_CHAPTER
   }
 
-  def self.import_file(user, importer)
+  def self.import_file(user, account, importer)
     csv_string = StringIO.new(importer.import_file.download)
 
-    state_chapter_id = Chapter.state_wide.id
+    state_chapter_id = account.chapters.state_wide.id
     index = 0
     CSV.parse(csv_string) do |row|
+      puts "ROW: #{row}"
       if index > 0
         email = row[DATABANK_COL_TO_INDEX[:email]]
+        puts "EMAIL: #{email}"
         if email.blank? || Member.find_by_email(email).blank?
+          puts "NEW-MEMBER"
           member = Member.new
           message_control_for_member = nil
           row.each_with_index do |column_value, index|
@@ -221,14 +226,19 @@ class Member < ApplicationRecord
                 message_control_for_member = MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL, control_type: MessageControl::CONTROL_TYPE_UNSUBSCRIBE)
               end
             else
-              if !([:id, :created_at, :updatd_at].include?(col_name))
+              if !([:id, :created_at, :updated_at].include?(col_name))
                 member.send("#{col_name}=", column_value)
               end
             end
           end
 
           member.chapter_id = state_chapter_id
-          member.save
+          member.account_id = account.id
+          if member.save
+            puts "SAVED"
+          else
+            puts "ERRORS: #{member.errors}"
+          end
 
           if message_control_for_member
             member.message_controls << message_control_for_member
