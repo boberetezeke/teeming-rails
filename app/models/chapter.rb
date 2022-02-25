@@ -33,8 +33,8 @@ class Chapter < ApplicationRecord
 
   end
 
-  def self.collection_hash
-    Hash[Chapter.all.map do |chapter|
+  def self.collection_hash(account)
+    Hash[account.chapters.all.map do |chapter|
       chapter.is_state_wide ?
         [chapter.name, chapter.id] :
         ["#{chapter.name} - (#{chapter.chapter_type_str})", chapter.id]

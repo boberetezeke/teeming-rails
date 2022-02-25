@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby "2.6.6"
+
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
   "https://github.com/#{repo_name}.git"
@@ -22,6 +24,7 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'select2-rails'
 gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git', branch: 'add_text_change_support_and_check_box'
+gem 'letter_opener'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2'

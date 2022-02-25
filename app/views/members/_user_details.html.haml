@@ -3,6 +3,7 @@
     = f.input :email, input_html: { disabled: disabled }
   - else
     = f.hidden_field :email
+= f.hidden_field :account_id
 - if is_current_user?(f.object, current_user) || f.object.share_name_with?(current_user)
   .row
     .col-md-5

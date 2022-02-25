@@ -2,6 +2,24 @@ namespace :roles  do
   desc "create default roles"
   task :create_default_roles => :environment do
     roles = [
+      { name: 'admin', privileges: [
+        { action: 'write', subject: 'chapter' },
+        { action: 'write', subject: 'officer' },
+        { action: 'manage_external', subject: 'candidacy' },
+        { action: 'view', subject: 'questionnaire' },
+        { action: 'write', subject: 'questionnaire' },
+        { action: 'manage_internal', subject: 'election' },
+        { action: 'enter', subject: 'vote' },
+        { action: 'delete', subject: 'vote' },
+        { action: 'download', subject: 'vote' },
+        { action: 'show_tallies', subject: 'vote' },
+        { action: 'generate_tallies_for', subject: 'vote' },
+        { action: 'write', subject: 'meeting_minute' },
+        { action: 'write', subject: 'event' },
+        { action: 'send', subject: 'message' },
+        { action: 'view', subject: 'member' },
+        { action: 'write', subject: 'member' },
+      ]},
       { name: 'state president', privileges: [
           { action: 'write', subject: 'chapter' },
           { action: 'write', subject: 'officer' }

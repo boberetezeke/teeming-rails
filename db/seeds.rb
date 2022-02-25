@@ -1,142 +1,9 @@
-require 'csv'
-
-VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i unless defined?(VALID_EMAIL_REGEX)
-
-if File.exist?(Rails.root.join('db', 'data', 'ormn_roster.csv'))
-  members_text = File.read(Rails.root.join('db', 'data', 'ormn_roster.csv'))
-  csv = CSV.parse(members_text, :headers => true, :encoding => 'ISO-8859-1')
-  csv.each do |row|
-    m = Member.find_or_create_by(databank_id:  row['MemberID'])
-    m.first_name = row['First1']
-    m.middle_initial = row['MI1']
-    m.last_name = row['Last1']
-    m.company = row['Company']
-    m.address_1 = row['Address']
-    m.address_2 = row['Addr2']
-    m.city = row['City']
-    m.state = row['State']
-    m.zip = row['Zip']
-    m.home_phone = row['HomePhone']
-    m.work_phone = row['WorkPhone']
-    m.mobile_phone = row['MobilePh']
-    m.email = row['Email']
-    m.save!
-
-    # puts "#{m.databank_id}: #{m.first_name} #{m.last_name} saved"
-  end
-
-  # puts "There are now #{Member.count} members"
-
-
-  blocked_emails = []
-  bounced_emails = []
-  invalid_emails = []
-  unsubscribed_emails = []
-  duplicate_emails = []
-
-  blocks_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'suppression_blocks.csv')
-  )
-  blocks = CSV.parse(blocks_text, :headers => true, :encoding => 'ISO-8859-1')
-  blocks.each { |row| blocked_emails.push(row['email'])}
-
-  bounces_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'suppression_bounces.csv')
-  )
-  bounces = CSV.parse(bounces_text, :headers => true, :encoding => 'ISO-8859-1')
-  bounces.each { |row| bounced_emails.push(row['email'])}
-
-  spams_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'suppression_spam_reports.csv')
-  )
-  spams = CSV.parse(spams_text, :headers => true, :encoding => 'ISO-8859-1')
-  spams.each { |row| bounced_emails.push(row['email'])}
-
-  invalids_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'suppression_invalid_emails.csv')
-  )
-  invalids = CSV.parse(invalids_text, :headers => true, :encoding => 'ISO-8859-1')
-  invalids.each { |row| invalid_emails.push(row['email'])}
-
-  bad_emails_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'bad_email_roster.csv')
-  )
-  bads = CSV.parse(bad_emails_text, :headers => true, :encoding => 'ISO-8859-1')
-  bads.each { |row| invalid_emails.push(row['email'])}
-
-  requests_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'suppression_manual.csv')
-  )
-  requests = CSV.parse(requests_text, :headers => true, :encoding => 'ISO-8859-1')
-  requests.each { |row| unsubscribed_emails.push(row['email'])}
-
-  unsubscribe_text = File.read(
-    Rails.root.join('db', 'data', 'suppressions', 'unsubscribe_roster.csv')
-  )
-  unsubscribes = CSV.parse(requests_text, :headers => true, :encoding => 'ISO-8859-1')
-  unsubscribes.each { |row| unsubscribed_emails.push(row['email'])}
-
-  blocked_emails.each do |email|
-    member = Member.find_by_email(email)
-    member.update(status: 'block') if member
-  end
-  # puts "There are #{blocked_emails.count} blocked emails"
-
-  bounced_emails.each do |email|
-    member = Member.find_by_email(email)
-    member.update(status: 'bounce') if member
-  end
-  # puts "There are #{bounced_emails.count} bounced emails"
-
-  unsubscribed_emails.each do |email|
-    member = Member.find_by_email(email)
-    member.update(status: 'unsubscribe') if member
-  end
-  # puts "There are #{unsubscribed_emails.count} unsubscribed emails"
-
-  invalid_emails.each do |email|
-    member = Member.find_by_email(email)
-    member.update(status: 'invalid') if member
-  end
-
-  Member.valid_email.each do |member|
-    if (member[:email] =~ VALID_EMAIL_REGEX).nil?
-      member.update!(status: 'invalid')
-    end
-  end
-  # puts "There are #{invalid_emails.count} invalid emails"
-
-
-  repeated_emails = Member.valid_email.group(:email)
-    .having("count(email) > 1").count.keys
-
-  repeated_emails.each do |email|
-    Member.current.where(email: email)
-      .order("databank_id desc")
-      .each_with_index do |member, i|
-
-      if i != 0
-        member.update!(status: "duplicate")
-        duplicate_emails.push(member[:email])
-      end
-    end
-  end
-  # puts "There are #{duplicate_emails.count} duplicate emails"
-
-
-  Member.where("status IS NULL").each do |member|
-    member.update!(status: "active")
-  end
-
-  # puts "There are #{Member.active.count} active members!"
-end
-
 #======================== setup MN State Init ==========================
 
 state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
-['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
-  Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
-end
+# ['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
+#   Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
+# end
 
 # account = Account.find_or_create_by_name("Our Revolution Minnesota")
 
@@ -161,10 +28,11 @@ skills_questionnaire.destroy if skills_questionnaire
 #end
 
 MemberGroup.write_member_groups
-
-minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
-minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
-initial_board_election = Election.find_or_create_by(name: 'Initial Board Election', member_group: MemberGroup.find_by_scope_type("chapter_members"),  chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), vote_start_time: Time.zone.local(2017, 9, 16, 16, 00), vote_end_time: Time.zone.local(2017, 9, 16, 16, 30), election_type: Election::ELECTION_TYPE_INTERNAL)
+Account.create(name: "Test Org")
+#
+# minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
+# minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
+# initial_board_electionon = Election.find_or_create_by(name: 'Initial Board Election', member_group: MemberGroup.find_by_scope_type("chapter_members"),  chapter_id: state_chapter.id, vote_date: Date.new(2017, 9, 16), vote_start_time: Time.zone.local(2017, 9, 16, 16, 00), vote_end_time: Time.zone.local(2017, 9, 16, 16, 30), election_type: Election::ELECTION_TYPE_INTERNAL)
 
 =begin
   %p.in-formtastic

@@ -31,7 +31,11 @@ class UsersController < ApplicationController
           @user.member = existing_member
           @display_found_member_modal = true
         else
-          @user.member = Member.new(email: @user.email, added_with_new_user: true, message_controls: [
+          @user.member = Member.new(
+            email: @user.email,
+            account_id: @user.selected_account.id,
+            added_with_new_user: true,
+            message_controls: [
               MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_EMAIL,
                                  control_type: MessageControl::CONTROL_TYPE_NEUTRAL),
               MessageControl.new(unsubscribe_type: MessageControl::CONTROL_SUBSCRIPTION_TYPE_TEXT,
@@ -230,7 +234,7 @@ class UsersController < ApplicationController
                                     :id,
                                     :email, :first_name, :last_name, :middle_initial, :mobile_phone, :home_phone, :work_phone,
                                     :address_1, :address_2, :city, :state, :zip, :chapter_id, :interested_in_starting_chapter,
-                                    :with_user_input, :bio,
+                                    :with_user_input, :bio, :account_id,
                                     {answers_attributes: CandidaciesController.answers_atributes},
                                     {message_controls_attributes: [:unsubscribe_type, :control_type, :id]}
                                  ]},
