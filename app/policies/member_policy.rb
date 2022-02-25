@@ -1,7 +1,7 @@
 class MemberPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
-      @scope.all
+      @scope.where(account: @user.selected_account)
     end
   end
 
