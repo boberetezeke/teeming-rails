@@ -1,0 +1,51 @@
+- if current_user
+  .navbar-text= "Logged in as #{current_user.email}"
+  - if current_user.setup_state.blank?
+    %ul.nav.navbar-nav
+      - if current_user.admin?
+        %li.dropdown
+          %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+            Admin
+            %span.caret
+          %ul.dropdown-menu{:role => "menu"}
+            %li
+              = link_to("Jobs", jobs_path)
+      %li.dropdown
+        %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+          - if current_user.admin?
+            Users
+          - else
+            User
+          %span.caret
+        %ul.dropdown-menu{:role => "menu"}
+          %li= link_to "Dashboard", root_path
+          %li.divider
+          %li= link_to "My Account", account_users_path
+          %li= link_to "My Profile", profile_users_path
+          %li= link_to "My Privacy", privacy_users_path
+          %li= link_to "My Candidacies", candidacies_path
+          %li= link_to "My Contact Banks", contact_banks_path
+          %li.divider
+          %li= link_to "Chapters", chapters_path
+          %li= link_to "Roles", roles_path
+          %li= link_to "Users with Roles", with_roles_users_path
+          %li.divider
+          %li= link_to "Bylaws", bylaws_users_path
+          %li= link_to "Code of Conduct", code_of_conduct_users_path
+          %li= link_to "Privacy Policy", privacy_policy_users_path
+          - if QuestionnairePolicy.new(current_user, Questionnaire).index?
+            %li= link_to "Questionnaires", questionnaires_path
+            /%li.divider
+            /%li= link_to "Redo Setup Process", redo_initial_steps_users_path, method: :put
+          %li.divider
+          %li= link_to "Join/Switch Org", select_account_users_path
+          %li.divider
+          %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
+  - else
+    %ul.nav.navbar-nav
+      %li.dropdown
+        %a.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+          User
+          %span.caret
+        %ul.dropdown-menu{:role => "menu"}
+          %li= link_to "Sign Out", destroy_user_session_path, :method => :delete
