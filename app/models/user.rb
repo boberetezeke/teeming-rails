@@ -29,6 +29,7 @@ class User < ApplicationRecord
   has_many :vote_completions
 
   has_many :user_account_memberships
+  has_many :accounts, through: :user_account_memberships
 
   belongs_to :role
 

@@ -53,6 +53,7 @@ class AccountsController < ApplicationController
   def join
     @account = Account.find(params[:id])
     current_user.select_account(@account)
+    UserAccountMembership.create(user: current_user, account: @account, role: User::ROLE_TYPE_USER)
     redirect_to root_path
   end
 
