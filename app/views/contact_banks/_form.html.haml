@@ -2,8 +2,8 @@
   = f.input :name
   /= f.input :users, as: :select, multiple: true, collection: User.for_chapter(@chapter), label: 'Contacters'
   /= f.input :members, as: :select, multiple: true, label: 'Contactees', collection: @chapter.members
-  = f.input :users, as: :select, multiple: true, label: 'Contacters',   collection: f.object.users
-  = f.input :members, as: :select, multiple: true, label: 'Contactees', collection: f.object.members
+  = f.input :users, as: :select, multiple: true, label: 'Contacters',   collection: UserPolicy::Scope.new(current_user, f.object.users).resolve
+  = f.input :members, as: :select, multiple: true, label: 'Contactees', collection: MemberPolicy::Scope.new(current_user, f.object.members).resolve
   = f.input :notes, as: :text, input_html: { rows: 4 }
   = f.input :script, as: :text, input_html: { rows: 4 }
   = f.input :sms_script, as: :text, hint: 'used when sending a text to people', input_html: { rows: 4 }
