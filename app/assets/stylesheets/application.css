@@ -348,3 +348,19 @@ form.formtastic select.form-control.narrow {
     padding: 5px;
     background-color: #fcfcfc;
 }
+
+.when2meet td {
+    padding: 5px;
+}
+
+.when2meet .hour {
+    border: gray solid 1px;
+}
+
+.when2meet td.checked {
+    background-color: #53a2f2;
+}
+
+form.when2meet .check_box {
+    display: none;
+}

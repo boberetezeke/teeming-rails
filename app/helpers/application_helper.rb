@@ -205,4 +205,12 @@ module ApplicationHelper
   def percent(part, whole)
     "%.2f" % [(part.to_f / whole.to_f) * 100]
   end
+
+  def when_to_meet_date(day)
+    (Date.today + day).to_s
+  end
+
+  def when_to_meet_hour(hour)
+    "#{(9 + hour) % 12}:00 #{hour >= 3 ? 'pm' : 'am'}"
+  end
 end

@@ -28,6 +28,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :when_to_meet, only: :show do
+    member do
+      post :signup
+    end
+  end
+
   resources :accounts do
     member do
       put :enter
