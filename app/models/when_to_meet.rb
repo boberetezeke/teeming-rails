@@ -98,10 +98,19 @@ class WhenToMeet < ApplicationRecord
   end
 
   def set_strs
-    self.start_date_str = self.start_date ? self.start_date.strftime("%m/%d/%Y") : nil
-    self.end_date_str = self.end_date ? self.end_date.strftime("%m/%d/%Y") : nil
-    self.starting_hour_str = self.starting_hour ? self.starting_hour.to_s : nil
-    self.ending_hour_str = self.ending_hour ? self.ending_hour.to_s : nil
+    unless self.start_date_str
+      self.start_date_str = self.start_date ? self.start_date.strftime("%m/%d/%Y") : nil
+    end
+    unless self.end_date_str
+      self.end_date_str = self.end_date ? self.end_date.strftime("%m/%d/%Y") : nil
+    end
+
+    unless self.starting_hour_str
+      self.starting_hour_str = self.starting_hour ? self.starting_hour.to_s : nil
+    end
+    unless self.ending_hour_str
+      self.ending_hour_str = self.ending_hour ? self.ending_hour.to_s : nil
+    end
   end
 
   def valid_start_and_end_hours
@@ -133,7 +142,7 @@ class WhenToMeet < ApplicationRecord
   end
 
   def valid_start_and_end_dates
-    return true if self.start_date.nil? && self.end_date.nil?
+    return true if self.start_date_str.nil? && self.end_date_str.nil?
 
     valid_start_date = validate_date(:start_date) { |d|
       self.start_date = d
