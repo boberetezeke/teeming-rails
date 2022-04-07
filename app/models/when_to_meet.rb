@@ -31,7 +31,7 @@ class WhenToMeet < ApplicationRecord
     def generate_id(users)
       m = /^([^@]*).*/.match(@email)
       if m
-        id = m[1]
+        id = m[1].gsub(/\./, "_")
         orig_id = id
         next_num = 2
         while true
