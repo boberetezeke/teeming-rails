@@ -2,14 +2,14 @@ FactoryBot.define do
   factory :user do
     sequence(:email) {|s| "a@b-#{s}.com" }
 
-    password                'asdfasdf'
-    password_confirmation   'asdfasdf'
+    password                { 'asdfasdf' }
+    password_confirmation   { 'asdfasdf' }
 
-    confirmed_at            Time.now
+    confirmed_at            { Time.now }
     association             :role
 
     transient do
-      chapter nil
+      chapter { nil }
     end
 
     after(:create) do |user, evaluator|

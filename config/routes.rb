@@ -28,11 +28,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :when_to_meet, only: :show do
+  resources :when_to_meet do
     member do
       post :signup
     end
   end
+  get '/when_to_meet/:id/user/:user_id', to: 'when_to_meet#show', as: :when_to_meet_user
 
   resources :accounts do
     member do

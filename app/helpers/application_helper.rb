@@ -211,6 +211,8 @@ module ApplicationHelper
   end
 
   def when_to_meet_hour(hour)
-    "#{(9 + hour) % 12}:00 #{hour >= 3 ? 'pm' : 'am'}"
+    hour = (9 + hour) % 12
+    hour = 12 if hour == 0
+    "#{hour}:00 #{hour >= 3 ? 'pm' : 'am'}"
   end
 end

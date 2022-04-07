@@ -353,6 +353,16 @@ form.formtastic select.form-control.narrow {
     padding: 5px;
 }
 
+.when2meet td.hour {
+    color: black;
+    text-align: center;
+}
+
+.when2meet td.hour.checked {
+    color: white;
+    text-align: center;
+}
+
 .when2meet .hour {
     border: gray solid 1px;
 }
@@ -362,5 +372,9 @@ form.formtastic select.form-control.narrow {
 }
 
 form.when2meet .check_box {
-    display: none;
+   display: none;
+}
+
+.bold {
+    font-weight: bold;
 }

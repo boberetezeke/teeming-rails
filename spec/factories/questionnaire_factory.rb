@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :questionnaire do
     transient do
-      skip_create_sections false
+      skip_create_sections { false }
     end
 
     after(:create) do |questionnaire, evaluator|

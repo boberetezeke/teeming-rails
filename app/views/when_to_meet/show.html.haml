@@ -1,5 +1,21 @@
 %h2 When To Meet
 
+%label Name
+%input{type: 'text', id: 'name_display', value: @user&.name}
+%label Email
+%input{type: 'text', id: 'email_display', value: @user&.email}
+%div
+  %span.bold Link:
+  %a{href: when_to_meet_url(@when_to_meet), target: "_blank", id: "link"}= when_to_meet_url(@when_to_meet)
+  |
+  %a{href: "#", id: 'copy'}
+    %span.bold Copy
+%div
+  %span.bold People:
+  - @when_to_meet.users.each_with_index do |user, index|
+    %a{href: when_to_meet_user_url(@when_to_meet, user_id: user.id)}= user.name
+    - if index != @when_to_meet.users.size - 1
+      |
 %table.when2meet
   %tr
     %td Date
@@ -9,29 +25,60 @@
     %tr
       %td.date= when_to_meet_date(day)
       - 12.times do |hour|
-        %td.hour{"data-check": "#{when_to_meet_date(day)}-#{when_to_meet_hour(hour)}", id: "#{when_to_meet_date(day)}-#{when_to_meet_hour(hour)}"}
-%form.when2meet
+        - id = "#{when_to_meet_date(day)}-#{when_to_meet_hour(hour)}"
+        - slot = @when_to_meet.time_slots&.fetch("check-#{id}",nil)
+        - checked = slot&.include?(@user&.email).present?
+        - num_checked = slot ? slot.size : ''
+        %td.hour{"data-check": id, id: id, class: checked ? 'checked hour' : 'hour' }
+          %span.num_checked= num_checked
+= form_with(url: signup_when_to_meet_path(@when_to_meet), class: 'when2meet') do
+  %input{type: 'hidden', id: 'user_name', name: 'user_name'}
+  %input{type: 'hidden', id: 'user_email', name: 'user_email'}
   - 7.times do |day|
     - 12.times do |hour|
       %span.check_box
         %label= "#{when_to_meet_date(day)}-#{when_to_meet_hour(hour)}"
-        %input{type: 'checkbox', id: "check-#{when_to_meet_date(day)}-#{when_to_meet_hour(hour)}"}
-  %input{type: 'submit'}
+        - id = "check-#{when_to_meet_date(day)}-#{when_to_meet_hour(hour)}"
+        - checked = @when_to_meet.time_slots&.fetch(id,nil)&.include?(@user&.email).present?
+        %input{type: 'checkbox', id: id, name: id, checked: checked  ? true : nil}
+  %input{type: 'submit', id: 'submit'}
 :javascript
   $(function() {
-    console.log("on start")
+    $("#copy").click(function() {
+      var copy = $("#link").attr("href")
+      console.log("copy", copy);
+      var data = [new ClipboardItem({ "text/plain": new Blob([copy], { type: "text/plain" }) })];
+      navigator.clipboard.write(data).then(function() {
+        console.log("Copied to clipboard successfully!");
+      }, function() {
+        console.error("Unable to write to clipboard. :-(");
+      });
+    })
+    $("#submit").click(function() {
+      console.log("submit clicked")
+      $("#user_name").val($("#name_display").val())
+      $("#user_email").val($("#email_display").val())
+    })
     $(".hour").click(function(e) {
       console.log("clicked")
       console.log(e.target.dataset.check)
       var el = document.getElementById(e.target.dataset.check)
+      var count = el.children[0].innerText
+      var new_count = count == '' ? 0 : parseInt(count);
+      console.log('count', count)
+      console.log('new_count', new_count)
       var check_el = document.getElementById("check-" + e.target.dataset.check)
       if (el.classList.contains('checked')) {
         check_el.checked = false;
         el.classList.remove('checked');
+        new_count -= 1;
+        new_count = (new_count == 0) ? '' : new_count;
       }
       else {
         check_el.checked = true;
         el.classList.add('checked');
+        new_count += 1;
       }
+      el.children[0].innerText = new_count
     })
   })

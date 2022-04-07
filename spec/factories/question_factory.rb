@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :question do
-    text "question text"
+    text { "question text" }
   end
 end
