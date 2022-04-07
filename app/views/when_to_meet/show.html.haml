@@ -1,9 +1,11 @@
 %h2 When To Meet (#{@when_to_meet.name})
 
-%label Name
-%input{type: 'text', id: 'name_display', value: @user&.name}
-%label Email
-%input{type: 'text', id: 'email_display', value: @user&.email}
+%div
+  %label Name
+  %input{type: 'text', id: 'name_display', value: @user&.name}
+%div
+  %label Email
+  %input{type: 'text', id: 'email_display', value: @user&.email}
 - if @user.errors.full_messages.present?
   %div.error=  @user.errors.full_messages.join(", ")
 %div
@@ -48,7 +50,7 @@
         - id = "check-#{when_to_meet_date(@when_to_meet, day)}-#{when_to_meet_hour(@when_to_meet, hour)}"
         - checked = @when_to_meet.time_slots&.fetch(id,nil)&.include?(@user&.email).present?
         %input{type: 'checkbox', id: id, name: id, checked: checked  ? true : nil}
-  %input{type: 'submit', id: 'submit'}
+  %input{type: 'submit', id: 'submit', value: 'Update', class: 'btn btn-sm btn-primary'}
 :javascript
   var users = #{@when_to_meet.users.map{|user| [user.email, user.name]}.to_h.to_json.html_safe};
   var time_slots = #{@when_to_meet.time_slots.to_json.html_safe};

@@ -10,7 +10,7 @@ class WhenToMeet < ApplicationRecord
 
     def initialize(name:, email:, is_creator:, id: nil)
       @name = name
-      @email = email
+      @email = email.downcase
       @is_creator = is_creator
       @id = id
     end
@@ -64,7 +64,7 @@ class WhenToMeet < ApplicationRecord
   end
 
   def find_user_by_email(email)
-    users.to_a.select{|user| user.email == email}.first
+    users.to_a.select{|user| user.email == email.downcase}.first
   end
 
   # def new_user(user_name, user_email, is_creator)
