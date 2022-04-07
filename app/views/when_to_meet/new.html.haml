@@ -1,13 +1,14 @@
 %h2 Create When To Meet
 
 = semantic_form_for @when_to_meet, url: when_to_meet_index_path, method: :post do |f|
+  = f.semantic_errors
   = f.input :name
-  = f.input :start_date, as: :string
-  = f.input :end_date, as: :string
-  = f.input :starting_hour
-  = f.input :ending_hour
+  = f.input :start_date_str, as: :string
+  = f.input :end_date_str, as: :string
+  = f.input :starting_hour_str, as: :string
+  = f.input :ending_hour_str, as: :string
   = f.submit @when_to_meet.persisted? ? 'Update' : 'Create'
 
 :javascript
-  $("#when_to_meet_start_date").datepicker({orientation: 'bottom'})
-  $("#when_to_meet_end_date").datepicker({orientation: 'bottom'})
+  $("#when_to_meet_start_date_str").datepicker({orientation: 'bottom'})
+  $("#when_to_meet_end_date_str").datepicker({orientation: 'bottom'})

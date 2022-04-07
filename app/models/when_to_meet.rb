@@ -45,9 +45,14 @@ class WhenToMeet < ApplicationRecord
     end
   end
 
-  attr_accessor :user_name, :user_email
+  attr_accessor :start_date_str, :end_date_str, :starting_hour_str, :ending_hour_str
+  attr_accessor :editing_content
 
   validates :name, presence: true
+  validate :valid_start_and_end_dates, unless: ->{ editing_content }
+  validate :valid_start_and_end_hours, unless: ->{ editing_content }
+
+  before_create :create_slug
 
   serialize :users
   serialize :time_slots
@@ -61,9 +66,9 @@ class WhenToMeet < ApplicationRecord
     users.to_a.select{|user| user.email == email}.first
   end
 
-  def new_user(user_name, user_email, is_creator)
-    User.new(user_name, user_email, id_for_email(user_email), is_creator)
-  end
+  # def new_user(user_name, user_email, is_creator)
+  #   User.new(name: user_name, email: user_email, id_for_email(user_email), is_creator)
+  # end
 
   def add_user(user)
     self.users ||= []
@@ -88,6 +93,67 @@ class WhenToMeet < ApplicationRecord
       unless users_for_check.include?(user.email)
         self.time_slots[check] = users_for_check + [user.email]
       end
+    end
+  end
+
+  def valid_start_and_end_hours
+    valid_starting_hour = true
+    valid_ending_hour = true
+    m = /^(\d+)$/.match(starting_hour_str)
+    if m  && starting_hour_str.to_i >= 1 && starting_hour_str.to_i <= 23
+      self.starting_hour = starting_hour_str.to_i
+    else
+      valid_starting_hour = false
+      errors.add(:starting_hour_str, "is not a valid hour")
+    end
+
+    m = /^(\d+)$/.match(ending_hour_str)
+    if m && ending_hour_str.to_i >= 1 && ending_hour_str.to_i <= 23
+      self.ending_hour = ending_hour_str.to_i
+    else
+      errors.add(:ending_hour_str, "is not a valid hour")
+      valid_ending_hour = false
+    end
+
+    if valid_starting_hour && valid_ending_hour
+      if self.starting_hour > self.ending_hour
+        errors.add(:base, "starting hour is not less than the ending hour")
+      end
+    end
+  end
+
+  def valid_start_and_end_dates
+    valid_start_date = validate_date(:start_date) { |d|
+      self.start_date = d
+    }
+    valid_end_date = validate_date(:end_date) { |d|
+      self.end_date = d
+    }
+
+    if !valid_start_date
+      errors.add(:start_date_str, "is invalid")
+    end
+    if !valid_end_date
+      errors.add(:end_date_str, "is invalid")
+    end
+    if valid_start_date && valid_end_date
+      if self.start_date > self.end_date
+        errors.add(:base, "start date is not less than the end date")
+      end
+    end
+  end
+
+  def valid_date(sym)
+    date_str = send(sym)
+    date = Date.parse(date_str)
+  end
+
+  def create_slug
+    slug_root = name.split(/\s+/).map(&:downcase).join("-")
+    self.slug = slug_root
+    while true
+      break unless self.class.find_by_slug(self.slug)
+      self.slug = slug_root + "-#{rand(1..1000)}"
     end
   end
 end
