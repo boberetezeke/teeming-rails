@@ -52,6 +52,7 @@ class WhenToMeet < ApplicationRecord
   validate :valid_start_and_end_dates, unless: ->{ editing_content }
   validate :valid_start_and_end_hours, unless: ->{ editing_content }
 
+  after_initialize :set_strs
   before_create :create_slug
 
   serialize :users
@@ -96,7 +97,16 @@ class WhenToMeet < ApplicationRecord
     end
   end
 
+  def set_strs
+    self.start_date_str = self.start_date ? self.start_date.strftime("%m/%d/%Y") : nil
+    self.end_date_str = self.end_date ? self.end_date.strftime("%m/%d/%Y") : nil
+    self.starting_hour_str = self.starting_hour ? self.starting_hour.to_s : nil
+    self.ending_hour_str = self.ending_hour ? self.ending_hour.to_s : nil
+  end
+
   def valid_start_and_end_hours
+    return true if starting_hour_str.nil? && ending_hour_str.nil?
+
     valid_starting_hour = true
     valid_ending_hour = true
     m = /^(\d+)$/.match(starting_hour_str)
@@ -123,6 +133,8 @@ class WhenToMeet < ApplicationRecord
   end
 
   def valid_start_and_end_dates
+    return true if self.start_date.nil? && self.end_date.nil?
+
     valid_start_date = validate_date(:start_date) { |d|
       self.start_date = d
     }

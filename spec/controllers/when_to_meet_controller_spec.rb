@@ -7,13 +7,11 @@ describe WhenToMeetController do
     it "creates the when to meet object" do
       post :create, params: {
         when_to_meet: {
-          name: 'Meeting',
-          user_name: 'name',
-          user_email: 'a@email.com'
+          name: 'Meeting'
         }
       }
       when_to_meet = WhenToMeet.last
-      expect(response).to redirect_to(when_to_meet_path(when_to_meet))
+      expect(response).to redirect_to(when_to_meet_path(when_to_meet.slug))
       expect(when_to_meet.name).to eq("Meeting")
     end
 
@@ -21,9 +19,7 @@ describe WhenToMeetController do
       post :create, params: {
         id: when_to_meet.id,
         when_to_meet: {
-          name: '',
-          user_name: '',
-          user_email: 'email.com'
+          name: ''
         }
       }
       expect(response).to render_template('new')
@@ -47,7 +43,7 @@ describe WhenToMeetController do
         "check-2022-04-02-9:00 am" => "no"
       }
       when_to_meet.reload
-      expect(response).to redirect_to(when_to_meet_user_path(when_to_meet, user_id: when_to_meet.users.first.id))
+      expect(response).to redirect_to(when_to_meet_user_path(when_to_meet.slug, user_id: when_to_meet.users.first.id))
       expect(when_to_meet.users.size).to eq(1)
       user = when_to_meet.users.first
       expect(user.email).to eq('a@email.com')
