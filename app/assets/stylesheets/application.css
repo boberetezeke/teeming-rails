@@ -371,6 +371,10 @@ form.formtastic select.form-control.narrow {
     background-color: #53a2f2;
 }
 
+.when2meet .num_checked {
+    user-select: none;
+}
+
 form.when2meet .check_box {
    display: none;
 }

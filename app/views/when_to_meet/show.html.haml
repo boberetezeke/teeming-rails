@@ -71,15 +71,21 @@
       $("#user_name").val($("#name_display").val())
       $("#user_email").val($("#email_display").val())
     })
+    // $(".num_checked").click(function(e) {
+    //
+    // });
     $(".hour").click(function(e) {
       console.log("clicked")
       console.log(e.target.dataset.check)
-      var el = document.getElementById(e.target.dataset.check)
+      var el = e.target;
+      if (el.classList[0] == 'num_checked') {
+        el = el.parentElement;
+      }
       var count = el.children[0].innerText
       var new_count = count == '' ? 0 : parseInt(count);
       console.log('count', count)
       console.log('new_count', new_count)
-      var check_val = "check-" + e.target.dataset.check;
+      var check_val = "check-" + el.dataset.check;
       var check_el = document.getElementById(check_val)
       var checked_list;
       if (time_slots[check_val]) {
