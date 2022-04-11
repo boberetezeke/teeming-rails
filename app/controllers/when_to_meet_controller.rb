@@ -18,10 +18,6 @@ class WhenToMeetController < ApplicationController
     @when_to_meet.users = []
     @when_to_meet.time_slots = {}
 
-    # @user = WhenToMeet::User.new(name: when_to_meet_params[:user_name], email: when_to_meet_params[:user_email], is_creator: true)
-    # @user.save(@when_to_meet.users)
-    # @when_to_meet.add_user(@user)
-
     if @when_to_meet.save
       redirect_to when_to_meet_path(@when_to_meet.slug)
     else

@@ -25,21 +25,22 @@
   %span#selected
 - num_days = (@when_to_meet.end_date - @when_to_meet.start_date + 1).to_i
 - num_hours = (@when_to_meet.ending_hour - @when_to_meet.starting_hour + 1)
-%table.when2meet
-  %tr
-    %td Date
-    - num_hours.times do |hour|
-      %td= when_to_meet_hour(@when_to_meet, hour)
-  - num_days.times do |day|
+.table-container
+  %table.when2meet
     %tr
-      %td.date= when_to_meet_date(@when_to_meet, day)
+      %td
       - num_hours.times do |hour|
-        - id = "#{when_to_meet_date(@when_to_meet, day)}-#{when_to_meet_hour(@when_to_meet, hour)}"
-        - slot = @when_to_meet.time_slots&.fetch("check-#{id}",nil)
-        - checked = slot&.include?(@user&.email).present?
-        - num_checked = slot ? slot.size : ''
-        %td.hour{"data-check": id, id: id, class: checked ? 'checked hour' : 'hour' }
-          %span.num_checked= num_checked
+        %td.time= when_to_meet_hour_header(@when_to_meet, hour)
+    - num_days.times do |day|
+      %tr
+        %td.date= when_to_meet_date_header(@when_to_meet, day)
+        - num_hours.times do |hour|
+          - id = "#{when_to_meet_date(@when_to_meet, day)}-#{when_to_meet_hour(@when_to_meet, hour)}"
+          - slot = @when_to_meet.time_slots&.fetch("check-#{id}",nil)
+          - checked = slot&.include?(@user&.email).present?
+          - num_checked = slot ? slot.size : ''
+          %td.hour{"data-check": id, id: id, class: checked ? 'checked hour' : 'hour' }
+            %span.num_checked= num_checked
 = form_with(url: signup_when_to_meet_path(@when_to_meet), class: 'when2meet') do
   %input{type: 'hidden', id: 'user_name', name: 'user_name'}
   %input{type: 'hidden', id: 'user_email', name: 'user_email'}

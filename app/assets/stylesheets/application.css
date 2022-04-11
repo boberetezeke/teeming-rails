@@ -349,6 +349,17 @@ form.formtastic select.form-control.narrow {
     background-color: #fcfcfc;
 }
 
+/* ------------------ WhenToMeet styles ------------------- */
+
+.table-container {
+    width: 100%;
+    overflow: auto;
+}
+
+.when2meet {
+    /* width: 500px; */
+}
+
 .when2meet td {
     padding: 5px;
 }
@@ -380,5 +391,13 @@ form.when2meet .check_box {
 }
 
 .bold {
+    font-weight: bold;
+}
+
+.time {
+    font-weight: bold;
+}
+
+.date {
     font-weight: bold;
 }

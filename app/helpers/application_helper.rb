@@ -215,4 +215,15 @@ module ApplicationHelper
     hour = 12 if hour == 0
     "#{hour}:00 #{hour >= 3 ? 'pm' : 'am'}"
   end
+
+  def when_to_meet_date_header(when_to_meet, day)
+    (when_to_meet.start_date + day).strftime("%m/%d %a")
+  end
+
+  def when_to_meet_hour_header(when_to_meet, hour)
+    hour = when_to_meet.starting_hour + hour
+    am_pm_hour = hour % 12
+    am_pm_hour = 12 if am_pm_hour == 0
+    "#{am_pm_hour}:00 #{hour >= 12 ? 'pm' : 'am'}"
+  end
 end
