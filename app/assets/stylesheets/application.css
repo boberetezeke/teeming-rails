@@ -348,3 +348,56 @@ form.formtastic select.form-control.narrow {
     padding: 5px;
     background-color: #fcfcfc;
 }
+
+/* ------------------ WhenToMeet styles ------------------- */
+
+.table-container {
+    width: 100%;
+    overflow: auto;
+}
+
+.when2meet {
+    /* width: 500px; */
+}
+
+.when2meet td {
+    padding: 5px;
+}
+
+.when2meet td.hour {
+    color: black;
+    text-align: center;
+}
+
+.when2meet td.hour.checked {
+    color: white;
+    text-align: center;
+}
+
+.when2meet .hour {
+    border: gray solid 1px;
+}
+
+.when2meet td.checked {
+    background-color: #53a2f2;
+}
+
+.when2meet .num_checked {
+    user-select: none;
+}
+
+form.when2meet .check_box {
+   display: none;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.time {
+    font-weight: bold;
+}
+
+.date {
+    font-weight: bold;
+}

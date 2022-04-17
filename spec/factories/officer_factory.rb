@@ -3,10 +3,10 @@ FactoryBot.define do
     association :chapter
 
     transient do
-      users []
-      roles []
-      start_date nil
-      end_date nil
+      users { [] }
+      roles { [] }
+      start_date { nil }
+      end_date { nil }
     end
 
     after(:create) do |officer, evaluator|

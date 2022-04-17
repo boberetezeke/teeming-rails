@@ -1,0 +1,119 @@
+%h2 When To Meet (#{@when_to_meet.name})
+
+%div
+  %label Name
+  %input{type: 'text', id: 'name_display', value: @user&.name}
+%div
+  %label Email
+  %input{type: 'text', id: 'email_display', value: @user&.email}
+- if @user.errors.full_messages.present?
+  %div.error=  @user.errors.full_messages.join(", ")
+%div
+  %span.bold Link:
+  %a{href: when_to_meet_url(@when_to_meet.slug), target: "_blank", id: "link"}= when_to_meet_url(@when_to_meet.slug)
+  |
+  %a{href: "#", id: 'copy'}
+    %span.bold Copy
+%div
+  %span.bold People:
+  - @when_to_meet.users.each_with_index do |user, index|
+    %a{href: when_to_meet_user_url(@when_to_meet.slug, user_id: user.id)}= user.name
+    - if index != @when_to_meet.users.size - 1
+      |
+%div
+  %span.bold Selected:
+  %span#selected
+- num_days = (@when_to_meet.end_date - @when_to_meet.start_date + 1).to_i
+- num_hours = (@when_to_meet.ending_hour - @when_to_meet.starting_hour + 1)
+.table-container
+  %table.when2meet
+    %tr
+      %td
+      - num_hours.times do |hour|
+        %td.time= when_to_meet_hour_header(@when_to_meet, hour)
+    - num_days.times do |day|
+      %tr
+        %td.date= when_to_meet_date_header(@when_to_meet, day)
+        - num_hours.times do |hour|
+          - id = "#{when_to_meet_date(@when_to_meet, day)}-#{when_to_meet_hour(@when_to_meet, hour)}"
+          - slot = @when_to_meet.time_slots&.fetch("check-#{id}",nil)
+          - checked = slot&.include?(@user&.email).present?
+          - num_checked = slot ? slot.size : ''
+          %td.hour{"data-check": id, id: id, class: checked ? 'checked hour' : 'hour' }
+            %span.num_checked= num_checked
+= form_with(url: signup_when_to_meet_path(@when_to_meet), class: 'when2meet') do
+  %input{type: 'hidden', id: 'user_name', name: 'user_name'}
+  %input{type: 'hidden', id: 'user_email', name: 'user_email'}
+  - num_days.times do |day|
+    - num_hours.times do |hour|
+      %span.check_box
+        %label= "#{when_to_meet_date(@when_to_meet, day)}-#{when_to_meet_hour(@when_to_meet, hour)}"
+        - id = "check-#{when_to_meet_date(@when_to_meet, day)}-#{when_to_meet_hour(@when_to_meet, hour)}"
+        - checked = @when_to_meet.time_slots&.fetch(id,nil)&.include?(@user&.email).present?
+        %input{type: 'checkbox', id: id, name: id, checked: checked  ? true : nil}
+  %input{type: 'submit', id: 'submit', value: 'Update', class: 'btn btn-sm btn-primary'}
+:javascript
+  var users = #{@when_to_meet.users.map{|user| [user.email, user.name]}.to_h.to_json.html_safe};
+  var time_slots = #{@when_to_meet.time_slots.to_json.html_safe};
+  var user_email = "#{@user.email}"
+  $(function() {
+    $("#copy").click(function() {
+      var copy = $("#link").attr("href")
+      console.log("copy", copy);
+      var data = [new ClipboardItem({ "text/plain": new Blob([copy], { type: "text/plain" }) })];
+      navigator.clipboard.write(data).then(function() {
+        console.log("Copied to clipboard successfully!");
+      }, function() {
+        console.error("Unable to write to clipboard. :-(");
+      });
+    })
+    $("#submit").click(function() {
+      console.log("submit clicked")
+      $("#user_name").val($("#name_display").val())
+      $("#user_email").val($("#email_display").val())
+    })
+    // $(".num_checked").click(function(e) {
+    //
+    // });
+    $(".hour").click(function(e) {
+      console.log("clicked")
+      console.log(e.target.dataset.check)
+      var el = e.target;
+      if (el.classList[0] == 'num_checked') {
+        el = el.parentElement;
+      }
+      var count = el.children[0].innerText
+      var new_count = count == '' ? 0 : parseInt(count);
+      console.log('count', count)
+      console.log('new_count', new_count)
+      var check_val = "check-" + el.dataset.check;
+      var check_el = document.getElementById(check_val)
+      var checked_list;
+      if (time_slots[check_val]) {
+        checked_list = [... time_slots[check_val]];
+      }
+      else {
+        checked_list = [];
+      }
+
+      checked_list = checked_list.filter((email) => {
+        return email != user_email
+      })
+      if (el.classList.contains('checked')) {
+        check_el.checked = false;
+        el.classList.remove('checked');
+        new_count -= 1;
+        new_count = (new_count == 0) ? '' : new_count;
+      }
+      else {
+        check_el.checked = true;
+        el.classList.add('checked');
+        new_count += 1;
+        checked_list = checked_list.concat(user_email);
+      }
+      el.children[0].innerText = new_count
+
+      var checked_list_names = checked_list.map((email) => users[email])
+      $("#selected").html(checked_list_names.join(", "));
+    })
+  })

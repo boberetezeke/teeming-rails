@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.6.6"
+ruby "2.6.9"
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -14,7 +14,7 @@ gem 'devise'
 gem 'pundit'
 gem 'haml'
 gem 'formtastic', '~> 3.0'
-gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
+gem 'twitter-bootstrap-rails', :git => 'https://github.com/seyhunak/twitter-bootstrap-rails.git'
 gem 'bootstrap-datepicker-rails'
 gem 'formtastic-bootstrap' #, git: 'git://github.com/0xCCD/formtastic-bootstrap.git'
 gem 'rails_admin'

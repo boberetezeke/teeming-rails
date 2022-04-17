@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :questionnaire_section do
-    title "My Great Questionnaire Section"
+    title { "My Great Questionnaire Section" }
 
     transient do
-      skip_create_questions false
+      skip_create_questions { false }
     end
 
     after(:create) do |questionnaire_section, evaluator|
