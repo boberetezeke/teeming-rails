@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.6.9"
+ruby "2.7.5"
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
@@ -13,7 +13,7 @@ gem 'turbograft'
 gem 'devise'
 gem 'pundit'
 gem 'haml'
-gem 'formtastic', '~> 3.0'
+gem 'formtastic', '~> 4.0'
 gem 'twitter-bootstrap-rails', :git => 'https://github.com/seyhunak/twitter-bootstrap-rails.git'
 gem 'bootstrap-datepicker-rails'
 gem 'formtastic-bootstrap' #, git: 'git://github.com/0xCCD/formtastic-bootstrap.git'
@@ -25,11 +25,12 @@ gem 'will_paginate-bootstrap'
 gem 'select2-rails'
 gem 'dynamic_table', git: 'https://github.com/boberetezeke/dynamic_table.git', branch: 'add_text_change_support_and_check_box'
 gem 'letter_opener'
+gem 'webpacker', '~> 5.4.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2'
+gem 'rails', '~> 6.1'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 0.18'
+gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -39,7 +40,7 @@ gem 'puma', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 gem 'geocoder'
-gem 'acts-as-taggable-on', '~> 6.0'
+gem 'acts-as-taggable-on', '~> 9.0'
 
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'jwt', '>= 1.5.6'
@@ -55,6 +56,7 @@ gem 'daemons'
 # gem 'sidekiq'
 
 gem 'figaro'
+gem 'sassc'
 
 gem 'dotenv-rails', groups: [:development, :test]
 
@@ -87,7 +89,7 @@ end
 
 group :development do
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '~> 3.0.5'
+  gem 'listen'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
