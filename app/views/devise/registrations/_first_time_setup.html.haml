@@ -1,0 +1,21 @@
+%h2 First Time Setup
+%h3 Welcome to your first time setup of the Open-Org System
+
+%ol
+  %li Fill out your email and password below. This will be for the super admin user for this system.
+  %li You will be emailed a confirmation email, check your email for that email.
+  %li Click on the confirmation link in the email
+  %li You will be asked to login with your email and the password you entered in Step 1
+  %li You will then go through a multi step process setup
+
+%hr
+
+= semantic_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+  = f.input :email, as: :email
+  - if @minimum_password_length
+    = f.input :password, as: :password, hint: "(#{@minimum_password_length} characters minimum)"
+  - else
+    = f.input :password, as: :password
+  = f.input :password_confirmation, as: :password
+  = f.submit "Sign up", class: "btn btn-sm btn-primary btn-with-padding"
+= render "devise/shared/links"

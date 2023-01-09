@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_07_041429) do
+ActiveRecord::Schema.define(version: 2022_05_02_165125) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -529,6 +529,12 @@ ActiveRecord::Schema.define(version: 2022_04_07_041429) do
     t.datetime "updated_at"
     t.bigint "account_id"
     t.index ["account_id"], name: "index_roles_on_account_id"
+  end
+
+  create_table "system_settings", force: :cascade do |t|
+    t.boolean "multi_tenant", default: false
+    t.datetime "initial_setup_time"
+    t.integer "setup_status", default: 0
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
