@@ -1,34 +1,34 @@
 #======================== setup MN State Init ==========================
 
-state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
+# state_chapter = Chapter.find_or_create_by(name: 'State', is_state_wide: true)
 # ['Greater St. Paul', 'St. Cloud', 'Alexandria', 'Duluth', 'Southern Minnesota'].each do |chapter|
 #   Chapter.find_or_create_by(name: chapter, is_state_wide: false, chapter_type: Chapter::CHAPTER_TYPE_AFFILIATE)
 # end
 
 # account = Account.find_or_create_by_name("Our Revolution Minnesota")
 
-skills_questionnaire = Questionnaire.where(questionnairable_type: 'Chapter', questionnairable_id: state_chapter.id).first
-skills_questionnaire.destroy if skills_questionnaire
-#if !skills_questionnaire
-  skills_questionnaire = Questionnaire.create(name: 'Member Skills', questionnairable: state_chapter)
-  overview_section = QuestionnaireSection.create(questionnaire: skills_questionnaire, order_index: 1, title: 'Skills and Interests')
-    involvement_question = Question.create(questionnaire_section: overview_section, order_index: 1, text: 'What would you like to do?', question_type: Question::QUESTION_TYPE_CHECKBOXES)
-      Choice.create(question: involvement_question, order_index: 1, title: 'I would like to chair a committee',              value: 'committee-chair')
-      Choice.create(question: involvement_question, order_index: 2, title: 'I would be on a committee',                      value: 'committee')
-      Choice.create(question: involvement_question, order_index: 3, title: 'I would like to help door knock',                value: 'door-knock')
-      Choice.create(question: involvement_question, order_index: 4, title: 'I would like to help phone bank',                value: 'phone-bank')
-      Choice.create(question: involvement_question, order_index: 5, title: 'I would like to help with event organizing',     value: 'event-organizing')
-    Question.create(questionnaire_section: overview_section, order_index: 2, text: 'Any other ways you\'d like to help ?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
-    skills_question = Question.create(questionnaire_section: overview_section, order_index: 3, text: 'Do you have skills?', question_type: Question::QUESTION_TYPE_CHECKBOXES)
-      Choice.create(question: skills_question, order_index: 1, title: 'I am great at marketing',   value: 'marketer')
-      Choice.create(question: skills_question, order_index: 2, title: 'I love social media',       value: 'social-media')
-      Choice.create(question: skills_question, order_index: 3, title: 'I am a great recruiter',    value: 'recruiter')
-      Choice.create(question: skills_question, order_index: 4, title: 'I am tech savvy',           value: 'techie')
-    Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
-#end
-
-MemberGroup.write_member_groups
-Account.create(name: "Test Org")
+# skills_questionnaire = Questionnaire.where(questionnairable_type: 'Chapter', questionnairable_id: state_chapter.id).first
+# skills_questionnaire.destroy if skills_questionnaire
+# #if !skills_questionnaire
+#   skills_questionnaire = Questionnaire.create(name: 'Member Skills', questionnairable: state_chapter)
+#   overview_section = QuestionnaireSection.create(questionnaire: skills_questionnaire, order_index: 1, title: 'Skills and Interests')
+#     involvement_question = Question.create(questionnaire_section: overview_section, order_index: 1, text: 'What would you like to do?', question_type: Question::QUESTION_TYPE_CHECKBOXES)
+#       Choice.create(question: involvement_question, order_index: 1, title: 'I would like to chair a committee',              value: 'committee-chair')
+#       Choice.create(question: involvement_question, order_index: 2, title: 'I would be on a committee',                      value: 'committee')
+#       Choice.create(question: involvement_question, order_index: 3, title: 'I would like to help door knock',                value: 'door-knock')
+#       Choice.create(question: involvement_question, order_index: 4, title: 'I would like to help phone bank',                value: 'phone-bank')
+#       Choice.create(question: involvement_question, order_index: 5, title: 'I would like to help with event organizing',     value: 'event-organizing')
+#     Question.create(questionnaire_section: overview_section, order_index: 2, text: 'Any other ways you\'d like to help ?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
+#     skills_question = Question.create(questionnaire_section: overview_section, order_index: 3, text: 'Do you have skills?', question_type: Question::QUESTION_TYPE_CHECKBOXES)
+#       Choice.create(question: skills_question, order_index: 1, title: 'I am great at marketing',   value: 'marketer')
+#       Choice.create(question: skills_question, order_index: 2, title: 'I love social media',       value: 'social-media')
+#       Choice.create(question: skills_question, order_index: 3, title: 'I am a great recruiter',    value: 'recruiter')
+#       Choice.create(question: skills_question, order_index: 4, title: 'I am tech savvy',           value: 'techie')
+#     Question.create(questionnaire_section: overview_section, order_index: 4, text: 'Any other skills you\'d like to mention?', question_type: Question::QUESTION_TYPE_LONG_TEXT)
+# #end
+#
+# MemberGroup.write_member_groups
+# Account.create(name: "Test Org")
 #
 # minnesota_2018_election = Election.find_or_create_by(name: 'Minnesota 2018 Election', chapter_id: state_chapter.id, vote_date: Date.new(2018, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
 # minnesota_2017_election = Election.find_or_create_by(name: 'Minnesota 2017 Election', chapter_id: state_chapter.id, vote_date: Date.new(2017, 11, 8), election_type: Election::ELECTION_TYPE_EXTERNAL)
